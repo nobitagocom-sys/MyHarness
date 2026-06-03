@@ -1,0 +1,20 @@
+role: implement
+description: "Implementation agent: write source code for backend and frontend"
+context:
+  read_globs:
+    - "specs/**/*.md"
+    - "docs/output/design-docs/**/*.md"
+    - "backend/**"
+    - "frontend/**"
+    - ".harness/kb/**"
+    - ".specify/memory/constitution.md"
+  write_globs:
+    - "backend/**"
+    - "frontend/**"
+    - "e2e/**"
+    - "docker-compose.yml"
+guardrails:
+  pre_action:
+    - "python .harness/enforce/scope_guard.py --role implement --staged"
+  post_action:
+    - "python .harness/enforce/layer_lint.py"

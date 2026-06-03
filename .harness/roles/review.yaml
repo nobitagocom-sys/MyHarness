@@ -1,0 +1,11 @@
+role: review
+description: "Review agent: read-only review of specs, plans, and source code"
+context:
+  read_globs:
+    - "specs/**/*.md"
+    - "backend/src/**"
+    - "frontend/src/**"
+    - "docs/output/design-docs/**"
+    - ".specify/memory/constitution.md"
+  write_globs:
+    - "docs/output/run-logs/**/reports/*.md"

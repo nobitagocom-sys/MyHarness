@@ -1,0 +1,11 @@
+role: spec
+description: "Spec agent: create and update feature specifications"
+context:
+  read_globs:
+    - "docs/input/**"
+    - "docs/output/design-docs/**"
+    - ".specify/memory/constitution.md"
+    - ".harness/kb/**"
+  write_globs:
+    - "specs/**"
+    - "docs/output/run-logs/**/reports/*.md"

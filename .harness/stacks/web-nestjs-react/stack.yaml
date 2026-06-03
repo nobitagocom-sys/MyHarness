@@ -1,0 +1,50 @@
+id: web-nestjs-react
+name: "Web App — NestJS + React + MySQL"
+version: "1.0.0"
+description: >
+  Full-stack web application. NestJS backend with Prisma ORM,
+  React + Vite frontend, MySQL database. Docker-based local dev.
+
+# Tech tiers (mapped to .harness/models/catalog.yaml)
+tech:
+  backend: NestJS latest + Node.js 20 LTS + TypeScript latest + Prisma latest
+  frontend: React latest + Vite latest + TailwindCSS ^3 (pinned) + TanStack Query latest
+  database: MySQL 8.0 (Docker) / SQLite (local fallback)
+  auth: JWT (access 1h + refresh 7d, HttpOnly cookies)
+  testing: Jest + Supertest (unit/integration) + Playwright (E2E)
+
+# Files to copy into project root when initializing
+setup:
+  copy:
+    - from: technical_architecture.md
+      to: docs/technical_architecture.md
+    - from: copilot-instructions.md
+      to: .github/agents/copilot-instructions.md
+      note: "links rewritten by init-packages.sh — do NOT copy manually"
+    - from: init-packages.sh
+      to: init-packages.sh
+
+  # Run once after scaffolding — resolves latest compatible versions at init time
+  init_script: init-packages.sh
+
+# Placeholders user must fill after copying
+placeholders:
+  - "[PROJECT_NAME]"
+  - "[PROJECT_DESCRIPTION]"
+  - "[TEAM_SIZE]"
+
+# Layer order enforced by layer_lint.py
+layer_order: [types, config, repo, service, runtime]
+
+# Agent hints — orchestrator reads this when onboarding project
+agent_hints:
+  implement_scope:
+    backend: "backend/src/"
+    frontend: "frontend/src/"
+    e2e: "e2e/"
+  forbidden_shared_files:
+    - "package.json"
+    - "docker-compose.yml"
+    - "backend/prisma/schema.prisma"
+  seed_required: true
+  coverage_target: 80

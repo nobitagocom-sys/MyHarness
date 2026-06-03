@@ -1,0 +1,12 @@
+role: orchestrator
+description: "Orchestrator: coordinates all agents, never writes source code"
+context:
+  read_globs:
+    - "**/*.md"
+    - "**/*.yaml"
+    - "**/*.json"
+  write_globs:
+    - "docs/output/run-logs/**"
+    - "specs/**"
+    - ".harness/logs/**"
+    - ".harness/metrics/**"

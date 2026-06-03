@@ -1,0 +1,36 @@
+id: [stack-id]                        # e.g. web-nestjs-react, mobile-flutter
+name: "[Stack Display Name]"
+version: "1.0.0"
+description: >
+  [One-line description of this stack profile]
+
+tech:
+  backend: "[Framework + Runtime + Language]"
+  frontend: "[Framework + Build tool]"
+  database: "[DB name + version]"
+  auth: "[Auth method]"
+  testing: "[Test frameworks]"
+
+setup:
+  copy:
+    - from: technical_architecture.md
+      to: docs/technical_architecture.md
+    - from: copilot-instructions.md
+      to: .github/agents/copilot-instructions.md
+
+placeholders:
+  - "[PROJECT_NAME]"
+  - "[PROJECT_DESCRIPTION]"
+  - "[TEAM_SIZE]"
+  - "[ENVIRONMENT]"
+
+layer_order: []     # e.g. [types, config, repo, service, runtime]
+
+agent_hints:
+  implement_scope:
+    backend: "[backend source path]"
+    frontend: "[frontend source path]"
+    e2e: "[e2e path]"
+  forbidden_shared_files: []
+  seed_required: true
+  coverage_target: 80

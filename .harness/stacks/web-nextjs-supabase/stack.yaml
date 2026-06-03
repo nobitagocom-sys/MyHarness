@@ -1,0 +1,47 @@
+id: web-nextjs-supabase
+name: "Web App — Next.js 14 + Supabase"
+version: "1.0.0"
+description: >
+  Full-stack web application using Next.js App Router (RSC) with Supabase
+  as backend (Postgres + Auth + Realtime + Storage). Serverless/edge-friendly.
+
+tech:
+  frontend: "Next.js 14 (App Router) + TypeScript 5 + Tailwind CSS 3"
+  backend: "Next.js API Routes / Server Actions + Supabase Edge Functions"
+  database: "PostgreSQL via Supabase (hosted) + Prisma or supabase-js client"
+  auth: "Supabase Auth (email/password, OAuth, magic link)"
+  state: "TanStack Query 5 (client) + React Server Components (server)"
+  testing: "Vitest + Testing Library + Playwright (E2E)"
+
+setup:
+  copy:
+    - from: technical_architecture.md
+      to: docs/technical_architecture.md
+    - from: copilot-instructions.md
+      to: .github/agents/copilot-instructions.md
+
+placeholders:
+  - "[PROJECT_NAME]"
+  - "[PROJECT_DESCRIPTION]"
+  - "[SUPABASE_PROJECT_REF]"
+  - "[TEAM_SIZE]"
+
+layer_order: [types, lib, server-actions, components, pages]
+
+agent_hints:
+  implement_scope:
+    app: "app/"
+    components: "components/"
+    lib: "lib/"
+    e2e: "e2e/"
+  forbidden_shared_files:
+    - "package.json"
+    - "next.config.ts"
+    - "middleware.ts"
+    - "supabase/migrations/"
+  seed_required: true
+  coverage_target: 80
+  notes: >
+    No separate backend/ dir — Next.js App Router handles both RSC and API.
+    Supabase migrations live in supabase/migrations/ (managed by Supabase CLI).
+    myharness.implement writes to app/, components/, lib/ only.

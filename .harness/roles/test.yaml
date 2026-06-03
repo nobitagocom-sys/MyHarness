@@ -1,0 +1,14 @@
+role: test
+description: "Test agent: generate and run tests, create bug reports"
+context:
+  read_globs:
+    - "specs/**/*.md"
+    - "backend/**"
+    - "frontend/**"
+    - "docs/output/design-docs/**"
+  write_globs:
+    - "backend/test/**"
+    - "frontend/test/**"
+    - "e2e/**"
+    - "docs/output/run-logs/**/reports/*.md"
+    - "docs/bugs/**"

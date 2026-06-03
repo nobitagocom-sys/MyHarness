@@ -1,0 +1,9 @@
+# Change Request Registry
+# Update this file when adding a new CR or completing one.
+crs: []
+# Example entry:
+# - id: CR-0001
+#   title: "Feature description"
+#   status: complete   # draft | in_progress | complete
+#   feature_id: "001-feature-name"
+#   branch: feat/CR-0001

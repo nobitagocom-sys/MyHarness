@@ -1,0 +1,48 @@
+id: mobile-react-native
+name: "Mobile App — React Native + Expo + REST API"
+version: "1.0.0"
+description: >
+  Cross-platform mobile application (iOS + Android) built with React Native + Expo.
+  REST API backend (stack-agnostic — pair with web-nestjs-react or web-nextjs-supabase).
+
+tech:
+  mobile: "React Native 0.74+ + Expo SDK 51+ + TypeScript 5"
+  navigation: "Expo Router (file-based) or React Navigation 6"
+  state: "TanStack Query 5 (server state) + Zustand (client state)"
+  api_client: "Axios 1.x via src/lib/api.ts"
+  styling: "NativeWind 4 (Tailwind for RN) or StyleSheet"
+  auth: "JWT stored in SecureStore (expo-secure-store)"
+  testing: "Jest + React Native Testing Library + Detox (E2E)"
+  backend: "Pair with web-nestjs-react or web-nextjs-supabase stack"
+
+setup:
+  copy:
+    - from: technical_architecture.md
+      to: docs/technical_architecture.md
+    - from: copilot-instructions.md
+      to: .github/agents/copilot-instructions.md
+
+placeholders:
+  - "[PROJECT_NAME]"
+  - "[PROJECT_DESCRIPTION]"
+  - "[TEAM_SIZE]"
+  - "[PLATFORM]"          # ios | android | both
+
+layer_order: [types, api, store, hooks, components, screens]
+
+agent_hints:
+  implement_scope:
+    mobile: "mobile/src/"
+    backend: "backend/src/"     # if monorepo
+    e2e: "e2e/"
+  forbidden_shared_files:
+    - "app.json"
+    - "app.config.ts"
+    - "package.json"
+  seed_required: false           # seed is on API side
+  coverage_target: 75
+  notes: >
+    myharness.implement runs in 2 scopes when monorepo:
+    - mobile/ scope (React Native screens, components, hooks)
+    - backend/ scope (API endpoints serving mobile)
+    orchestrator must check write-set overlap before parallel dispatch.

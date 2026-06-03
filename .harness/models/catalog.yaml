@@ -1,0 +1,58 @@
+# MyHarness Model Catalog
+# Single source of truth for all agent model assignments.
+# To change a model: edit the alias value under `models:`, then run:
+#   bash .github/agents/sync-models.sh
+
+models:
+  claude_opus:   "claude-opus-4-8"           # orchestration, highest reasoning
+  claude_sonnet: "claude-sonnet-4-6"         # review, balanced quality/cost
+  claude_haiku:  "claude-haiku-4-5-20251001" # lightweight/fast tasks
+  gpt_frontier:  "GPT-5.4"                   # long-context synthesis, spec writing
+  gpt_codex:     "GPT-5.3-Codex"             # code-centric reasoning, implementation
+
+tiers:
+  synthesis:
+    model: gpt_frontier
+    use_for: [srs, bd, specify, clarify, tasks, srs.system]
+    description: "Long-context document synthesis, formal spec writing"
+
+  coding:
+    model: gpt_codex
+    use_for: [plan, dd, implement]
+    description: "Code-centric reasoning, patch creation, build/test-fix loops"
+
+  review:
+    model: claude_sonnet
+    use_for: [review.spec, review.plan, review.code, init]
+    description: "Gate pass/fail decisions, multi-artifact comparison"
+
+  orchestrator:
+    model: claude_sonnet
+    use_for: [orchestrator]
+    description: "Top-level coordinator, full pipeline autonomy"
+
+agents:
+  myharness.orchestrator:  { model: claude_sonnet,   role: orchestrator }
+  myharness.bd:            { model: gpt_frontier,  role: synthesis }
+  myharness.clarify:       { model: gpt_frontier,  role: synthesis }
+  myharness.specify:       { model: gpt_frontier,  role: synthesis }
+  myharness.srs:           { model: gpt_frontier,  role: synthesis }
+  myharness.srs.system:    { model: gpt_frontier,  role: synthesis }
+  myharness.tasks:         { model: gpt_frontier,  role: synthesis }
+  myharness.plan:          { model: gpt_codex,     role: coding }
+  myharness.dd:            { model: gpt_codex,     role: coding }
+  myharness.implement:     { model: gpt_codex,     role: coding }
+  myharness.review.code:   { model: claude_sonnet, role: review }
+  myharness.review.plan:   { model: claude_sonnet, role: review }
+  myharness.review.spec:   { model: claude_sonnet, role: review }
+  myharness.init:          { model: claude_sonnet, role: review }
+
+escalation:
+  synthesis_fail_after: 3   # retries before escalating to review tier
+  coding_fail_after: 3
+
+budget:
+  max_cost_usd_per_run: 5.00
+  warn_at_ratio: 0.70
+  restrict_at_ratio: 0.85
+  block_at_ratio: 0.95

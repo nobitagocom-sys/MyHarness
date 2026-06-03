@@ -1,0 +1,19 @@
+# Phase → Tier routing
+phase_defaults:
+  ingest: synthesis
+  normalize: synthesis
+  srs: synthesis
+  bd: synthesis
+  specify: synthesis
+  clarify: synthesis
+  plan: coding
+  dd: coding
+  tasks: coding
+  implement: coding
+  review_spec: review
+  review_plan: review
+  review_code: review
+  testkit: review
+  kb_update: synthesis
+  report: synthesis
+  orchestrator: review
