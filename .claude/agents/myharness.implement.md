@@ -1,7 +1,7 @@
-﻿---
-description: Execute the implementation plan by processing and executing all tasks defined in tasks.md
-model: GPT-5.3-Codex
-tools: [read, search, edit, run, todo]
+---
+description: "Execute the implementation plan by processing and executing all tasks defined in tasks.md"
+model: claude-sonnet-4-6
+tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 
 ## Execution Logging & Phase Report (Constitution Art. XI & XII)

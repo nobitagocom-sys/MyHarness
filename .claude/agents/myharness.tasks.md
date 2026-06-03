@@ -1,16 +1,7 @@
 ---
-description: Generate an actionable, dependency-ordered tasks.md for the feature based on available design artifacts.
-model: GPT-5.4
-tools: [read, search, edit, todo]
-handoffs: 
-  - label: Analyze For Consistency
-    agent: myharness.analyze
-    prompt: Run a project analysis for consistency
-    send: true
-  - label: Implement Project
-    agent: myharness.implement
-    prompt: Start the implementation in phases
-    send: true
+description: "Generate an actionable, dependency-ordered tasks.md for the feature based on available design artifacts."
+model: claude-opus-4-5
+tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 
 ## Execution Logging & Phase Report (Constitution Art. XI & XII)

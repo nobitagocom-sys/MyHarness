@@ -1,0 +1,5 @@
+Execute the implementation planning workflow using the plan template to generate design artifacts.
+
+Use the agent: myharness.plan
+
+$ARGUMENTS

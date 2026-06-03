@@ -1,11 +1,7 @@
-﻿---
-description: Identify underspecified areas in the current feature spec by asking up to 5 highly targeted clarification questions and encoding answers back into the spec.
-model: GPT-5.4
-tools: [read, search, edit, todo]
-handoffs: 
-  - label: Build Technical Plan
-    agent: myharness.plan
-    prompt: Create a plan for the spec. I am building with...
+---
+description: "Identify underspecified areas in the current feature spec by asking up to 5 highly targeted clarification questions and encoding answers back into the spec."
+model: claude-opus-4-5
+tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 
 ## Execution Logging & Phase Report (Constitution Art. XI & XII)

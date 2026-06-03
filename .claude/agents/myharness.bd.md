@@ -1,8 +1,7 @@
 ---
 description: "Generate BD (Basic Design / External Design) per module. Use when: generate BD, create basic design, screen design, UI layout, system architecture, logical ERD, screen transition, external interface design, basic design, external design, MOD-XX BD."
-model: GPT-5.4
-tools: [read, search, edit, todo]
-argument-hint: "Module ID or keyword (e.g., 'MOD-01', 'Dashboard', 'Objective', 'Workspace')"
+model: claude-opus-4-5
+tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 
 ## Execution Logging & Phase Report (Constitution Art. XI & XII)

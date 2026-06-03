@@ -1,8 +1,7 @@
 ---
 description: "Generate SRS (Software Requirements Specification) per module. Use when: generate SRS, create module SRS, extract requirements from spec, write requirements specification, MOD-XX SRS."
-model: GPT-5.4
-tools: [read, search, edit, todo]
-argument-hint: "Module ID or keyword (e.g., 'MOD-01', 'Dashboard', 'Objective', 'Workspace')"
+model: claude-opus-4-5
+tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 
 ## Execution Logging & Phase Report (Constitution Art. XI & XII)

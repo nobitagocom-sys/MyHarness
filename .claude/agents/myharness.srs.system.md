@@ -1,8 +1,7 @@
 ---
 description: "Generate system-wide SRS (Full Module Requirements Definition). Use when: generate full SRS, extract all requirements from spec, create docs/output/srs-systems folder, generate wireframe/ERD, full system SRS, all-module SRS, requirements extraction, requirements definition from product requirements, wireframe, ERD."
-model: GPT-5.4
-tools: [read, search, edit, todo]
-argument-hint: "Optional: path to input file/folder and scope constraints (default: extract ALL modules from spec)"
+model: claude-opus-4-5
+tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 
 ## Execution Logging & Phase Report

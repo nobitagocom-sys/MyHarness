@@ -1,8 +1,7 @@
 ---
 description: "Review feature specifications for quality, completeness, and correctness. Use when: review spec, check spec quality, validate feature requirements, audit specification for gaps or inconsistencies, spec review after clarify (Step 4)."
 model: claude-sonnet-4-6
-tools: [read, search, edit, todo]
-argument-hint: "Optional: feature-id to review (e.g. '001-xxx'). Leave empty to auto-detect."
+tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 
 ## Execution Logging & Phase Report (Constitution Art. XI & XII)

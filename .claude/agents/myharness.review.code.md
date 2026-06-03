@@ -1,8 +1,7 @@
-﻿---
+---
 description: "Review implementation code for quality, correctness, security, and spec conformance. Use when: review code, check implementation quality, code review, audit Node.js NestJS TypeScript code, verify code matches spec, post-implementation review, code review (Step 9)."
 model: claude-sonnet-4-6
-tools: [read, search, edit, todo]
-argument-hint: "Feature ID or module to review (e.g., '001-xxx', 'mod01')"
+tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 
 ## Execution Logging & Phase Report (Constitution Art. XI & XII)

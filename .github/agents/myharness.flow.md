@@ -1,6 +1,8 @@
-# Flow Agent — Pipeline
+# MyHarness — Pipeline Flow
 
 > Describes the operational flow of the multi-agent system for the Feature Development Pipeline.
+> Model names shown are **provider-dependent** — see `.harness/models/catalog.yaml` for the active mapping.
+> Current provider is set in `.specify/init-options.json` (`ai` field).
 
 ---
 
@@ -8,19 +10,20 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                  myharness.orchestrator (Orchestrator)                         │
-│               claude-sonnet-4-6 — Orchestrator                  │
+│                  myharness.orchestrator                         │
+│               [orchestrator tier] — full pipeline autonomy      │
 │                                                                 │
-│  📋 protocols/    📝 steps/    📄 templates/    📊 logs/       │
+│  📋 .harness/agents/protocols/                                  │
+│  📝 .harness/agents/steps/                                      │
+│  📄 .harness/agents/templates/    📊 docs/output/run-logs/      │
 └──────────┬──────────────────────────────────────────────────────┘
-           │ delegates to 12 specialist sub-agents
+           │ delegates to specialist sub-agents
            ▼
 ┌──────────────────────────────────────────────────────────────────┐
-│  myharness.srs                │  myharness.bd                │  myharness.dd       │
-│  myharness.specify        │  myharness.clarify       │  myharness.plan │
-│  myharness.tasks          │  myharness.implement     │               │
-│  myharness.review.spec         │  myharness.review.plan        │               │
-│  myharness.review.code         │  myharness.testkit           │               │
+│  myharness.srs          │  myharness.bd           │  myharness.dd          │
+│  myharness.specify      │  myharness.clarify      │  myharness.plan        │
+│  myharness.tasks        │  myharness.implement    │  myharness.testkit     │
+│  myharness.review.spec  │  myharness.review.plan  │  myharness.review.code │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
@@ -33,33 +36,33 @@ USER INPUT ($ARGUMENTS: feature description)
     │
     ▼
 ╔══════════════════════════════════════════════════════════════════╗
-║  PHASE 1: DESIGN (Steps 0–4)                                   ║
-║  📄 steps/steps-01-04-design.md                                 ║
+║  PHASE 1: DESIGN (Steps 0–4)                                    ║
+║  📄 .harness/agents/steps/steps-01-04-design.md                 ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║                                                                  ║
-║  STEP 0 ─ orchestrator (self)                                           ║
+║  STEP 0 ─ orchestrator (self)                                    ║
 ║  │  Detect existing spec in specs/ directory                    ║
 ║  │  → mode = CREATE or UPDATE                                   ║
 ║  ▼                                                               ║
-║  STEP 1 ─ myharness.srs (GPT-5.4)                                    ║
+║  STEP 1 ─ myharness.srs [synthesis tier]                         ║
 ║  │  Input:  srs-systems/ (overview + module detail + wireframe) ║
-║  │  Output: docs/output/design-docs/srs/srs-<MOD>-<name>.md            ║
-║  │  Report: 01-srs-report.md                                   ║
+║  │  Output: docs/output/design-docs/srs/srs-<MOD>-<name>.md    ║
+║  │  Report: 01-srs-report.md                                    ║
 ║  ▼                                                               ║
-║  STEP 2 ─ myharness.bd (GPT-5.4)                                     ║
+║  STEP 2 ─ myharness.bd [synthesis tier]                          ║
 ║  │  Input:  SRS + system overview + technical architecture      ║
-║  │  Output: docs/output/design-docs/bd/bd-<MOD>-<name>.md              ║
-║  │  Report: 02-bd-report.md                                    ║
+║  │  Output: docs/output/design-docs/bd/bd-<MOD>-<name>.md      ║
+║  │  Report: 02-bd-report.md                                     ║
 ║  │  🔧 Auto-Resolve: [NEEDS CLARIFICATION] markers             ║
 ║  ▼                                                               ║
-║  STEP 3 ─ myharness.specify (GPT-5.4)                            ║
+║  STEP 3 ─ myharness.specify [synthesis tier]                     ║
 ║  │  Input:  Feature desc + SRS + BD                             ║
 ║  │  Output: specs/<feature-id>/spec.md                          ║
 ║  │  Report: 03-specify-report.md                                ║
-║  │  🔧 Post-check: orchestrator auto-resolves [NEEDS CLARIFICATION]    ║
+║  │  🔧 Post-check: orchestrator auto-resolves [NEEDS CLARIFICATION] ║
 ║  ▼                                                               ║
-║  STEP 4 ─ myharness.clarify (GPT-5.4)                            ║
-║     Input:  spec.md                                              ║
+║  STEP 4 ─ myharness.clarify [synthesis tier]                     ║
+║     Input:  spec.md                                             ║
 ║     Output: spec.md (updated) + 04-clarify-qa.md               ║
 ║     Report: 04-clarify-report.md                                ║
 ║     ⚠️  NO HUMAN PAUSE — auto-resolve all questions             ║
@@ -69,30 +72,29 @@ USER INPUT ($ARGUMENTS: feature description)
     ▼
 ╔══════════════════════════════════════════════════════════════════╗
 ║  PHASE 2: REVIEW (Steps 5–7)                                    ║
-║  📄 steps/steps-05-07-review.md                                  ║
+║  📄 .harness/agents/steps/steps-05-07-review.md                 ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║                                                                  ║
-║  STEP 5 ─ myharness.review.spec (claude-sonnet-4-6)   🔄 GATE         ║
+║  STEP 5 ─ myharness.review.spec [review tier]     🔄 GATE       ║
 ║  │  Input:  spec.md + SRS + constitution                        ║
 ║  │  Verdict: ✅ APPROVED / ⚠️ CONDITIONS / ❌ REJECTED          ║
 ║  │  Report: 05-review-spec-report.md                            ║
 ║  │                                                               ║
-║  │  ❌ REJECTED → myharness.specify fixes → re-review (max 5x)   ║
+║  │  ❌ REJECTED → myharness.specify fixes → re-review (max 5x)  ║
 ║  │  ✅/⚠️ → continue                                            ║
 ║  ▼                                                               ║
-║  STEP 6 ─ myharness.plan (GPT-5.3-Codex)                         ║
-║  │  Input:  spec.md + constitution + docs/technical_architecture.md     ║
+║  STEP 6 ─ myharness.plan [coding tier]                           ║
+║  │  Input:  spec.md + constitution + docs/technical_architecture.md ║
 ║  │  Output: plan.md + data-model.md + contracts/ + research.md  ║
 ║  │  Report: 06-plan-report.md                                   ║
-║  │  🔧 Auto-Resolve: [NEEDS CLARIFICATION] in plan artifacts   ║
+║  │  🔧 Auto-Resolve: [NEEDS CLARIFICATION] in plan artifacts    ║
 ║  ▼                                                               ║
-
-║  STEP 7 ─ myharness.review.plan (claude-sonnet-4-6)   🔄 GATE         ║
+║  STEP 7 ─ myharness.review.plan [review tier]     🔄 GATE       ║
 ║     Input:  plan.md + spec.md + data-model.md + tech arch       ║
 ║     Verdict: ✅ APPROVED / ⚠️ CONDITIONS / ❌ REJECTED          ║
 ║     Report: 07-review-plan-report.md                            ║
 ║                                                                  ║
-║     ❌ REJECTED → myharness.plan fixes → re-review (max 5x)      ║
+║     ❌ REJECTED → myharness.plan fixes → re-review (max 5x)     ║
 ║     ✅/⚠️ → continue                                            ║
 ║                                                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
@@ -100,23 +102,22 @@ USER INPUT ($ARGUMENTS: feature description)
     ▼
 ╔══════════════════════════════════════════════════════════════════╗
 ║  PHASE 3: DETAIL DESIGN (Steps 8–9)                             ║
-║  📄 steps/steps-08-09-detail.md                                  ║
+║  📄 .harness/agents/steps/steps-08-09-detail.md                 ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║                                                                  ║
-║  STEP 8 ─ myharness.dd (GPT-5.3-Codex)                               ║
+║  STEP 8 ─ myharness.dd [coding tier]                             ║
 ║  │  Input:  BD + SRS + spec + plan + tech arch                  ║
-║  │  Output: docs/output/design-docs/dd/dd-<MOD>-<name>.md              ║
+║  │  Output: docs/output/design-docs/dd/dd-<MOD>-<name>.md      ║
 ║  │  Report: 08-dd-report.md                                     ║
-║  │  🔧 Auto-Resolve: [NEEDS CLARIFICATION] in DD               ║
+║  │  🔧 Auto-Resolve: [NEEDS CLARIFICATION] in DD                ║
 ║  ▼                                                               ║
-║  STEP 8b ─ myharness.testkit (claude-sonnet-4-6)                      ║
+║  STEP 8b ─ myharness.testkit [review tier]                       ║
 ║  │  Mode:   gen-testcases                                       ║
 ║  │  Input:  SRS + BD + DD + spec + plan                         ║
-║  │  Output: docs/output/design-docs/testcase/testcase-<MOD>-<name>.md  ║
+║  │  Output: docs/output/design-docs/testcase/testcase-<MOD>-<name>.md ║
 ║  │  Report: 08b-testcases-report.md                             ║
-║  │  orchestrator validates: FEA/BR/SCR coverage ≥ 1 TC each            ║
 ║  ▼                                                               ║
-║  STEP 9 ─ myharness.tasks (GPT-5.4)                              ║
+║  STEP 9 ─ myharness.tasks [synthesis tier]                       ║
 ║     Input:  plan.md + spec.md + data-model.md                   ║
 ║     Output: specs/<feature-id>/tasks.md                         ║
 ║     Report: 09-tasks-report.md                                  ║
@@ -126,35 +127,35 @@ USER INPUT ($ARGUMENTS: feature description)
     ▼
 ╔══════════════════════════════════════════════════════════════════╗
 ║  PHASE 4: IMPLEMENTATION & QA (Steps 10–12)                     ║
-║  📄 steps/steps-10-12-implement.md                               ║
+║  📄 .harness/agents/steps/steps-10-12-implement.md              ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║                                                                  ║
-║  STEP 10 ─ myharness.implement (GPT-5.3-Codex)        🔄 GATE   ║
+║  STEP 10 ─ myharness.implement [coding tier]          🔄 GATE   ║
 ║  │  Input:  tasks.md + plan.md + data-model.md + contracts/     ║
 ║  │  Output: src/modules/<module>/ (source code)                 ║
-║  │  Phase 1: implement all tasks                                 ║
-║  │  Phase 2: build & fix all errors                              ║
-║  │  Report: 10-implement-report.md (incl. Screen Verification) ║
-║  │  ⚡ REAL EXECUTION — npm build, docker up, npm start          ║
+║  │  Phase 1: implement all tasks                                ║
+║  │  Phase 2: build & fix all errors                             ║
+║  │  Report: 10-implement-report.md (incl. Screen Verification)  ║
+║  │  ⚡ REAL EXECUTION — npm build, docker up, npm start         ║
 ║  │                                                               ║
-║  │  ❌ Build fails → auto-fix → re-build (max 5x)              ║
+║  │  ❌ Build fails → auto-fix → re-build (max 5x)               ║
 ║  │  ✅ Build success + app starts → continue                    ║
 ║  ▼                                                               ║
-║  STEP 11 ─ myharness.review.code (claude-sonnet-4-6)  🔄 GATE         ║
+║  STEP 11 ─ myharness.review.code [review tier]        🔄 GATE   ║
 ║  │  Input:  source code + spec + tasks + constitution           ║
 ║  │  Check:  code quality + DB data usage (no mock data)         ║
 ║  │  Verdict: ✅ APPROVED / ⚠️ CONDITIONS / ❌ REJECTED          ║
 ║  │  Report: 11-review-code-report.md                            ║
 ║  │                                                               ║
-║  │  ❌ REJECTED → myharness.implement fixes → re-review (max 5x) ║
+║  │  ❌ REJECTED → myharness.implement fixes → re-review (max 5x)║
 ║  │  ✅/⚠️ → continue                                            ║
 ║  ▼                                                               ║
-║  STEP 12 ─ myharness.testkit (claude-sonnet-4-6)     🔄 GATE         ║
-║     Mode:   run-tests                                            ║
-║     Input:  testcases + running app                              ║
+║  STEP 12 ─ myharness.testkit [review tier]            🔄 GATE   ║
+║     Mode:   run-tests                                           ║
+║     Input:  testcases + running app                             ║
 ║     Output: testreport-<MOD>-<name>.md                          ║
-║     Report: 12-testkit-report.md                                 ║
-║     ⚡ REAL EXECUTION — Jest + Playwright                      ║
+║     Report: 12-testkit-report.md                                ║
+║     ⚡ REAL EXECUTION — Jest + Playwright                       ║
 ║                                                                  ║
 ║     ❌ FAIL → 🔙 BACK-TO-PLAN (myharness.plan → ... → re-test)  ║
 ║     ✅ PASS → continue                                          ║
@@ -164,11 +165,11 @@ USER INPUT ($ARGUMENTS: feature description)
     │
     ▼
 ╔══════════════════════════════════════════════════════════════════╗
-║  PHASE 5: LAUNCH (Step 13)                                       ║
-║  📄 steps/step-13-launch.md                                      ║
+║  PHASE 5: LAUNCH (Step 13)                                      ║
+║  📄 .harness/agents/steps/step-13-launch.md                     ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║                                                                  ║
-║  STEP 13 ─ orchestrator (direct: build + DB + launch)                  ║
+║  STEP 13 ─ orchestrator (direct: build + DB + launch)           ║
 ║  │  Build BE + connect DB + build FE + start services           ║
 ║  │  Report: 13-launch-report.md (incl. Launch Status)           ║
 ║  │  ⚡ REAL EXECUTION — npm build, docker up, npm build+start   ║
@@ -176,7 +177,7 @@ USER INPUT ($ARGUMENTS: feature description)
 ║  ▼                                                               ║
 ║  ✅ PIPELINE COMPLETE                                            ║
 ║  │  Write final pipeline-completion report                      ║
-║  │  Write [END] orchestrator log entry                                   ║
+║  │  Write [END] orchestrator log entry                          ║
 ║                                                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
@@ -185,53 +186,57 @@ USER INPUT ($ARGUMENTS: feature description)
 
 ## 3. Agent Roster
 
-### 3.1 Generation Agents (artifact creation)
+> Model assignments are managed in `.harness/models/catalog.yaml`.
+> Run `bash .harness/agents/sync-models.sh --provider all` after changing models.
 
-| Agent | Model | Steps | Role | Primary Output |
-|-------|-------|-------|------|----------------|
-| `myharness.srs` | GPT-5.4 | 1 | Requirements analysis → SRS | `srs-<MOD>-<name>.md` |
-| `myharness.bd` | GPT-5.4 | 2 | External design (BD / External Design) | `bd-<MOD>-<name>.md` |
-| `myharness.specify` | GPT-5.4 | 3 | Create feature spec | `spec.md` |
-| `myharness.clarify` | GPT-5.4 | 4 | Detect & resolve ambiguities | `spec.md` (updated) |
-| `myharness.plan` | GPT-5.3-Codex | 6 | Implementation planning | `plan.md`, `data-model.md`, `contracts/` |
-| `myharness.dd` | GPT-5.3-Codex | 8 | Detailed design (DD / Internal Design) | `dd-<MOD>-<name>.md` |
-| `myharness.tasks` | GPT-5.4 | 9 | Task decomposition | `tasks.md` |
-| `myharness.implement` | GPT-5.3-Codex | 10,12,13 | Code implementation + build + launch | `src/modules/<mod>/` |
+### 3.1 Generation Agents (synthesis + coding tiers)
 
-### 3.2 Review Agents (quality assurance)
+| Agent | Tier | Steps | Role | Primary Output |
+|-------|------|-------|------|----------------|
+| `myharness.srs` | synthesis | 1 | Requirements analysis → SRS | `srs-<MOD>-<name>.md` |
+| `myharness.bd` | synthesis | 2 | External design (BD) | `bd-<MOD>-<name>.md` |
+| `myharness.specify` | synthesis | 3 | Create feature spec | `spec.md` |
+| `myharness.clarify` | synthesis | 4 | Detect & resolve ambiguities | `spec.md` (updated) |
+| `myharness.plan` | coding | 6 | Implementation planning | `plan.md`, `data-model.md`, `contracts/` |
+| `myharness.dd` | coding | 8 | Detailed design (DD) | `dd-<MOD>-<name>.md` |
+| `myharness.tasks` | synthesis | 9 | Task decomposition | `tasks.md` |
+| `myharness.implement` | coding | 10,12,13 | Code implementation + build + launch | `src/modules/<mod>/` |
 
-| Agent | Model | Steps | Role | Gate |
-|-------|-------|-------|------|------|
-| `myharness.review.spec` | claude-sonnet-4-6 | 5 | Review spec vs SRS | 🔄 Auto-Retry (max 5) |
-| `myharness.review.plan` | claude-sonnet-4-6 | 7 | Review plan vs spec | 🔄 Auto-Retry (max 5) |
-| `myharness.review.code` | claude-sonnet-4-6 | 11 | Review code vs spec/constitution | 🔄 Auto-Retry (max 5) |
+### 3.2 Review Agents (review tier — quality gates)
 
-### 3.3 QA Agent (independent testing)
+| Agent | Tier | Steps | Role | Gate |
+|-------|------|-------|------|------|
+| `myharness.review.spec` | review | 5 | Review spec vs SRS | 🔄 Auto-Retry (max 5) |
+| `myharness.review.plan` | review | 7 | Review plan vs spec | 🔄 Auto-Retry (max 5) |
+| `myharness.review.code` | review | 11 | Review code vs spec/constitution | 🔄 Auto-Retry (max 5) |
 
-| Agent | Model | Steps | Mode | Role |
-|-------|-------|-------|------|------|
-| `myharness.testkit` | claude-sonnet-4-6 | 8b | `gen-testcases` | Generate test cases from SRS+BD+DD |
-| `myharness.testkit` | claude-sonnet-4-6 | 12 | `run-tests` | Execute tests (Jest + Playwright) |
+### 3.3 QA Agent (review tier — independent testing)
 
-### 3.4 orchestrator Orchestrator
+| Agent | Tier | Steps | Mode | Role |
+|-------|------|-------|------|------|
+| `myharness.testkit` | review | 8b | `gen-testcases` | Generate test cases from SRS+BD+DD |
+| `myharness.testkit` | review | 12 | `run-tests` | Execute tests (Jest + Playwright) |
 
-| Agent | Model | Steps | Role |
-|-------|-------|-------|------|
-| `myharness.orchestrator` | claude-sonnet-4-6 | ALL | Coordinate the entire pipeline, auto-resolve all issues |
+### 3.4 Orchestrator
 
-### 3.5 Model Selection Rationale by Group
+| Agent | Tier | Steps | Role |
+|-------|------|-------|------|
+| `myharness.orchestrator` | orchestrator | ALL | Coordinate the entire pipeline, auto-resolve all issues |
 
-| Group | Agents | Main Task | Preferred Model | Technical Reason |
-|-------|--------|-----------|-----------------|------------------|
-| Requirements and specification synthesis | `myharness.srs`, `myharness.bd`, `myharness.specify` | Convert large upstream inputs into formal, internally consistent specification documents | `GPT-5.4` | `GPT-5.4` is a good fit because it handles long-context document synthesis well and keeps structure and terminology stable while writing. That makes it suitable for turning large upstream inputs into long-form specifications with consistent organization and wording. |
-| Planning and implementation design | `myharness.plan`, `myharness.dd`, `myharness.implement` | Translate approved requirements into implementable technical design and executable code changes | `GPT-5.3-Codex` | `GPT-5.3-Codex` is a good fit because it is stronger at code-centric reasoning, including code-adjacent design, patch creation and editing, interface- and typing-aware implementation, and build/test-fix loops. That makes it suitable for translating requirements into implementable technical design and executable source changes. |
-| Review and orchestration | `myharness.review.spec`, `myharness.review.plan`, `myharness.review.code`, `myharness.testkit`, `myharness.orchestrator` | Evaluate artifacts, control pipeline progression, and decide pass/fail or retry actions across steps | `claude-sonnet-4-6` | `claude-sonnet-4-6` is a good fit because it is stronger at review and critique, long-context comparison across artifacts, inconsistency and coverage-gap detection, and consistent decision-making. That makes it suitable for gate pass/fail decisions and multi-step pipeline orchestration. |
+### 3.5 Tier → Model Mapping (per provider)
+
+| Tier | Copilot model | Claude Code model | Used by |
+|------|--------------|-------------------|---------|
+| synthesis | GPT-5.4 | claude-opus-4-5 | srs, bd, specify, clarify, tasks, srs.system, constitution |
+| coding | GPT-5.3-Codex | claude-sonnet-4-6 | plan, dd, implement |
+| review | claude-sonnet-4-6 | claude-sonnet-4-6 | review.*, testkit, init, analyze, checklist |
+| orchestrator | claude-sonnet-4-6 | claude-sonnet-4-6 | orchestrator |
 
 ---
 
 ## 4. Communication Mechanisms (Context Exchange)
 
-### 4.1 orchestrator → Sub-Agent: Structured $ARGUMENTS
+### 4.1 Orchestrator → Sub-Agent: Structured $ARGUMENTS
 
 ```yaml
 feature-id: 001-xxx
@@ -242,7 +247,7 @@ mode: autonomous
 language: Vietnamese
 ```
 
-### 4.2 Sub-Agent → orchestrator: Step Result Block
+### 4.2 Sub-Agent → Orchestrator: Step Result Block
 
 ```yaml
 <!-- STEP-RESULT
@@ -271,57 +276,49 @@ docs/output/run-logs/<feature-id>/run-context.yaml
 
 - Created at Step 0 (immutable fields: feature-id, module-id, tech-stack)
 - Updated after each step with artifact paths + metrics from STEP-RESULT
-- Sub-agents read this file to discover outputs from prior steps → **no need to re-read large files**
+- Sub-agents read this file to discover outputs from prior steps
 
 ---
 
 ## 5. Gate Mechanisms
 
 ### 5.1 Report Hard Gate ⛔
+
 - Applies to: **EVERY step** (after completion)
 - Requirement: Report file MUST exist with all required sections
-- Protocol: `protocols/report-gate-protocol.md`
+- Protocol: `.harness/agents/protocols/report-gate-protocol.md`
 
 ### 5.2 Review Gate 🔄
+
 - Applies to: Steps 5, 7, 11 (review agents)
 - Logic: REJECTED → fix agent corrects → re-review (maximum 5 times)
-- Protocol: `protocols/gate-retry-protocol.md`
+- Protocol: `.harness/agents/protocols/gate-retry-protocol.md`
 
 ### 5.3 Build Gate 🔄
+
 - Applies to: Step 10 (implementation + build & fix)
 - Logic: Build fail → auto-fix → re-build (maximum 5 times)
 
 ### 5.4 Test Gate 🔙
+
 - Applies to: Step 12 (test execution)
 - Logic: Test FAIL → **BACK-TO-PLAN** (return to Step 6 → re-plan → re-implement → re-test)
 - Maximum 3 BACK-TO-PLAN cycles → force continue
 
 ### 5.5 Auto-Resolve 🔧
+
 - Applies to: When encountering `[NEEDS CLARIFICATION]` markers
-- Logic: orchestrator automatically resolves using optimal assumption, logs to report
-- Protocol: `protocols/auto-resolve-protocol.md`
+- Logic: Orchestrator automatically resolves using optimal assumption, logs to report
+- Protocol: `.harness/agents/protocols/auto-resolve-protocol.md`
 
 ---
 
-## 6. File Structure
+## 6. Repository Structure
 
 ```
-.github/agents/
-├── myharness.orchestrator.agent.md          ← Orchestrator (~163 lines)
-├── myharness.srs.agent.md                  ← Step 1
-├── myharness.bd.agent.md                   ← Step 2
-├── myharness.specify.agent.md          ← Step 3
-├── myharness.clarify.agent.md          ← Step 4
-├── myharness.review.spec.agent.md           ← Step 5
-├── myharness.plan.agent.md             ← Step 6
-├── myharness.review.plan.agent.md           ← Step 7
-├── myharness.dd.agent.md                   ← Step 8
-├── myharness.testkit.agent.md              ← Steps 8b, 12
-├── myharness.tasks.agent.md            ← Step 9
-├── myharness.implement.agent.md        ← Step 10
-├── myharness.review.code.agent.md           ← Step 11
-│
-├── protocols/                        ← Protocols (read on-demand)
+.harness/agents/                    ← shared, provider-independent
+├── sync-models.sh                  ← sync agents for copilot or claude-code
+├── protocols/                      ← runtime protocols (read on-demand)
 │   ├── auto-resolve-protocol.md
 │   ├── gate-retry-protocol.md
 │   ├── report-gate-protocol.md
@@ -329,18 +326,41 @@ docs/output/run-logs/<feature-id>/run-context.yaml
 │   ├── log-formats.md
 │   ├── implement-delegation.md
 │   ├── step-result-block.md
-│   └── pipeline-context.md
-│
-├── steps/                            ← Step definitions (read on-demand)
+│   ├── pipeline-context.md
+│   ├── scope-guard-protocol.md
+│   ├── run-state-protocol.md
+│   └── health-check-protocol.md
+├── steps/                          ← step definitions (read on-demand)
 │   ├── steps-01-04-design.md
 │   ├── steps-05-07-review.md
 │   ├── steps-08-09-detail.md
 │   ├── steps-10-12-implement.md
 │   └── step-13-launch.md
-│
-└── templates/                        ← Shared templates
-    ├── report-templates.md           ← Universal report structure
-    └── pipeline-completion.md        ← Pipeline completion template
+└── templates/                      ← shared report templates
+    ├── report-templates.md
+    ├── pipeline-completion.md
+    └── token-report-template.md
+
+.harness/models/
+├── catalog.yaml                    ← single source of truth for model assignments
+└── routing.yaml                    ← phase → tier routing
+
+.github/agents/                     ← Copilot provider
+├── copilot-instructions.md         ← Copilot context file
+├── myharness.*.agent.md            ← Copilot agent definitions
+└── myharness.flow.md               ← this file
+
+.github/prompts/                    ← Copilot slash commands
+└── myharness.*.prompt.md
+
+.claude/agents/                     ← Claude Code provider (generated)
+└── myharness.*.md
+
+.claude/commands/                   ← Claude Code slash commands (generated)
+└── myharness.*.md
+
+.specify/scripts/bash/
+└── switch-provider.sh              ← switch between copilot and claude-code
 ```
 
 ---
@@ -350,15 +370,15 @@ docs/output/run-logs/<feature-id>/run-context.yaml
 ```
 docs/output/
 ├── design-docs/
-│   ├── srs/srs-mod01-xxx.md        ← Step 1
-│   ├── bd/bd-mod01-xxx.md           ← Step 2
-│   ├── dd/dd-mod01-xxx.md           ← Step 8
-│   ├── testcase/testcase-mod01-xxx.md  ← Step 8b
-│   └── testreport/testreport-mod01-xxx.md  ← Step 12
+│   ├── srs/srs-mod01-xxx.md               ← Step 1
+│   ├── bd/bd-mod01-xxx.md                 ← Step 2
+│   ├── dd/dd-mod01-xxx.md                 ← Step 8
+│   ├── testcase/testcase-mod01-xxx.md     ← Step 8b
+│   └── testreport/testreport-mod01-xxx.md ← Step 12
 │
-└── output_logs/<feature-id>/
-    ├── 00-myharness.log.md                           ← orchestrator log (all steps)
-    ├── run-context.yaml                    ← Shared state
+└── run-logs/<feature-id>/
+    ├── 00-myharness.log.md                ← orchestrator log (all steps)
+    ├── run-context.yaml                   ← shared state
     └── reports/
         ├── 01-srs-report.md
         ├── 02-bd-report.md
@@ -376,13 +396,13 @@ docs/output/
         └── 13-launch-report.md
 
 specs/<feature-id>/
-├── spec.md                                      ← Step 3
-├── plan.md                                      ← Step 6
-├── data-model.md                                ← Step 6
-├── research.md                                  ← Step 6
-├── tasks.md                                     ← Step 9
-├── contracts/*.md                               ← Step 6
-└── checklists/requirements.md                   ← Step 3
+├── spec.md                                ← Step 3
+├── plan.md                                ← Step 6
+├── data-model.md                          ← Step 6
+├── research.md                            ← Step 6
+├── tasks.md                               ← Step 9
+├── contracts/*.md                         ← Step 6
+└── checklists/requirements.md             ← Step 3
 ```
 
 ---
@@ -398,25 +418,25 @@ STEP 12 FAIL
 orchestrator logs [BACK-TO-PLAN]
     │
     ▼
-STEP 6  myharness.plan       ← re-plan with failure context
+STEP 6  myharness.plan        ← re-plan with failure context
     │
     ▼
-STEP 7  myharness.review.plan        ← re-review plan
+STEP 7  myharness.review.plan ← re-review plan
     │
     ▼
-STEP 8  myharness.dd              ← re-generate DD
+STEP 8  myharness.dd          ← re-generate DD
     │
     ▼
-STEP 9  myharness.tasks      ← re-generate tasks
+STEP 9  myharness.tasks       ← re-generate tasks
     │
     ▼
-STEP 10 myharness.implement  ← re-implement + build
+STEP 10 myharness.implement   ← re-implement + build
     │
     ▼
-STEP 11 myharness.review.code      ← re-review code
+STEP 11 myharness.review.code ← re-review code
     │
     ▼
-STEP 12 myharness.testkit         ← re-test
+STEP 12 myharness.testkit     ← re-test
     │
     ├─ ✅ PASS → STEP 13 (fix & launch)
     └─ ❌ FAIL → repeat cycle (max 3 total)

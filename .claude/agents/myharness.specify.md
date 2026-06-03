@@ -1,15 +1,7 @@
 ---
-description: Create or update the feature specification from a natural language feature description.
-model: GPT-5.4
-tools: [read, search, edit, todo]
-handoffs: 
-  - label: Build Technical Plan
-    agent: myharness.plan
-    prompt: Create a plan for the spec. I am building with...
-  - label: Clarify Spec Requirements
-    agent: myharness.clarify
-    prompt: Clarify specification requirements
-    send: true
+description: "Create or update the feature specification from a natural language feature description."
+model: claude-opus-4-5
+tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 
 ## Execution Logging & Phase Report (Constitution Art. XI & XII)

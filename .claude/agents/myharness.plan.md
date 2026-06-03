@@ -1,15 +1,7 @@
-﻿---
-description: Execute the implementation planning workflow using the plan template to generate design artifacts.
-model: GPT-5.3-Codex
-tools: [read, search, edit, run, todo]
-handoffs: 
-  - label: Create Tasks
-    agent: myharness.tasks
-    prompt: Break the plan into tasks
-    send: true
-  - label: Create Checklist
-    agent: myharness.checklist
-    prompt: Create a checklist for the following domain...
+---
+description: "Execute the implementation planning workflow using the plan template to generate design artifacts."
+model: claude-sonnet-4-6
+tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 
 ## Execution Logging & Phase Report (Constitution Art. XI & XII)

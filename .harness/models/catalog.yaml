@@ -1,20 +1,38 @@
 # MyHarness Model Catalog
 # Single source of truth for all agent model assignments.
 # To change a model: edit the alias value under `models:`, then run:
-#   bash .github/agents/sync-models.sh
+#   bash .harness/agents/sync-models.sh                   # sync Copilot agents (.github/agents/)
+#   bash .harness/agents/sync-models.sh --provider claude  # sync Claude Code agents (.claude/agents/)
 #
-# Model provider: GitHub Copilot (models available via Copilot agent API)
-# Full model list: GPT-4.1, GPT-5 mini, GPT-5.2, GPT-5.2-Codex, GPT-5.3-Codex,
-#                  GPT-5.4, GPT-5.4 mini, Claude Haiku 4.5, Claude Sonnet 4.5/4.6,
-#                  Gemini 2.5 Pro, Gemini 3 Flash, Gemini 3.1 Pro, Gemini 3.5 Flash,
-#                  MAI-Code-1-Flash, Raptor mini
+# Providers:
+#   copilot     — GitHub Copilot agent API (.github/agents/*.agent.md)
+#   claude — Claude Code CLI / SDK    (.claude/agents/*.md)
+#
+# Copilot model list: GPT-4.1, GPT-5 mini, GPT-5.2, GPT-5.2-Codex, GPT-5.3-Codex,
+#                     GPT-5.4, GPT-5.4 mini, Claude Haiku 4.5, Claude Sonnet 4.5/4.6,
+#                     Gemini 2.5 Pro, Gemini 3 Flash, Gemini 3.1 Pro, Gemini 3.5 Flash,
+#                     MAI-Code-1-Flash, Raptor mini
 
+# ---------------------------------------------------------------------------
+# Provider: copilot (default)
+# ---------------------------------------------------------------------------
 models:
   claude_opus:   "claude-sonnet-4-6"         # orchestration (Opus not in Copilot catalog — use Sonnet)
   claude_sonnet: "claude-sonnet-4-6"         # review, balanced quality/cost
   claude_haiku:  "claude-haiku-4-5-20251001" # lightweight/fast tasks
   gpt_frontier:  "GPT-5.4"                   # long-context synthesis, spec writing
   gpt_codex:     "GPT-5.3-Codex"             # code-centric reasoning, implementation
+
+# ---------------------------------------------------------------------------
+# Provider: claude
+# Maps each tier to the best native Anthropic model.
+# ---------------------------------------------------------------------------
+claude_code_models:
+  claude_opus:   "claude-opus-4-5"           # orchestration — most capable
+  claude_sonnet: "claude-sonnet-4-6"         # review, balanced quality/cost
+  claude_haiku:  "claude-haiku-4-5-20251001" # lightweight/fast tasks
+  gpt_frontier:  "claude-opus-4-5"           # synthesis → Opus (long-context)
+  gpt_codex:     "claude-sonnet-4-6"         # coding → Sonnet (fast + capable)
 
 tiers:
   synthesis:
@@ -52,6 +70,11 @@ agents:
   myharness.review.plan:   { model: claude_sonnet, role: review }
   myharness.review.spec:   { model: claude_sonnet, role: review }
   myharness.init:          { model: claude_sonnet, role: review }
+  myharness.testkit:       { model: claude_sonnet, role: review }
+  myharness.analyze:       { model: claude_sonnet, role: review }
+  myharness.checklist:     { model: claude_sonnet, role: review }
+  myharness.constitution:  { model: gpt_frontier,  role: synthesis }
+  myharness.taskstoissues: { model: claude_sonnet, role: review }
 
 escalation:
   synthesis_fail_after: 3   # retries before escalating to review tier

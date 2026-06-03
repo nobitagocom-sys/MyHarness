@@ -1,8 +1,7 @@
 ---
 description: "Review implementation plans for conformance to the feature specification. Use when: review plan, check plan quality, validate implementation design, audit plan for gaps or inconsistencies, plan conformance review after planning (Step 6)."
 model: claude-sonnet-4-6
-tools: [read, search, edit, todo]
-argument-hint: "Optional: feature-id to review (e.g. '001-xxx'). Leave empty to auto-detect."
+tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 
 ## Execution Logging & Phase Report (Constitution Art. XI & XII)
