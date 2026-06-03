@@ -1,88 +1,42 @@
-# GitHub Copilot Instructions — MyHarness Project
+# GitHub Copilot Instructions — Web Application (NestJS + React)
 
-You are an expert developer working within the **MyHarness AI-SDLC pipeline**.
-Your primary goal is to generate code that is secure, traceable to design documents,
-and strictly follows this project's architecture.
+You are an expert full-stack developer. Your role is to translate design documents into code — not to be creative. Every piece of code must be traceable to a specification.
 
-> **Stack-specific rules** are in `docs/technical_architecture.md`.
-> Read that file before generating any code.
+Read the relevant instruction files before generating code:
 
----
+| # | File | When to read |
+|---|------|-------------|
+| 1 | [Architecture Rules](../../docs/instructions/01-architecture-rules.md) | Always — read first |
+| 2 | [Technology Stack](../../docs/instructions/02-tech-stack.md) | When choosing libraries or versions |
+| 3 | [Design Style](../../docs/instructions/03-design-style.md) | When writing any frontend UI |
+| 4 | [Backend Rules](../../docs/instructions/04-backend-rules.md) | When generating NestJS / Prisma code |
+| 5 | [Frontend Rules](../../docs/instructions/05-frontend-rules.md) | When generating React / Vite code |
+| 6 | [TypeScript Rules](../../docs/instructions/06-typescript-rules.md) | After generating any code — verify types |
 
-## 1. Supreme Rule: Architecture First
 
-Before generating any code:
-1. Read `docs/technical_architecture.md` — stack, module structure, layer order
-2. Read `docs/input/change-request/cr-input.md` — current requirement scope
-3. Read `.specify/memory/constitution.md` — project principles
+## Quick Reference
 
-Do NOT invent features. Every piece of code must trace to a design document.
+**Never do:**
+- Install libraries not in `package.json`
+- Use `any` type
+- Write raw SQL
+- Call Axios directly in components
+- Put business logic in controllers
 
----
+**Always do:**
+- Read `docs/technical_architecture.md` and `docs/input/change-request/cr-input.md` first
+- Keep controllers thin — one service call per handler
+- Use Prisma client for all DB access
+- Update `backend/prisma/seed.ts` after every schema change
+- Verify TypeScript types before submitting code
 
-## 2. Library Restriction
+## Caveman Agents (Token Reduction)
 
-⚠️ **ZERO TOLERANCE — do not install new libraries without approval.**
+| Agent | Trigger | Purpose |
+|-------|---------|---------|
+| `@caveman` | `@caveman [lite/full/ultra/wenyan]` | Compressed responses (~75% fewer output tokens) |
+| `@caveman-commit` | `@caveman-commit` | Conventional commit message ≤50 chars |
+| `@caveman-review` | `@caveman-review` | One-line-per-issue code review |
+| `@caveman-compress` | `@caveman-compress <file>` | Compress markdown/memory files |
 
-- Use ONLY libraries declared in `docs/technical_architecture.md` and `package.json`
-- If a new library is critically needed: stop, ask user, justify, wait for approval
-
----
-
-## 3. Code Generation Rules
-
-### General
-- All business logic in service layer — never in controllers or repositories
-- Controllers: validate input → call service → return response only
-- No hardcoded secrets — use environment variables or config service
-- No mock/static data bypassing the persistence layer in production code
-- Error handling: use framework-native exceptions, not bare try/catch everywhere
-
-### Testing
-- Write tests before implementation (TDD — red/green/refactor)
-- Unit tests for all service methods
-- Integration tests for all controller endpoints
-- Coverage target: ≥ 80% on business logic
-
-### Database
-- All DB operations through the declared ORM — no raw SQL in application code
-- Schema is single source of truth — never modify DB directly
-- Seed scripts must be idempotent (upsert pattern)
-- No in-memory substitutes for entities defined in the data model
-
----
-
-## 4. Scope Guard
-
-Do NOT write code outside the current feature's declared write scope.
-Check `specs/<feature-id>/tasks.md` for the `write:` list of each task.
-
-If a task requires files outside the write scope:
-- Stop and flag it
-- Do not silently create out-of-scope files
-
----
-
-## 5. Post-Mortem Rules
-
-Read `.harness/kb/project/post-mortem-rules.md` before writing source code.
-Violations are caught by `myharness.review.code` and cause REJECTED verdict.
-
----
-
-## 6. Stack-Specific Rules
-
-See `.harness/stacks/` for the reference profile matching this project's stack.
-The active stack profile is copied to:
-- `docs/technical_architecture.md` — architecture decisions and constraints
-- This file's Section 7 below — coding patterns specific to this stack
-
----
-
-## 7. Project-Specific Coding Patterns
-
-> **This section is populated from the active stack profile.**
-> Copy patterns from `.harness/stacks/<stack-name>/copilot-instructions.md` § Coding Patterns
-> when onboarding this project.
-
-[Stack-specific patterns go here — e.g., NestJS module conventions, React component rules, etc.]
+Deactivate caveman mode: "stop caveman" or "normal mode".

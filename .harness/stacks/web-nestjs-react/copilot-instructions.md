@@ -6,12 +6,13 @@ Read the relevant instruction files before generating code:
 
 | # | File | When to read |
 |---|------|-------------|
-| 1 | [Architecture Rules](instructions/01-architecture-rules.md) | Always — read first |
-| 2 | [Technology Stack](instructions/02-tech-stack.md) | When choosing libraries or versions |
-| 3 | [Design Style](instructions/03-design-style.md) | When writing any frontend UI |
-| 4 | [Backend Rules](instructions/04-backend-rules.md) | When generating NestJS / Prisma code |
-| 5 | [Frontend Rules](instructions/05-frontend-rules.md) | When generating React / Vite code |
-| 6 | [TypeScript Rules](instructions/06-typescript-rules.md) | After generating any code — verify types |
+| 1 | [Architecture Rules](.harness/stacks/web-nestjs-react/instructions/01-architecture-rules.md) | Always — read first |
+| 2 | [Technology Stack](.harness/stacks/web-nestjs-react/instructions/02-tech-stack.md) | When choosing libraries or versions |
+| 3 | [Design Style](.harness/stacks/web-nestjs-react/instructions/03-design-style.md) | When writing any frontend UI |
+| 4 | [Backend Rules](.harness/stacks/web-nestjs-react/instructions/04-backend-rules.md) | When generating NestJS / Prisma code |
+| 5 | [Frontend Rules](.harness/stacks/web-nestjs-react/instructions/05-frontend-rules.md) | When generating React / Vite code |
+| 6 | [TypeScript Rules](.harness/stacks/web-nestjs-react/instructions/06-typescript-rules.md) | After generating any code — verify types |
+
 
 ## Quick Reference
 

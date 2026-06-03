@@ -87,10 +87,22 @@ For each entry in `setup.copy`:
 
 3. Write filled content to destination path (`to` in stack.yaml)
 
-4. **Provider-specific context file** — after processing `copilot-instructions.md`:
-   - The filled content is always written to `.github/agents/copilot-instructions.md`
-   - If active provider is `claude`: also write the same filled content to `CLAUDE.md`
-     (replacing the section header `# GitHub Copilot Instructions` → `# Claude Code Instructions` if present)
+4. **Copy `instructions/` folder** — if `.harness/stacks/<chosen-stack>/instructions/` exists:
+   - Copy all files to `docs/instructions/`
+   - This makes paths like `docs/instructions/01-architecture-rules.md` valid from repo root
+
+5. **Write `.github/agents/copilot-instructions.md`** — always:
+   - Start from the filled template content
+   - Rewrite links: `(docs/instructions/` → `(../../docs/instructions/`
+   - Strip `<!-- TEMPLATE NOTE: ... -->` comment block
+   - Write to `.github/agents/copilot-instructions.md`
+
+6. **Write `CLAUDE.md`** — only if active provider is `claude`:
+   - Start fresh from the filled template content (do NOT reuse the copilot version)
+   - Replace header: `# GitHub Copilot Instructions` → `# Claude Code Instructions`
+   - Links stay as `docs/instructions/...` — do NOT rewrite to `../../docs/instructions/`
+   - Strip `<!-- TEMPLATE NOTE: ... -->` comment block
+   - Write to `CLAUDE.md`
 
 ---
 

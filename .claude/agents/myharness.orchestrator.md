@@ -211,6 +211,9 @@ If `tasks.md` contains clearly separable Backend and Frontend task groups, run t
 2. Read `.harness/agents/protocols/pipeline-context.md` and create `run-context.yaml`
 3. **STEP 0**:
    - Read `docs/input/change-request/registry.yaml` — check if `feature_id` already exists in `crs[]`. If YES: set `pipeline-mode: UPDATE` and log the existing branch. If NO: set `pipeline-mode: CREATE`.
+   - **SRS System Detection (MANDATORY):** Check if `docs/output/srs-systems/srs-overview-system.md` exists.
+     - If YES: **READ the file immediately**. Extract module list, FEA count, entity count. Set `srs-system.status: PRE_GENERATED` in `run-context.yaml`. Log `[SRS-DETECTED]` entry with file path and extracted metrics. Step 1 will be SKIPPED and Steps 2+ will use this output as primary input.
+     - If NO: Set `srs-system.status: NONE`. Step 1 will run normally.
    - Create `docs/output/run-logs/<feature-id>/state.yaml` with:
    ```yaml
    run_id: RUN-<YYYYMMDD>-<feature-id>

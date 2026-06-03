@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"CAVEMAN MODE ACTIVE (full). Strip articles/filler/hedging. Fragments OK. Technical terms precise. Code blocks untouched. Format: [thing] [action] [reason]. Auto-suspend for security warnings and irreversible actions. Resume after.\"}}'",
+            "statusMessage": "Caveman mode on"
+          }
+        ]
+      }
+    ]
+  }
+}
