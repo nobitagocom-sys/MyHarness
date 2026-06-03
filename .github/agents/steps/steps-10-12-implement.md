@@ -10,7 +10,7 @@
 | Key | Value |
 |-----|-------|
 | Agent | `myharness.implement` |
-| Model | `gpt-5-3-codex` |
+| Model | see catalog.yaml |
 | Input | `tasks.md`, `plan.md`, `data-model.md`, `contracts/`, `docs/output/design-docs/testcase/testcase-<mod-id>-<short-name>.md` |
 | Report | `reports/10-implement-report.md` (NN=10, phase=implement) |
 | Gate | BUILD GATE (Auto-Retry) + REPORT HARD GATE (+ "Test Results" + "Screen Verification" sections required) |

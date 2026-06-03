@@ -34,8 +34,8 @@ Read `.harness/models/catalog.yaml` for tier definitions and `escalation.synthes
 
 | Fix Agent Tier | Escalates To | Threshold |
 |---------------|-------------|-----------|
-| synthesis (gpt-5.4) | review (claude-sonnet-4-6) | retry 3 |
-| coding (gpt-5-3-codex) | review (claude-sonnet-4-6) | retry 3 |
+| synthesis (GPT-5.4) | review (claude-sonnet-4-6) | retry 3 |
+| coding (GPT-5.3-Codex) | review (claude-sonnet-4-6) | retry 3 |
 | review tier | no escalation | — |
 
 Escalation applies to the **fix agent only** — the review agent remains unchanged.

@@ -1,5 +1,6 @@
 ---
 description: "Independent QA agent. Generates comprehensive test cases from SRS + BD + DD, then generates and executes automated test scripts (Jest for backend, Playwright for E2E/UI). Operates independently from development agents to ensure objectivity. Use when: generate test cases after DD, run automated tests after implementation, verify screen functionality against design docs."
+model: claude-sonnet-4-6
 tools: [read, edit, execute, agent, todo]
 argument-hint: "Mode + Feature ID (e.g., 'gen-testcases 001-xxx' or 'run-tests 001-xxx')"
 ---

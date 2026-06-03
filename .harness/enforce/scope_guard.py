@@ -32,7 +32,6 @@ def load_write_globs(role_name: str) -> list:
 
 
 def get_changed_files(staged_only: bool = False) -> list:
-    flag = "--cached" if staged_only else "--name-only"
     args = ["git", "diff", "--name-only"]
     if staged_only:
         args.append("--cached")

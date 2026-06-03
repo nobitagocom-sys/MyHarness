@@ -186,7 +186,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/08-dd-report.md`
 
 **Step-specific overrides:**
 - **Title:** `# STEP 8: DD Generation Report`
-- **Agent:** `myharness.dd (gpt-5-3-codex)`
+- **Agent:** `myharness.dd (GPT-5.3-Codex)`
 - **Output:** DD document (`docs/output/design-docs/dd/dd-<mod-id>-<name>.md`)
 - **Design metrics:** component count, sequence diagram count, physical table count, API endpoint count, batch process count, error code count
 - **Next phase:** STEP 9: `myharness.tasks` — task generation

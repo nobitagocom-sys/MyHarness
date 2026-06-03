@@ -1,0 +1,66 @@
+{
+  "timestamp": "2026-06-03T05:48:42.690430+00:00",
+  "summary": {
+    "health_score": 100,
+    "total_checks": 8,
+    "total_alerts": 0,
+    "error_count": 0
+  },
+  "alerts": [],
+  "checks": {
+    "file_size": {
+      "passed": [
+        "implement.yaml",
+        "spec.yaml",
+        "test.yaml",
+        "orchestrator.yaml",
+        "review.yaml"
+      ],
+      "warnings": [],
+      "warning_count": 0
+    },
+    "workflow_dag": {
+      "checked": 0,
+      "issues": [],
+      "issue_count": 0
+    },
+    "cross_refs": {
+      "broken": [],
+      "broken_count": 0
+    },
+    "context_coverage": {
+      "total_calls": 0,
+      "avg_coverage": 1.0,
+      "avg_waste_percent": 0.0,
+      "missing_context_incidents": [],
+      "coverage_by_role": {}
+    },
+    "token_efficiency": {
+      "total_calls": 0,
+      "avg_tokens_per_call": 0,
+      "avg_tokens_per_success": 0,
+      "context_reuse_rate": 0.0,
+      "high_cost_low_value_calls": []
+    },
+    "role_boundary_audit": {
+      "total_attempts": 0,
+      "violation_rate": 0.0,
+      "read": [],
+      "write": [],
+      "skill": [],
+      "total_violations": 0
+    },
+    "hallucinations": {
+      "count": 0,
+      "samples": []
+    },
+    "human_override_rate": {
+      "total_decisions": 0,
+      "override_count": 0,
+      "override_rate": 0.0,
+      "reasons": {},
+      "trending": "stable"
+    }
+  },
+  "recommendations": []
+}

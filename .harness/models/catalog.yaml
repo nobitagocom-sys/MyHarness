@@ -2,9 +2,15 @@
 # Single source of truth for all agent model assignments.
 # To change a model: edit the alias value under `models:`, then run:
 #   bash .github/agents/sync-models.sh
+#
+# Model provider: GitHub Copilot (models available via Copilot agent API)
+# Full model list: GPT-4.1, GPT-5 mini, GPT-5.2, GPT-5.2-Codex, GPT-5.3-Codex,
+#                  GPT-5.4, GPT-5.4 mini, Claude Haiku 4.5, Claude Sonnet 4.5/4.6,
+#                  Gemini 2.5 Pro, Gemini 3 Flash, Gemini 3.1 Pro, Gemini 3.5 Flash,
+#                  MAI-Code-1-Flash, Raptor mini
 
 models:
-  claude_opus:   "claude-opus-4-8"           # orchestration, highest reasoning
+  claude_opus:   "claude-sonnet-4-6"         # orchestration (Opus not in Copilot catalog — use Sonnet)
   claude_sonnet: "claude-sonnet-4-6"         # review, balanced quality/cost
   claude_haiku:  "claude-haiku-4-5-20251001" # lightweight/fast tasks
   gpt_frontier:  "GPT-5.4"                   # long-context synthesis, spec writing

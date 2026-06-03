@@ -13,10 +13,15 @@ def run(log_file: Path = Path(".harness/logs/agent.jsonl")) -> dict:
         for p in Path(".").rglob("*")
         if p.is_file()
     }
-    valid_skills = {
-        f.stem.split(".")[0]
-        for f in Path(".harness/roles").glob("*.yaml")
-    } if Path(".harness/roles").exists() else set()
+    # Index skills by both the role file stem (e.g. "implement") and the full
+    # agent name convention (e.g. "myharness.implement") so skill references in
+    # agent logs are not falsely flagged as hallucinations.
+    _roles_dir = Path(".harness/roles")
+    if _roles_dir.exists():
+        _stems = {f.stem for f in _roles_dir.glob("*.yaml")}
+        valid_skills = _stems | {f"myharness.{s}" for s in _stems}
+    else:
+        valid_skills = set()
 
     hallucinations: list[dict] = []
 

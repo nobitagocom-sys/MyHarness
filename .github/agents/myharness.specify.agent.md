@@ -40,7 +40,7 @@ Use this **exact template** (in Vietnamese):
 
 **Step-specific overrides:**
 - **Title:** `# STEP 2: Specification Creation Report`
-- **Agent:** `myharness.specify (gpt-5.4)`
+- **Agent:** `myharness.specify (GPT-5.4)`
 - **Input:** feature description, SRS (`srs-<mod-id>-<name>.md`), BD (`bd-<mod-id>-<name>.md`), template, constitution
 - **Output:** specification (`specs/<feature-id>/spec.md`), quality checklist (`specs/<feature-id>/checklists/requirements.md`)
 - **Quality evaluation categories:** content quality, requirement completeness, feature readiness, screen layout (UI), wireframe (UI), visual design specification (UI)

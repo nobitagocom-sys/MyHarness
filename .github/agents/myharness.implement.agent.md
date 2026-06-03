@@ -37,7 +37,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/<NN>-<phase>-report.md`
 
 **Step-specific overrides:**
 - **Title:** `# STEP <NN>: <Implementation Report / Build Verification Report / Launch Report>`
-- **Agent:** `myharness.implement (gpt-5-3-codex)`
+- **Agent:** `myharness.implement (GPT-5.3-Codex)`
 - **Input:** tasks (`tasks.md`), implementation plan (`plan.md`), data model (`data-model.md`), contracts (`contracts/*.md`)
 - **Quality evaluation categories:** compile success, test pass, coverage threshold met, checklist completion
 - **Metrics:** completed task count, created file count, changed file count, test count (pass/fail), coverage
@@ -181,6 +181,12 @@ ADMIN role query logic (P-08), Prisma portable schema (P-09), error boundaries (
    - **Execution flow**: Order and dependency requirements
 
 6. Execute implementation following the task plan:
+   - **⛔ STACK DETECTION (runs before PATH VALIDATION)**:
+     Read `docs/technical_architecture.md` to determine the actual stack. The path rules below
+     apply to the **NestJS + React** stack. If the architecture doc declares a different stack
+     (e.g. Next.js, mobile React Native, plain Node), derive canonical paths from
+     `docs/technical_architecture.md` `implement_scope` from `agent_hints` in the selected stack instead
+     of using the hardcoded defaults below.
    - **⛔ PATH VALIDATION (runs before first file creation)**:
      Scan all file paths in `tasks.md` and `plan.md`. Reject any path that does NOT follow
      the canonical layout:
@@ -275,7 +281,7 @@ ADMIN role query logic (P-08), Prisma portable schema (P-09), error boundaries (
      - **Local mode (no Docker):** Create `backend/.env` with `DATABASE_URL="file:./dev.db"` (SQLite)
    - **MUST create `backend/.env.example`** with all required env vars (placeholder values)
    - **MUST create `backend/.env`** with working defaults for local development
-   - **NEVER hardcode secrets (JWT_SECRET, DB passwords) in source code** — always use `process.env` or `ConfigService`
+   - **NEVER hardcode secrets (JWT_SECRET, DB passwords) in application source code** — always use `process.env` or `ConfigService`. **Workshop exception:** `docker-compose.yml` may contain hardcoded credentials for local-dev convenience only (explicitly documented in `docs/technical_architecture.md`). This exception does NOT apply to any other file.
    - Application must **fail-fast** at startup if the database is unreachable — never silently fall back to in-memory data
    - **NEVER** create demo / in-memory services that bypass the persistence layer
    - If the database is not available during development, STOP and instruct the user to start the database (`docker-compose up`) rather than substituting in-memory data
@@ -411,7 +417,7 @@ cd backend && npm test -- --coverage
 ### 10-F: Write STEP 10 log + report
 
 After all commands complete:
-2. Write `docs/output/run-logs/<feature-id>/reports/12-verify-report.md` with per-screen HTTP status table and Istanbul/c8 results
+2. Write `docs/output/run-logs/<feature-id>/reports/10-implement-report.md` with per-screen HTTP status table and Istanbul/c8 results
 
 ---
 

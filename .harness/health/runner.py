@@ -3,6 +3,45 @@ import argparse, json, sys, yaml
 from datetime import datetime, timezone
 from pathlib import Path
 
+# .harness/ starts with a dot so Python won't resolve it as package "harness".
+# Inject the parent of .harness into sys.path so that
+#   from harness.health.checks.X import ...
+# resolves to  .harness/health/checks/X.py  at runtime.
+_HARNESS_PARENT = Path(__file__).resolve().parent.parent.parent  # repo root
+_HARNESS_PKG = _HARNESS_PARENT / ".harness"
+if str(_HARNESS_PKG.parent) not in sys.path:
+    sys.path.insert(0, str(_HARNESS_PKG.parent))
+
+# Re-map import name "harness" → ".harness" directory via a path alias so
+# standard `from harness.X import Y` statements work without renaming the dir.
+import importlib, importlib.abc, importlib.util
+
+class _DotHarnessFinder(importlib.abc.MetaPathFinder):
+    """Redirect `import harness.*` to the `.harness` directory."""
+    _root = _HARNESS_PKG
+
+    def find_spec(self, fullname, path, target=None):
+        parts = fullname.split(".")
+        if parts[0] != "harness":
+            return None
+        candidate = self._root.joinpath(*parts[1:])
+        # Package (directory with __init__.py)
+        init = candidate / "__init__.py"
+        if init.exists():
+            spec = importlib.util.spec_from_file_location(
+                fullname, init,
+                submodule_search_locations=[str(candidate)],
+            )
+            return spec
+        # Module (.py file)
+        mod = candidate.with_suffix(".py")
+        if mod.exists():
+            return importlib.util.spec_from_file_location(fullname, mod)
+        return None
+
+if not any(isinstance(f, _DotHarnessFinder) for f in sys.meta_path):
+    sys.meta_path.insert(0, _DotHarnessFinder())
+
 # Modular checks
 from harness.health.checks.file_size_check      import run as run_file_size
 from harness.health.checks.workflow_dag_check    import run as run_dag
@@ -90,6 +129,14 @@ def run_all(
                 "severity": "error",
                 "check": "workflow_dag",
                 "message": f"{checks['workflow_dag']['issue_count']} workflow DAG issues",
+            })
+        orphan_threshold = thresholds["workflow"].get("max_orphan_steps", 0)
+        orphan_count = checks["workflow_dag"].get("orphan_count", 0)
+        if orphan_count > orphan_threshold:
+            alerts.append({
+                "severity": "warning",
+                "check": "workflow_dag_orphans",
+                "message": f"{orphan_count} orphan steps exceed threshold {orphan_threshold}",
             })
 
         checks["cross_refs"] = run_cross_ref()

@@ -32,7 +32,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/04-clarify-report.md`
 
 **Step-specific overrides:**
 - **Title:** `# STEP 3: Specification Clarification Report`
-- **Agent:** `myharness.clarify (gpt-5.4)`
+- **Agent:** `myharness.clarify (GPT-5.4)`
 - **Input:** specification (`specs/<feature-id>/spec.md`)
 - **Output:** Q&A document (`04-clarify-qa.md`), updated specification (`spec.md`)
 - **Quality evaluation categories:** ambiguity detection, Q&A quality, completeness of spec updates

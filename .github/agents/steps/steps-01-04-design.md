@@ -39,7 +39,7 @@ Run: Get-ChildItem specs/ -Directory | Select-Object -ExpandProperty Name
 | Key | Value |
 |-----|-------|
 | Agent | `myharness.srs` |
-| Model | `gpt-5.4` |
+| Model | see catalog.yaml |
 | Input | Module keyword from `$ARGUMENTS` |
 | Output | `docs/output/design-docs/srs/srs-<MOD-ID>-<short-name>.md` |
 | Report | `reports/01-srs-report.md` |
@@ -66,7 +66,7 @@ pipeline-context: docs/output/run-logs/<feature-id>/run-context.yaml
 | Key | Value |
 |-----|-------|
 | Agent | `myharness.bd` |
-| Model | `gpt-5.4` |
+| Model | see catalog.yaml |
 | Input | `docs/output/design-docs/srs/srs-<MOD-ID>-<short-name>.md`, `docs/output/srs-systems/srs-overview-system.md`, `docs/technical_architecture.md` |
 | Output | `docs/output/design-docs/bd/bd-<MOD-ID>-<short-name>.md` |
 | Report | `reports/02-bd-report.md` |
@@ -93,7 +93,7 @@ pipeline-context: docs/output/run-logs/<feature-id>/run-context.yaml
 | Key | Value |
 |-----|-------|
 | Agent | `myharness.specify` |
-| Model | `gpt-5.4` |
+| Model | see catalog.yaml |
 | Input | Feature description, `docs/output/design-docs/srs/srs-<MOD-ID>-<short-name>.md`, `docs/output/design-docs/bd/bd-<MOD-ID>-<short-name>.md` |
 | Output | `specs/<feature-id>/spec.md` |
 | Report | `reports/03-specify-report.md` |
@@ -125,7 +125,7 @@ pipeline-context: docs/output/run-logs/<feature-id>/run-context.yaml
 | Key | Value |
 |-----|-------|
 | Agent | `myharness.clarify` |
-| Model | `gpt-5.4` |
+| Model | see catalog.yaml |
 | Input | `specs/<feature-id>/spec.md` |
 | Output | Updated spec + `reports/04-clarify-qa.md` |
 | Report | `reports/04-clarify-report.md` |

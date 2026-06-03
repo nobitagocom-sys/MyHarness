@@ -11,17 +11,17 @@ Use this template when all steps complete (with or without escalations).
 
 | # | Step | Agent | Model | Status | Retries | Assumptions |
 |---|------|-------|-------|--------|---------|-------------|
-| 1 | SRS Generation | myharness.srs | gpt-5.4 | ✅ | 0 | N |
-| 2 | BD Generation (External Design) | myharness.bd | gpt-5.4 | ✅ | 0 | N |
-| 3 | Spec Creation | myharness.specify | gpt-5.4 | ✅ | 0 | N |
-| 4 | Spec Clarification | myharness.clarify | gpt-5.4 | ✅ | 0 | N |
+| 1 | SRS Generation | myharness.srs | GPT-5.4 | ✅ | 0 | N |
+| 2 | BD Generation (External Design) | myharness.bd | GPT-5.4 | ✅ | 0 | N |
+| 3 | Spec Creation | myharness.specify | GPT-5.4 | ✅ | 0 | N |
+| 4 | Spec Clarification | myharness.clarify | GPT-5.4 | ✅ | 0 | N |
 | 5 | Thorough Spec Review | myharness.review.spec | claude-sonnet-4-6 | ✅ | R | - |
-| 6 | Implementation Planning | myharness.plan | gpt-5-3-codex | ✅ | 0 | N |
+| 6 | Implementation Planning | myharness.plan | GPT-5.3-Codex | ✅ | 0 | N |
 | 7 | Plan Conformance Review | myharness.review.plan | claude-sonnet-4-6 | ✅ | R | - |
-| 8 | DD Generation (Internal Design) | myharness.dd | gpt-5-3-codex | ✅ | 0 | N |
+| 8 | DD Generation (Internal Design) | myharness.dd | GPT-5.3-Codex | ✅ | 0 | N |
 | 8b | Test Case Generation | myharness.testkit | claude-sonnet-4-6 | ✅ | 0 | N |
-| 9 | Task Generation | myharness.tasks | gpt-5.4 | ✅ | 0 | N |
-| 10 | Implementation + Build & Fix | myharness.implement | gpt-5-3-codex | ✅ | R | N |
+| 9 | Task Generation | myharness.tasks | GPT-5.4 | ✅ | 0 | N |
+| 10 | Implementation + Build & Fix | myharness.implement | GPT-5.3-Codex | ✅ | R | N |
 | 11 | Code Review | myharness.review.code | claude-sonnet-4-6 | ✅ | R | - |
 | 12 | Final QA Audit | myharness.testkit | claude-sonnet-4-6 | ✅ | R | - |
 | 13 | Launch | orchestrator (direct) | claude-sonnet-4-6 | ✅ | R | - |

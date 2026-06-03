@@ -41,24 +41,24 @@ USER INPUT ($ARGUMENTS: feature description)
 ║  │  Detect existing spec in specs/ directory                    ║
 ║  │  → mode = CREATE or UPDATE                                   ║
 ║  ▼                                                               ║
-║  STEP 1 ─ myharness.srs (gpt-5.4)                                    ║
+║  STEP 1 ─ myharness.srs (GPT-5.4)                                    ║
 ║  │  Input:  srs-systems/ (overview + module detail + wireframe) ║
 ║  │  Output: docs/output/design-docs/srs/srs-<MOD>-<name>.md            ║
 ║  │  Report: 01-srs-report.md                                   ║
 ║  ▼                                                               ║
-║  STEP 2 ─ myharness.bd (gpt-5.4)                                     ║
+║  STEP 2 ─ myharness.bd (GPT-5.4)                                     ║
 ║  │  Input:  SRS + system overview + technical architecture      ║
 ║  │  Output: docs/output/design-docs/bd/bd-<MOD>-<name>.md              ║
 ║  │  Report: 02-bd-report.md                                    ║
 ║  │  🔧 Auto-Resolve: [NEEDS CLARIFICATION] markers             ║
 ║  ▼                                                               ║
-║  STEP 3 ─ myharness.specify (gpt-5.4)                            ║
+║  STEP 3 ─ myharness.specify (GPT-5.4)                            ║
 ║  │  Input:  Feature desc + SRS + BD                             ║
 ║  │  Output: specs/<feature-id>/spec.md                          ║
 ║  │  Report: 03-specify-report.md                                ║
 ║  │  🔧 Post-check: orchestrator auto-resolves [NEEDS CLARIFICATION]    ║
 ║  ▼                                                               ║
-║  STEP 4 ─ myharness.clarify (gpt-5.4)                            ║
+║  STEP 4 ─ myharness.clarify (GPT-5.4)                            ║
 ║     Input:  spec.md                                              ║
 ║     Output: spec.md (updated) + 04-clarify-qa.md               ║
 ║     Report: 04-clarify-report.md                                ║
@@ -80,7 +80,7 @@ USER INPUT ($ARGUMENTS: feature description)
 ║  │  ❌ REJECTED → myharness.specify fixes → re-review (max 5x)   ║
 ║  │  ✅/⚠️ → continue                                            ║
 ║  ▼                                                               ║
-║  STEP 6 ─ myharness.plan (gpt-5-3-codex)                         ║
+║  STEP 6 ─ myharness.plan (GPT-5.3-Codex)                         ║
 ║  │  Input:  spec.md + constitution + docs/technical_architecture.md     ║
 ║  │  Output: plan.md + data-model.md + contracts/ + research.md  ║
 ║  │  Report: 06-plan-report.md                                   ║
@@ -103,7 +103,7 @@ USER INPUT ($ARGUMENTS: feature description)
 ║  📄 steps/steps-08-09-detail.md                                  ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║                                                                  ║
-║  STEP 8 ─ myharness.dd (gpt-5-3-codex)                               ║
+║  STEP 8 ─ myharness.dd (GPT-5.3-Codex)                               ║
 ║  │  Input:  BD + SRS + spec + plan + tech arch                  ║
 ║  │  Output: docs/output/design-docs/dd/dd-<MOD>-<name>.md              ║
 ║  │  Report: 08-dd-report.md                                     ║
@@ -116,7 +116,7 @@ USER INPUT ($ARGUMENTS: feature description)
 ║  │  Report: 08b-testcases-report.md                             ║
 ║  │  orchestrator validates: FEA/BR/SCR coverage ≥ 1 TC each            ║
 ║  ▼                                                               ║
-║  STEP 9 ─ myharness.tasks (gpt-5.4)                              ║
+║  STEP 9 ─ myharness.tasks (GPT-5.4)                              ║
 ║     Input:  plan.md + spec.md + data-model.md                   ║
 ║     Output: specs/<feature-id>/tasks.md                         ║
 ║     Report: 09-tasks-report.md                                  ║
@@ -129,7 +129,7 @@ USER INPUT ($ARGUMENTS: feature description)
 ║  📄 steps/steps-10-12-implement.md                               ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║                                                                  ║
-║  STEP 10 ─ myharness.implement (gpt-5-3-codex)        🔄 GATE   ║
+║  STEP 10 ─ myharness.implement (GPT-5.3-Codex)        🔄 GATE   ║
 ║  │  Input:  tasks.md + plan.md + data-model.md + contracts/     ║
 ║  │  Output: src/modules/<module>/ (source code)                 ║
 ║  │  Phase 1: implement all tasks                                 ║
@@ -189,14 +189,14 @@ USER INPUT ($ARGUMENTS: feature description)
 
 | Agent | Model | Steps | Role | Primary Output |
 |-------|-------|-------|------|----------------|
-| `myharness.srs` | gpt-5.4 | 1 | Requirements analysis → SRS | `srs-<MOD>-<name>.md` |
-| `myharness.bd` | gpt-5.4 | 2 | External design (BD / External Design) | `bd-<MOD>-<name>.md` |
-| `myharness.specify` | gpt-5.4 | 3 | Create feature spec | `spec.md` |
-| `myharness.clarify` | gpt-5.4 | 4 | Detect & resolve ambiguities | `spec.md` (updated) |
-| `myharness.plan` | gpt-5-3-codex | 6 | Implementation planning | `plan.md`, `data-model.md`, `contracts/` |
-| `myharness.dd` | gpt-5-3-codex | 8 | Detailed design (DD / Internal Design) | `dd-<MOD>-<name>.md` |
-| `myharness.tasks` | gpt-5.4 | 9 | Task decomposition | `tasks.md` |
-| `myharness.implement` | gpt-5-3-codex | 10,12,13 | Code implementation + build + launch | `src/modules/<mod>/` |
+| `myharness.srs` | GPT-5.4 | 1 | Requirements analysis → SRS | `srs-<MOD>-<name>.md` |
+| `myharness.bd` | GPT-5.4 | 2 | External design (BD / External Design) | `bd-<MOD>-<name>.md` |
+| `myharness.specify` | GPT-5.4 | 3 | Create feature spec | `spec.md` |
+| `myharness.clarify` | GPT-5.4 | 4 | Detect & resolve ambiguities | `spec.md` (updated) |
+| `myharness.plan` | GPT-5.3-Codex | 6 | Implementation planning | `plan.md`, `data-model.md`, `contracts/` |
+| `myharness.dd` | GPT-5.3-Codex | 8 | Detailed design (DD / Internal Design) | `dd-<MOD>-<name>.md` |
+| `myharness.tasks` | GPT-5.4 | 9 | Task decomposition | `tasks.md` |
+| `myharness.implement` | GPT-5.3-Codex | 10,12,13 | Code implementation + build + launch | `src/modules/<mod>/` |
 
 ### 3.2 Review Agents (quality assurance)
 
@@ -223,8 +223,8 @@ USER INPUT ($ARGUMENTS: feature description)
 
 | Group | Agents | Main Task | Preferred Model | Technical Reason |
 |-------|--------|-----------|-----------------|------------------|
-| Requirements and specification synthesis | `myharness.srs`, `myharness.bd`, `myharness.specify` | Convert large upstream inputs into formal, internally consistent specification documents | `gpt-5.4` | `gpt-5.4` is a good fit because it handles long-context document synthesis well and keeps structure and terminology stable while writing. That makes it suitable for turning large upstream inputs into long-form specifications with consistent organization and wording. |
-| Planning and implementation design | `myharness.plan`, `myharness.dd`, `myharness.implement` | Translate approved requirements into implementable technical design and executable code changes | `gpt-5-3-codex` | `gpt-5-3-codex` is a good fit because it is stronger at code-centric reasoning, including code-adjacent design, patch creation and editing, interface- and typing-aware implementation, and build/test-fix loops. That makes it suitable for translating requirements into implementable technical design and executable source changes. |
+| Requirements and specification synthesis | `myharness.srs`, `myharness.bd`, `myharness.specify` | Convert large upstream inputs into formal, internally consistent specification documents | `GPT-5.4` | `GPT-5.4` is a good fit because it handles long-context document synthesis well and keeps structure and terminology stable while writing. That makes it suitable for turning large upstream inputs into long-form specifications with consistent organization and wording. |
+| Planning and implementation design | `myharness.plan`, `myharness.dd`, `myharness.implement` | Translate approved requirements into implementable technical design and executable code changes | `GPT-5.3-Codex` | `GPT-5.3-Codex` is a good fit because it is stronger at code-centric reasoning, including code-adjacent design, patch creation and editing, interface- and typing-aware implementation, and build/test-fix loops. That makes it suitable for translating requirements into implementable technical design and executable source changes. |
 | Review and orchestration | `myharness.review.spec`, `myharness.review.plan`, `myharness.review.code`, `myharness.testkit`, `myharness.orchestrator` | Evaluate artifacts, control pipeline progression, and decide pass/fail or retry actions across steps | `claude-sonnet-4-6` | `claude-sonnet-4-6` is a good fit because it is stronger at review and critique, long-context comparison across artifacts, inconsistency and coverage-gap detection, and consistent decision-making. That makes it suitable for gate pass/fail decisions and multi-step pipeline orchestration. |
 
 ---

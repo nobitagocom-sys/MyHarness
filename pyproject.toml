@@ -13,8 +13,15 @@ dependencies = [
 ]
 
 [tool.setuptools.packages.find]
+# .harness is a dot-prefixed directory; setuptools cannot discover it automatically.
+# The _DotHarnessFinder meta-path hook in runner.py handles runtime resolution.
+# For editable installs, run from the repo root so sys.path includes ".harness/..".
 where = ["."]
-include = [".harness*"]
+include = ["harness*"]
+
+[tool.setuptools.package-dir]
+# Map the public package name "harness" to the physical ".harness" directory.
+"harness" = ".harness"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

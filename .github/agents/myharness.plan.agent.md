@@ -36,7 +36,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/06-plan-report.md`
 
 **Step-specific overrides:**
 - **Title:** `# STEP 5: Implementation Plan Report`
-- **Agent:** `myharness.plan (gpt-5-3-codex)`
+- **Agent:** `myharness.plan (GPT-5.3-Codex)`
 - **Input:** specification (`spec.md`), constitution (`constitution.md`), technical architecture (`docs/technical_architecture.md`)
 - **Output:** implementation plan (`plan.md`), data model (`data-model.md`), research (`research.md`), contracts (`contracts/*.md`), UI design (`ui-design.md`)
 - **Quality evaluation categories:** data model completeness, contract definition, constitution compliance, UI design (UI behavior)

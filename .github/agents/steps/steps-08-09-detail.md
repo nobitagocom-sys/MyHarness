@@ -18,7 +18,7 @@
 | Key | Value |
 |-----|-------|
 | Agent | `myharness.dd` |
-| Model | `gpt-5-3-codex` |
+| Model | see catalog.yaml |
 | Input | BD, SRS, spec, plan, technical architecture |
 | Output | `docs/output/design-docs/dd/dd-<MOD-ID>-<short-name>.md` |
 | Report | `reports/08-dd-report.md` |
@@ -46,7 +46,7 @@ pipeline-context: docs/output/run-logs/<feature-id>/run-context.yaml
 | Key | Value |
 |-----|-------|
 | Agent | `myharness.tasks` |
-| Model | `gpt-5.4` |
+| Model | see catalog.yaml |
 | Input | `specs/<feature-id>/plan.md`, `specs/<feature-id>/spec.md`, `specs/<feature-id>/data-model.md` |
 | Output | `specs/<feature-id>/tasks.md` |
 | Report | `reports/09-tasks-report.md` |

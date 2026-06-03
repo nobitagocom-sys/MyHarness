@@ -32,7 +32,7 @@
 | Key | Value |
 |-----|-------|
 | Agent | `myharness.plan` |
-| Model | `gpt-5-3-codex` |
+| Model | see catalog.yaml |
 | Input | `spec.md`, `constitution.md`, `docs/technical_architecture.md` |
 | Output | `plan.md`, `data-model.md`, `contracts/` |
 | Report | `reports/06-plan-report.md` |

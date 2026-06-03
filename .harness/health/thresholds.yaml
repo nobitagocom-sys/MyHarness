@@ -1,21 +1,20 @@
 # Harness health check alert thresholds
-# Tuned for BookTracker v1.0 project state (post LAB-08)
-# Trade-off notes inline.
+# Adjust per project as the pipeline matures.
 
 file_size:
-  max_warnings: 3          # tightened from 5 — specs are now well-structured, large files indicate drift
+  max_warnings: 3          # files exceeding size limit indicate spec drift
 
 workflow:
-  max_issues: 0            # keep strict — workflow DAG must have zero structural issues
-  max_orphan_steps: 1      # tightened from 2 — orphan steps indicate stale workflows
+  max_issues: 0            # workflow DAG must have zero structural issues
+  max_orphan_steps: 1      # orphan steps indicate stale workflows
 
 context:
-  min_coverage: 0.70       # raised from 0.60 — project has rich context, agents should use it
-  max_waste_percent: 30    # tightened from 40 — context is curated, less waste expected
+  min_coverage: 0.70       # minimum avg context coverage across agent calls
+  max_waste_percent: 30    # maximum % of context tokens not used by agent
 
 behavior:
-  max_violation_rate: 0.03   # tightened from 0.05 — after LAB-05/06/07, roles are well-scoped
-  max_hallucinations_per_100: 1  # tightened from 2 — test suite coverage reduces hallucination risk
+  max_violation_rate: 0.03 # max fraction of agent actions that violate role boundaries
+  max_hallucinations_per_100: 1  # max hallucination events per 100 agent calls
 
 evolution:
-  max_override_rate: 0.15    # unchanged — 15% human override is normal for this team size
+  max_override_rate: 0.15  # 15% human override is normal for small teams

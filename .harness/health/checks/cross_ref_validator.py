@@ -31,6 +31,12 @@ def run(root: Path = Path(".")) -> dict:
                 pass
 
     # 2. Role → read/write glob sanity (non-glob paths must exist)
+    # Only flag paths that contain no glob characters AND no path separators
+    # (i.e. are plain filenames, not directory prefixes).  Directory-style paths
+    # like "docs/output/run-logs" legitimately don't exist on a fresh project —
+    # they are created at runtime.  Skip anything that looks like a directory
+    # prefix (ends with /, contains a trailing segment without an extension, or
+    # would be created by agents during the first pipeline run).
     roles_dir = root / ".harness/roles"
     if roles_dir.exists():
         for role_path in roles_dir.glob("*.yaml"):
@@ -38,8 +44,13 @@ def run(root: Path = Path(".")) -> dict:
                 role = yaml.safe_load(role_path.read_text(encoding="utf-8")) or {}
                 for key in ("read_globs", "write_globs"):
                     for glob in role.get(key, []):
-                        if "**" in glob or "*" in glob:
-                            continue  # skip wildcard globs
+                        # Skip patterns with any wildcard character
+                        if any(c in glob for c in ("*", "?", "[")):
+                            continue
+                        # Skip directory-style paths (no file extension in last segment)
+                        last_seg = glob.rstrip("/").split("/")[-1]
+                        if "." not in last_seg:
+                            continue  # looks like a directory prefix — runtime-created
                         target = root / glob
                         if not target.exists():
                             broken.append(

@@ -37,7 +37,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/09-tasks-report.md`
 
 **Step-specific overrides:**
 - **Title:** `# STEP 7: Task Generation Report`
-- **Agent:** `myharness.tasks (gpt-5.4)`
+- **Agent:** `myharness.tasks (GPT-5.4)`
 - **Input:** implementation plan (`plan.md`), specification (`spec.md`), data model (`data-model.md`)
 - **Output:** task list (`specs/<feature-id>/tasks.md`)
 - **Quality evaluation categories:** task completeness, dependency consistency, phase breakdown validity

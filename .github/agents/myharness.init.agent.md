@@ -94,34 +94,7 @@ Update the `## Product Scope Constraints` section:
 
 ---
 
-## Step 5 — Update `.harness/config.yaml`
-
-Create or update `.harness/config.yaml` with project metadata from stack.yaml `agent_hints`:
-
-```yaml
-project:
-  name: <project_name>
-  stack: <stack_id>
-  team_size: <N>
-  environment: <environment>
-
-implement_scope:
-  backend: <from stack agent_hints>
-  frontend: <from stack agent_hints>
-  e2e: <from stack agent_hints>
-
-forbidden_shared_files: <from stack agent_hints>
-
-quality:
-  coverage_target: <from stack agent_hints>
-  seed_required: <from stack agent_hints>
-
-layer_order: <from stack layer_order>
-```
-
----
-
-## Step 6 — Copy stack KB and create project profile
+## Step 5 — Copy stack KB and create project profile
 
 Copy the selected stack's knowledge base into the project:
 1. Read all files under `.harness/stacks/<stack_id>/kb/` recursively
@@ -151,7 +124,7 @@ Then create `.harness/kb/project/profile.md`:
 
 ---
 
-## Step 7 — Validation
+## Step 6 — Validation
 
 Verify the following before declaring success:
 
@@ -159,7 +132,6 @@ Verify the following before declaring success:
 - [ ] `docs/technical_architecture.md` exists and has no `[PLACEHOLDER]` patterns remaining
 - [ ] `.github/agents/copilot-instructions.md` exists and has no `[PLACEHOLDER]` patterns remaining  
 - [ ] `.specify/memory/constitution.md` has no `[PROJECT_NAME]` remaining
-- [ ] `.harness/config.yaml` exists and is valid YAML
 - [ ] `.harness/kb/project/profile.md` exists
 - [ ] `.harness/kb/project/post-mortem-rules.md` exists (copied from stack)
 
@@ -167,7 +139,7 @@ If any check fails: fix it before proceeding.
 
 ---
 
-## Step 8 — Summary report
+## Step 7 — Summary report
 
 Output a summary:
 
@@ -183,7 +155,6 @@ Output a summary:
 - docs/technical_architecture.md ✅
 - .github/agents/copilot-instructions.md ✅
 - .specify/memory/constitution.md ✅
-- .harness/config.yaml ✅
 - .harness/kb/project/post-mortem-rules.md ✅
 - .harness/kb/project/profile.md ✅
 

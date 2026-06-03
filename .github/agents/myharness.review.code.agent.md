@@ -29,7 +29,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/11-review-code-report.md`
 > 📄 Follow **Universal Report Structure** from `templates/report-templates.md` (STEP 11). Use **Review Agent Verdict Sections** for the review-specific additions.
 
 **Step-specific overrides:**
-- **Title:** `# STEP 9: Code Review Report`
+- **Title:** `# STEP 11: Code Review Report`
 - **Agent:** `myharness.review.code (claude-sonnet-4-6)`
 - **Verdict:** ✅ APPROVED / ⚠️ APPROVED WITH CONDITIONS / ❌ REJECTED
 - **Input:** specification (`spec.md`), tasks (`tasks.md`), implementation code (`backend/src/modules/<feature>/`), constitution (`constitution.md`)

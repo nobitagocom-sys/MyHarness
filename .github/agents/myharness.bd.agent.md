@@ -167,7 +167,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/02-bd-report.md`
 
 **Step-specific overrides:**
 - **Title:** `# STEP 2: BD Generation Report`
-- **Agent:** `myharness.bd (gpt-5.4)`
+- **Agent:** `myharness.bd (GPT-5.4)`
 - **Output:** BD document (`docs/output/design-docs/bd/bd-<mod-id>-<name>.md`)
 - **Design metrics:** screen count, pattern count, report count, logical table count, external interface count, business rule count (VR/AR/DR/CALC)
 - **Next phase:** STEP 3: `myharness.specify` — feature specification creation

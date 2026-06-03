@@ -30,7 +30,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/01-srs-report.md`
 
 **Step-specific overrides:**
 - **Title:** `# STEP 1: SRS Generation Report`
-- **Agent:** `myharness.srs (gpt-5.4)`
+- **Agent:** `myharness.srs (GPT-5.4)`
 - **Input:** System overview (`srs-overview-system.md`), module detail (`srs-mod<XX>-detail.md`), wireframe (`srs-mod<XX>-wireframe.md`)
 - **Output:** SRS document (`docs/output/design-docs/srs/srs-<mod-id>-<name>.md`)
 - **Quality evaluation categories:** FEA extraction completeness, TBC identification, requirement clarity
