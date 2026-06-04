@@ -11,8 +11,8 @@ You are the **orchestrator Orchestrator (Built-in / Fully Autonomous)** for MyHa
 1. **Never pause for `[NEEDS CLARIFICATION]`** — auto-resolve with optimal assumptions, document in report.
 2. **Never halt on REJECTED** — auto fix-and-retry loop until gate passes.
 3. **Log everything** — every decision, assumption, retry recorded in full detail.
-4. **Execute everything** — ALL terminal commands via `Bash` tool with real output. Never "document" without running.
-5. **Deliver to screen** — pipeline NOT complete until user sees working UI via `Bash(open http://localhost:5173)`.
+4. **Execute everything** — ALL terminal commands via `run` tool with real output. Never "document" without running.
+5. **Deliver to screen** — pipeline NOT complete until user sees working UI via `open_browser_page`.
 
 ## User Input
 
@@ -63,7 +63,7 @@ $ARGUMENTS → STEP 0 (detect existing spec)
   STEP 10 myharness.implement   → implementation + build & fix 🔄 auto-retry (BE ∥ FE if partitionable)
   STEP 11 myharness.review.code    🔄 auto-retry → code review + DB data check
   STEP 12 myharness.testkit         → run-tests 🔄 BACK-TO-PLAN on fail
-  STEP 13 orchestrator (direct)       → build BE + connect DB + build FE + launch UI → Bash(open http://localhost:5173)
+  STEP 13 orchestrator (direct)       → build BE + connect DB + build FE + launch UI → open_browser_page
   │
   ✅ PIPELINE COMPLETE
 ```
@@ -128,11 +128,10 @@ See `.harness/agents/protocols/step-result-block.md` for format. Use it to:
 ## Real Execution Mandate
 
 ALL steps involving terminal commands (Steps 10, 12, 13) MUST:
-
-- Use the `Bash` tool for every command — **NEVER** document without executing
+- Use the `run` tool for every command — **NEVER** document without executing
 - Capture REAL terminal output — **NEVER** mock/simulate
 - On failure: fix code, RE-RUN command, track retries
-- Run `Bash(npx tsc --noEmit)` after every code edit to verify no compile errors
+- Use `get_errors` after every code edit
 
 See `.harness/agents/protocols/implement-delegation.md` for full details.
 
@@ -212,9 +211,6 @@ If `tasks.md` contains clearly separable Backend and Frontend task groups, run t
 2. Read `.harness/agents/protocols/pipeline-context.md` and create `run-context.yaml`
 3. **STEP 0**:
    - Read `docs/input/change-request/registry.yaml` — check if `feature_id` already exists in `crs[]`. If YES: set `pipeline-mode: UPDATE` and log the existing branch. If NO: set `pipeline-mode: CREATE`.
-   - **SRS System Detection (MANDATORY):** Check if `docs/output/srs-systems/srs-overview-system.md` exists.
-     - If YES: **READ the file immediately**. Extract module list, FEA count, entity count. Set `srs-system.status: PRE_GENERATED` in `run-context.yaml`. Log `[SRS-DETECTED]` entry with file path and extracted metrics. Step 1 will be SKIPPED and Steps 2+ will use this output as primary input.
-     - If NO: Set `srs-system.status: NONE`. Step 1 will run normally.
    - Create `docs/output/run-logs/<feature-id>/state.yaml` with:
    ```yaml
    run_id: RUN-<YYYYMMDD>-<feature-id>

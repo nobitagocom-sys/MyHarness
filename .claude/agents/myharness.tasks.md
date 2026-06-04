@@ -1,6 +1,6 @@
 ---
 description: "Generate an actionable, dependency-ordered tasks.md for the feature based on available design artifacts."
-model: claude-opus-4-5
+model: claude-sonnet-4-6
 tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 
@@ -20,6 +20,7 @@ This agent **MUST** create one output file during execution. The pipeline CANNOT
 
 1. Determine `<feature-id>` from the context
 2. Create directories: `docs/output/run-logs/<feature-id>/` and `docs/output/run-logs/<feature-id>/reports/`
+
 ### Step FINAL — Write Phase Report (⚠️ DO THIS LAST — NON-NEGOTIABLE)
 
 Write to: `docs/output/run-logs/<feature-id>/reports/09-tasks-report.md`
@@ -27,6 +28,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/09-tasks-report.md`
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 09).
 
 **Step-specific overrides:**
+
 - **Title:** `# STEP 7: Task Generation Report`
 - **Agent:** `myharness.tasks (GPT-5.4)`
 - **Input:** implementation plan (`plan.md`), specification (`spec.md`), data model (`data-model.md`)
@@ -55,14 +57,14 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 | OS | Script path | Flag style |
 | --- | --- | --- |
-| macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
 | Windows | `.specify/scripts/powershell/<script>.ps1` | `-Json`, `-PathsOnly`, `-RequireTasks`, `-IncludeTasks` |
+| macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
 
-All script references below show the bash form. On Windows, substitute the powershell path and PowerShell-style flags.
+All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
 
 ## Outline
 
-1. **Setup**: Run `.specify/scripts/bash/check-prerequisites.sh --json` (Windows: `.specify/scripts/powershell/check-prerequisites.ps1 -Json`) from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. **Setup**: Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json` (macOS/Linux: `.specify/scripts/bash/check-prerequisites.sh --json`) from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
 
 2. **Load design documents**: Read from FEATURE_DIR:
    - **Required**: plan.md (tech stack, libraries, structure), spec.md (user stories with priorities)
@@ -125,6 +127,7 @@ orchestrator uses these sets to detect file conflicts before parallel dispatch.
 ```
 
 **Rules:**
+
 - `write:` MUST list every file the task creates or modifies — use exact paths
 - `read:` lists key input files (plan.md, spec.md, data-model.md relevant sections)
 - Tasks with overlapping `write:` paths CANNOT be marked `[P]`
@@ -156,17 +159,21 @@ Every task MUST strictly follow this format:
 **Examples**:
 
 - ✅ CORRECT:
+
   ```
   - [ ] T001 Create project structure per implementation plan
     - write: [`backend/src/modules/auth/`]
     - read: [`specs/FEATURE-ID/plan.md`]
   ```
+
 - ✅ CORRECT (parallel):
+
   ```
   - [ ] T012 [P] [US1] Create User model in backend/src/modules/users/user.entity.ts
     - write: [`backend/src/modules/users/user.entity.ts`]
     - read: [`specs/FEATURE-ID/data-model.md`]
   ```
+
 - ❌ WRONG: `- [ ] Create User model` (missing ID, story label, write set)
 - ❌ WRONG: `T001 [US1] Create model` (missing checkbox)
 - ❌ WRONG: `- [ ] T012 [P] [US1] Create User model` (missing write: declaration — cannot be [P])
@@ -210,6 +217,7 @@ Every task MUST strictly follow this format:
 ## Pipeline Context Integration
 
 If `$ARGUMENTS` contains a `pipeline-context:` key, read that YAML file at startup to discover:
+
 - `feature-id`, plan/spec/data-model paths from prior steps
 
 ## Step Result Block — MANDATORY

@@ -1,6 +1,6 @@
 ---
 description: "Generate SRS (Software Requirements Specification) per module. Use when: generate SRS, create module SRS, extract requirements from spec, write requirements specification, MOD-XX SRS."
-model: claude-opus-4-5
+model: claude-sonnet-4-6
 tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 
@@ -28,6 +28,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/01-srs-report.md`
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 01).
 
 **Step-specific overrides:**
+
 - **Title:** `# STEP 1: SRS Generation Report`
 - **Agent:** `myharness.srs (GPT-5.4)`
 - **Input:** System overview (`srs-overview-system.md`), module detail (`srs-mod<XX>-detail.md`), wireframe (`srs-mod<XX>-wireframe.md`)
@@ -51,6 +52,7 @@ $ARGUMENTS
 ```
 
 `$ARGUMENTS` contains the module specification. Accept either of the following formats:
+
 - `modxx` (e.g., `mod01`, `mod02`, etc.)
 - `Module: MOD-XX`
 - `Module: <keyword>` (e.g., `Dashboard`, `Objective`, `Workspace`)

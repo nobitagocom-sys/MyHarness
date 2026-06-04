@@ -13,7 +13,6 @@ $ARGUMENTS
 ```
 
 If `$ARGUMENTS` is empty or missing required fields, ask the user:
-
 1. **Project name** — short, slug-friendly (e.g. `hr-portal`)
 2. **Stack** — show the menu below and ask to pick one
 3. **Description** — one sentence describing the project
@@ -46,7 +45,6 @@ bash .harness/agents/sync-models.sh --provider claude
 List all subdirectories under `.harness/stacks/` (excluding `_template`). For each one, read its `stack.yaml` and extract the `name` and `description` fields.
 
 Present as a numbered menu, appending `_template` as the last option:
-
 ```
 Available stacks:
   1. <stack-dir>   — <name>: <description>
@@ -61,7 +59,6 @@ If user already specified stack in `$ARGUMENTS`, skip this step.
 ## Step 2 — Read selected stack profile
 
 Read `.harness/stacks/<chosen-stack>/stack.yaml` and extract:
-
 - `tech` summary
 - `setup.copy` list (which files to copy where)
 - `placeholders` list
@@ -73,7 +70,6 @@ Read `.harness/stacks/<chosen-stack>/stack.yaml` and extract:
 ## Step 3 — Copy and fill stack files
 
 For each entry in `setup.copy`:
-
 1. Read source file from `.harness/stacks/<chosen-stack>/<from>`
 2. Replace all placeholders with actual values:
 
@@ -88,21 +84,22 @@ For each entry in `setup.copy`:
 | `[STACK_SUMMARY]` | Tech summary from stack.yaml |
 | Other `[PLACEHOLDERS]` | Ask user if not derivable |
 
-1. Write filled content to destination path (`to` in stack.yaml)
+3. Write filled content to destination path (`to` in stack.yaml)
 
-2. **Copy `instructions/` folder** — if `.harness/stacks/<chosen-stack>/instructions/` exists:
+4. **Copy `instructions/` folder** — if `.harness/stacks/<chosen-stack>/instructions/` exists:
    - Copy all files to `docs/instructions/`
    - This makes paths like `docs/instructions/01-architecture-rules.md` valid from repo root
 
-3. **Write `.github/agents/copilot-instructions.md`** — always:
+5. **Write `.github/agents/copilot-instructions.md`** — always:
    - Start from the filled template content
    - Rewrite links: `(docs/instructions/` → `(../../docs/instructions/`
    - Strip `<!-- TEMPLATE NOTE: ... -->` comment block
    - Write to `.github/agents/copilot-instructions.md`
 
-4. **Write `CLAUDE.md`** — only if active provider is `claude`:
+6. **Write `CLAUDE.md`** — only if active provider is `claude`:
    - Start fresh from the filled template content (do NOT reuse the copilot version)
    - Replace header: `# GitHub Copilot Instructions` → `# Claude Code Instructions`
+   - Links stay as `docs/instructions/...` — do NOT rewrite to `../../docs/instructions/`
    - Strip `<!-- TEMPLATE NOTE: ... -->` comment block
    - Write to `CLAUDE.md`
 
@@ -113,7 +110,6 @@ For each entry in `setup.copy`:
 Read `.specify/memory/constitution.md`.
 
 Update the `## Product Scope Constraints` section:
-
 - Replace `[PROJECT_NAME]` with actual project name
 - Replace generic description with user's project description
 - Keep all 5 principles intact — do NOT modify them
@@ -123,7 +119,6 @@ Update the `## Product Scope Constraints` section:
 ## Step 5 — Copy stack KB and create project profile
 
 Copy the selected stack's knowledge base into the project:
-
 1. Read all files under `.harness/stacks/<stack_id>/kb/` recursively
 2. Write each file to the same relative path under `.harness/kb/` (e.g. `stacks/web-nestjs-react/kb/project/post-mortem-rules.md` → `.harness/kb/project/post-mortem-rules.md`)
 

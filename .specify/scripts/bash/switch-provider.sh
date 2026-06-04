@@ -71,81 +71,24 @@ fi
 
 CURRENT=$(current_provider)
 
-# Check if target dirs are intact (allow re-sync even if already on target)
-needs_sync=false
-if [[ "$TARGET" == "claude" ]]; then
-    [[ ! -d "$REPO_ROOT/.claude/agents" ]] && needs_sync=true
-    [[ ! -d "$REPO_ROOT/.claude/commands" ]] && needs_sync=true
-fi
-
-if [[ "$CURRENT" == "$TARGET" ]] && [[ "$needs_sync" == "false" ]]; then
+if [[ "$CURRENT" == "$TARGET" ]]; then
     echo "Already on provider: $TARGET"
     print_status
     exit 0
 fi
 
-if [[ "$CURRENT" == "$TARGET" ]]; then
-    echo "Provider is '$TARGET' but output dirs are missing — re-syncing ..."
-else
-    echo "Switching from '$CURRENT' → '$TARGET' ..."
-fi
+echo "Switching from '$CURRENT' → '$TARGET' ..."
 echo ""
 
 # 1. Update init-options.json
 set_provider_in_json "$TARGET"
 echo "  ✓ .specify/init-options.json  ai = $TARGET"
 
-# 2. Clean up outgoing provider's generated dirs
-if [[ "$TARGET" == "claude" ]]; then
-    # Switching to claude — nothing to clean on copilot side (source files, keep them)
-    :
-else
-    # Switching to copilot — remove .claude/ so Claude Code won't load stale agents
-    if [[ -d "$REPO_ROOT/.claude" ]]; then
-        rm -rf "$REPO_ROOT/.claude"
-        echo "  ✓ Removed .claude/ (inactive provider)"
-    fi
-fi
-
-# 3. Sync agent files + commands for target provider
-if [[ -f "$SYNC_SCRIPT" ]]; then
-    if [[ "$TARGET" == "claude" ]]; then
-        bash "$SYNC_SCRIPT" --provider claude
-    else
-        bash "$SYNC_SCRIPT" --provider copilot
-    fi
-fi
-echo "  ✓ Synced agents and commands"
-
-# 3. Update agent context file (CLAUDE.md or copilot-instructions.md)
-UPDATE_SCRIPT="$SCRIPT_DIR/update-agent-context.sh"
-TEMPLATE="$REPO_ROOT/.specify/templates/claude-instructions-template.md"
-CLAUDE_MD="$REPO_ROOT/CLAUDE.md"
-
-if [[ "$TARGET" == "claude" ]]; then
-    echo ""
-    if [[ ! -f "$CLAUDE_MD" ]]; then
-        if [[ -f "$TEMPLATE" ]]; then
-            cp "$TEMPLATE" "$CLAUDE_MD"
-            echo "  ✓ Created CLAUDE.md (from claude-instructions-template.md)"
-        else
-            echo "  ✗ Template not found at $TEMPLATE — CLAUDE.md not created"
-        fi
-    else
-        # CLAUDE.md exists — try updating with plan context if available
-        if [[ -f "$UPDATE_SCRIPT" ]]; then
-            bash "$UPDATE_SCRIPT" claude 2>/dev/null && echo "  ✓ Updated CLAUDE.md" \
-                || echo "  ✓ CLAUDE.md already exists (no plan.md to update from)"
-        fi
-    fi
-else
-    echo ""
-    if [[ -f "$UPDATE_SCRIPT" ]]; then
-        echo "  Updating copilot-instructions.md context..."
-        bash "$UPDATE_SCRIPT" copilot 2>/dev/null || echo "  (skipped — no plan.md found yet)"
-    fi
-fi
-
+# 2. Sync models for the new provider
 echo ""
+echo "Syncing models for provider '$TARGET' ..."
+bash "$SYNC_SCRIPT" --provider "$TARGET"
+echo ""
+
 echo "Done. Active provider:"
 print_status

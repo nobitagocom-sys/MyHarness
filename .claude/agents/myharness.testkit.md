@@ -133,7 +133,7 @@ Each section (UT, AT, E2E, IT) MUST be output as **one single consolidated maste
 
 #### Phase B: Execute Tests
 
-> **⚠️ CRITICAL: You MUST use the `Bash` tool to execute EVERY test command in the terminal.**
+> **⚠️ CRITICAL: You MUST use the `run` tool to execute EVERY test command in the terminal.**
 > **DO NOT just generate test scripts and skip execution. ACTUALLY RUN the tests and capture real results.**
 > **If a test fails, record the failure. DO NOT fake pass results.**
 
@@ -151,7 +151,7 @@ Each section (UT, AT, E2E, IT) MUST be output as **one single consolidated maste
    - If Playwright is not installed, run `npx playwright install chromium` first
    - Parse actual test output for pass/fail counts
 7. **Collect results** — parse actual Jest output + Playwright output
-   - **DO NOT** generate simulated results. Use REAL output from the `Bash` tool.
+   - **DO NOT** generate simulated results. Use REAL output from the `run` tool.
 8. **Retry failed tests** (when fix is possible):
    - For each failed test, attempt to identify the root cause
    - If the cause is a simple implementation bug (not a design gap), fix the code and re-run

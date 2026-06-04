@@ -1,6 +1,6 @@
 ---
 description: "Create or update the project constitution from interactive or provided principle inputs, ensuring all dependent templates stay in sync."
-model: claude-opus-4-5
+model: claude-sonnet-4-6
 tools: [Read, Edit, Bash, TodoWrite]
 ---
 

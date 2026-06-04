@@ -1,6 +1,6 @@
 ---
 description: "Generate BD (Basic Design / External Design) per module. Use when: generate BD, create basic design, screen design, UI layout, system architecture, logical ERD, screen transition, external interface design, basic design, external design, MOD-XX BD."
-model: claude-opus-4-5
+model: claude-sonnet-4-6
 tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 
@@ -86,6 +86,7 @@ Log: `[PROCESSING] Input file loading complete`
 ### Step 2 — Design System Architecture (§2)
 
 Based on `docs/technical_architecture.md` and SRS system context:
+
 1. Create network diagram (Mermaid)
 2. Create deployment diagram (Mermaid)
 3. Define layer structure table
@@ -95,6 +96,7 @@ Log: `[PROCESSING] Section 2 system architecture design complete`
 ### Step 3 — Design Screens (§3)
 
 From SRS functional requirements and wireframes:
+
 1. Create screen list table with IDs (S-01 ~ S-NN)
 2. Map roles to screen access (matrix)
 3. Classify screens into patterns (P-01 ~ P-NN)
@@ -109,6 +111,7 @@ Log: `[PROCESSING] Section 3 screen design complete — S-XX screen`
 ### Step 4 — Design Reports (§4)
 
 If the module has report/export requirements:
+
 1. Create report list table
 2. Design report layouts
 
@@ -117,6 +120,7 @@ Log: `[PROCESSING] Section 4 report design complete`
 ### Step 5 — Design Logical Data (§5)
 
 From SRS data requirements (§5):
+
 1. Create logical ERD (Mermaid erDiagram)
 2. Define logical table definitions (logical column names, descriptions, data categories, nullability)
 
@@ -127,6 +131,7 @@ Log: `[PROCESSING] Section 5 logical data design complete`
 ### Step 6 — Design External Interfaces (§6)
 
 If external system connections exist:
+
 1. Create interface list table
 2. Define interface details (connection method, auth, data items, error handling)
 
@@ -135,6 +140,7 @@ Log: `[PROCESSING] Section 6 external interface design complete`
 ### Step 7 — Define Business Rules (§7)
 
 From SRS functional requirements:
+
 1. Define validation rules (VR-xx)
 2. Define access control rules (AR-xx)
 3. Define data integrity and calculation logic (DR-xx, CALC-xx)
@@ -165,6 +171,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/02-bd-report.md`
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 02).
 
 **Step-specific overrides:**
+
 - **Title:** `# STEP 2: BD Generation Report`
 - **Agent:** `myharness.bd (GPT-5.4)`
 - **Output:** BD document (`docs/output/design-docs/bd/bd-<mod-id>-<name>.md`)
@@ -176,6 +183,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/02-bd-report.md`
 ## Output Language
 
 All output documents **MUST** be written in **Vietnamese**.
+
 - BD document: Vietnamese prose
 - Technical identifiers (S-XX, P-XX, FR-XX, VR-XX, etc.): unchanged
 - Mermaid diagram labels: Vietnamese
@@ -203,6 +211,7 @@ Before completing, verify:
 ## Pipeline Context Integration
 
 If `$ARGUMENTS` contains a `pipeline-context:` key, read that YAML file at startup to discover:
+
 - `feature-id`, `module-id`, `module-keyword`
 - SRS path from Step 1 (no need to guess)
 

@@ -1,6 +1,6 @@
 ---
 description: "Generate system-wide SRS (Full Module Requirements Definition). Use when: generate full SRS, extract all requirements from spec, create docs/output/srs-systems folder, generate wireframe/ERD, full system SRS, all-module SRS, requirements extraction, requirements definition from product requirements, wireframe, ERD."
-model: claude-opus-4-5
+model: claude-sonnet-4-6
 tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 
@@ -81,7 +81,7 @@ If `$ARGUMENTS` specifies a file or folder path, **read that path first** as the
 
 ### Phase A — System Overview File
 
-1. **Generate** `docs/output/srs-systems/srs-overview-system.md` containing:
+5. **Generate** `docs/output/srs-systems/srs-overview-system.md` containing:
    - §1 System Overview (purpose, scope, subsystems, assumptions, constraints)
    - §2 Architecture & Actors: system architecture Mermaid diagram (`flowchart` or `C4Context`), component diagram, and Actors table (`A-XX`: name, type, description, related modules)
    - §3 Functional Hierarchy: Module table (`MOD-XX`) + Feature index table (`FEA-XXX` per module) + Mermaid mindmap/flowchart of hierarchy
@@ -90,7 +90,7 @@ If `$ARGUMENTS` specifies a file or folder path, **read that path first** as the
 
 ### Phase B — Per-Module Folders
 
-1. **For EACH module** identified in step 3, create folder `docs/output/srs-systems/modXX-<module-slug>/` and generate:
+6. **For EACH module** identified in step 3, create folder `docs/output/srs-systems/modXX-<module-slug>/` and generate:
 
    **6a. `srs-modXX-detail.md`** — Detailed Feature Specification:
    For EACH feature in the module:
@@ -121,7 +121,7 @@ If `$ARGUMENTS` specifies a file or folder path, **read that path first** as the
 
 ### Phase C — Finalization
 
-1. **Extract Non-functional Requirements** — consolidate all NFR into §5 of `srs-overview-system.md`. Assign `NF-XX`.
+8. **Extract Non-functional Requirements** — consolidate all NFR into §5 of `srs-overview-system.md`. Assign `NF-XX`.
 2. **Compile TBC Items** — collect all `[TBC-XX]` markers into summary table: ID, description, impact, related FEA/MOD.
 3. **Self-verification** — run the quality checklist (see below) and fix any gaps.
 

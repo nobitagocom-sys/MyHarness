@@ -20,7 +20,6 @@ This agent **MUST** create one output file during execution. The pipeline CANNOT
 
 1. Determine `<feature-id>` from the context
 2. Create directories: `docs/output/run-logs/<feature-id>/` and `docs/output/run-logs/<feature-id>/reports/`
-
 ### Step FINAL — Write Phase Report (⚠️ DO THIS LAST — NON-NEGOTIABLE)
 
 Write to: `docs/output/run-logs/<feature-id>/reports/06-plan-report.md`
@@ -28,7 +27,6 @@ Write to: `docs/output/run-logs/<feature-id>/reports/06-plan-report.md`
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 06).
 
 **Step-specific overrides:**
-
 - **Title:** `# STEP 5: Implementation Plan Report`
 - **Agent:** `myharness.plan (GPT-5.3-Codex)`
 - **Input:** specification (`spec.md`), constitution (`constitution.md`), technical architecture (`docs/technical_architecture.md`)
@@ -57,14 +55,14 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 | OS | Script path | Flag style |
 | --- | --- | --- |
-| macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
 | Windows | `.specify/scripts/powershell/<script>.ps1` | `-Json`, `-PathsOnly`, `-RequireTasks`, `-IncludeTasks` |
+| macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
 
-All script references below show the bash form. On Windows, substitute the powershell path and PowerShell-style flags.
+All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
 
 ## Outline
 
-1. **Setup**: Run `.specify/scripts/bash/setup-plan.sh --json` (Windows: `.specify/scripts/powershell/setup-plan.ps1 -Json`) from repo root and parse JSON for FEATURE_SPEC, IMPL_PLAN, SPECS_DIR, BRANCH. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. **Setup**: Run `.specify/scripts/powershell/setup-plan.ps1 -Json` (macOS/Linux: `.specify/scripts/bash/setup-plan.sh --json`) from repo root and parse JSON for FEATURE_SPEC, IMPL_PLAN, SPECS_DIR, BRANCH. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
 
 2. **Load context**: Read FEATURE_SPEC and `.specify/memory/constitution.md`. Load IMPL_PLAN template (already copied).
 
@@ -107,7 +105,6 @@ All script references below show the bash form. On Windows, substitute the power
 ### Output Language
 
 All plan artifacts **MUST** be written in Vietnamese:
-
 - `plan.md`, `data-model.md`, `research.md`, `quickstart.md`, `ui-design.md`
 
 Technical IDs remain unchanged.
@@ -128,7 +125,7 @@ Technical IDs remain unchanged.
    - Skip if project is purely internal (build scripts, one-off tools, etc.)
 
 3. **Agent context update**:
-   - Run `.specify/scripts/bash/update-agent-context.sh claude` (Windows: `.specify/scripts/powershell/update-agent-context.ps1 -AgentType claude`)
+   - Run `.specify/scripts/powershell/update-agent-context.ps1 -AgentType copilot` (macOS/Linux: `.specify/scripts/bash/update-agent-context.sh copilot`)
    - These scripts detect which AI agent is in use
    - Update the appropriate agent-specific context file
    - Add only new technology from current plan
@@ -144,7 +141,7 @@ Technical IDs remain unchanged.
    - Map each screen to its **React JSX component path**:
      `frontend/src/pages/<featureName>/Scr{SCREEN_ID}.jsx`
      (e.g., SCR-mod01-01 → `frontend/src/pages/workspace/Scr0801.jsx`)
-   - **NEVER** reference Thymeleaf template paths or legacy `src/App-web/` paths
+   - **NEVER** reference Thymeleaf template paths or legacy `src/app-web/` paths
    - Include responsive behavior notes (if applicable)
    - Reference constitution Layout-01~06 standards throughout
    - Skip if feature has no user-facing screens
@@ -168,7 +165,6 @@ Technical IDs remain unchanged.
 ## Pipeline Context Integration
 
 If `$ARGUMENTS` contains a `pipeline-context:` key, read that YAML file at startup to discover:
-
 - `feature-id`, `module-id`, spec path, tech-stack summary
 
 ## Step Result Block — MANDATORY

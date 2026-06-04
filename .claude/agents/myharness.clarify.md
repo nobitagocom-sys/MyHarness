@@ -1,6 +1,6 @@
 ---
 description: "Identify underspecified areas in the current feature spec by asking up to 5 highly targeted clarification questions and encoding answers back into the spec."
-model: claude-opus-4-5
+model: claude-sonnet-4-6
 tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 
@@ -20,6 +20,7 @@ This agent **MUST** create one output file during execution. The pipeline CANNOT
 
 1. Determine `<feature-id>` from the context
 2. Create directories: `docs/output/run-logs/<feature-id>/` and `docs/output/run-logs/<feature-id>/reports/`
+
 ### Step FINAL — Write Phase Report (⚠️ DO THIS LAST — NON-NEGOTIABLE)
 
 Write to: `docs/output/run-logs/<feature-id>/reports/04-clarify-report.md`
@@ -27,6 +28,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/04-clarify-report.md`
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 04).
 
 **Step-specific overrides:**
+
 - **Title:** `# STEP 3: Specification Clarification Report`
 - **Agent:** `myharness.clarify (GPT-5.4)`
 - **Input:** specification (`specs/<feature-id>/spec.md`)
@@ -56,10 +58,10 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 | OS | Script path | Flag style |
 | --- | --- | --- |
-| macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
 | Windows | `.specify/scripts/powershell/<script>.ps1` | `-Json`, `-PathsOnly`, `-RequireTasks`, `-IncludeTasks` |
+| macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
 
-All script references below show the bash form. On Windows, substitute the powershell path and PowerShell-style flags.
+All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
 
 ## Outline
 
@@ -69,7 +71,7 @@ Note: This clarification workflow is expected to run (and be completed) BEFORE i
 
 Execution steps:
 
-1. Run `.specify/scripts/bash/check-prerequisites.sh --json --paths-only` (Windows: `.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly`) from repo root **once** (combined `--json --paths-only` mode / `-Json --PathsOnly`). Parse minimal JSON payload fields:
+1. Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly` (macOS/Linux: `.specify/scripts/bash/check-prerequisites.sh --json --paths-only`) from repo root **once** (combined `--json --paths-only` mode / `-Json -PathsOnly`). Parse minimal JSON payload fields:
    - `FEATURE_DIR`
    - `FEATURE_SPEC`
    - (Optionally capture `IMPL_PLAN`, `TASKS` for future chained flows.)
@@ -172,6 +174,7 @@ Execution steps:
     - For short‑answer style (no meaningful discrete options):
        - Provide your **suggested answer**: `**Suggested:** <your proposed answer> - <brief reasoning>`
     - At the end of the full list, add a summary table and instructions:
+
        ```
        | # | Question | Your Answer |
        |---|----------|-------------|
@@ -181,6 +184,7 @@ Execution steps:
 
        Reply with: `Q1=A Q2=B Q3=yes ...` (use "yes" to accept the recommendation)
        ```
+
     - Wait for the user to answer ALL questions in a single response.
     - After the user answers:
        - If the user replies "yes" or "recommended" for a specific question, use the recommendation.
@@ -246,6 +250,7 @@ Context for prioritization: $ARGUMENTS
 ## Pipeline Context Integration
 
 If `$ARGUMENTS` contains a `pipeline-context:` key, read that YAML file at startup to discover:
+
 - `feature-id`, spec path from Step 3
 
 ## Step Result Block — MANDATORY

@@ -1,6 +1,6 @@
 ---
 description: "Create or update the feature specification from a natural language feature description."
-model: claude-opus-4-5
+model: claude-sonnet-4-6
 tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 
@@ -20,6 +20,7 @@ This agent **MUST** create one output file during execution. The pipeline CANNOT
 
 1. Determine `<feature-id>` from the context (branch name, specs directory, or generate from feature description)
 2. Create directories: `docs/output/run-logs/<feature-id>/` and `docs/output/run-logs/<feature-id>/reports/`
+
 ### Step FINAL — Write Phase Report (⚠️ DO THIS LAST — NON-NEGOTIABLE)
 
 As your **absolute last action** before returning to the user or orchestrator, write the phase report. This file MUST exist or the pipeline is blocked.
@@ -31,6 +32,7 @@ Use this **exact template** (in Vietnamese):
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 03).
 
 **Step-specific overrides:**
+
 - **Title:** `# STEP 2: Specification Creation Report`
 - **Agent:** `myharness.specify (GPT-5.4)`
 - **Input:** feature description, SRS (`srs-<mod-id>-<name>.md`), BD (`bd-<mod-id>-<name>.md`), template, constitution
@@ -63,10 +65,10 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 | OS | Script path | Flag style |
 | --- | --- | --- |
-| macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
 | Windows | `.specify/scripts/powershell/<script>.ps1` | `-Json`, `-PathsOnly`, `-RequireTasks`, `-IncludeTasks` |
+| macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
 
-All script references below show the bash form. On Windows, substitute the powershell path and PowerShell-style flags.
+All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
 
 ## Outline
 
@@ -93,6 +95,7 @@ Given that feature description, do this:
    a. Derive the short-name from the feature description (same logic as step 1 above).
 
    b. Scan the `specs/` directory for an existing folder matching the short-name:
+
       ```powershell
       Get-ChildItem specs/ -Directory | Where-Object { $_.Name -match '<short-name>' }
       ```
@@ -102,7 +105,7 @@ Given that feature description, do this:
       - Set `<feature-id>` = the existing folder name (e.g., `001-xxx`)
       - Set `FEATURE_DIR` = `specs/<feature-id>`
       - Set `SPEC_FILE` = `specs/<feature-id>/spec.md`
-      - **Skip steps 2d (the create-new-feature.sh script) entirely** — the folder already exists
+      - **Skip steps 2d (the create-new-feature.ps1 script) entirely** — the folder already exists
       - Log in the phase report: "Detected existing spec folder: `specs/<feature-id>/` — skip new creation and update the existing spec instead"
       - Proceed directly to step 3 (load spec template), then **UPDATE the existing spec.md in-place** with new content
 
@@ -118,7 +121,7 @@ Given that feature description, do this:
       - Find the highest number N
       - Use N+1 for the new branch number
 
-   g. Run the script `.specify/scripts/bash/create-new-feature.sh --json "$ARGUMENTS"` (Windows: `.specify/scripts/powershell/create-new-feature.ps1 -Json "$ARGUMENTS"`) with the calculated number and short-name:
+   g. Run the script `.specify/scripts/powershell/create-new-feature.ps1 -Json "$ARGUMENTS"` (macOS/Linux: `.specify/scripts/bash/create-new-feature.sh --json "$ARGUMENTS"`) with the calculated number and short-name:
       - Pass `--number N+1` and `--short-name "your-short-name"` along with the feature description
       - Bash example: `.specify/scripts/bash/create-new-feature.sh --json "$ARGUMENTS" --json --number 5 --short-name "user-auth" "Add user authentication"`
       - PowerShell example: `.specify/scripts/powershell/create-new-feature.ps1 -Json "$ARGUMENTS" -Json -Number 5 -ShortName "user-auth" "Add user authentication"`
@@ -330,6 +333,7 @@ For each screen:
 | **Visual Design Mapping** *(mandatory — Layout-06)* | Component-level visual specs table mapping each UI element to constitution Layout-01~04 standards (colors, spacing, typography, tone). No CSS classes or framework terms. |
 
 Rules:
+
 - Screen IDs referenced in User Stories **MUST** each have a corresponding entry in Screen Layouts.
 - Layout descriptions are **technology-agnostic** — no CSS classes, component names, or framework terms.
 - Focus on **information architecture** and **user interaction**, not visual styling.
@@ -393,6 +397,7 @@ Success criteria must be:
 ## Pipeline Context Integration
 
 If `$ARGUMENTS` contains a `pipeline-context:` key, read that YAML file at startup to discover:
+
 - `feature-id`, `module-id` (use existing feature-id, do NOT generate new one)
 - SRS and BD paths from prior steps
 

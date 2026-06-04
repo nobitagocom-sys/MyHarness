@@ -1,16 +1,5 @@
-# /caveman-review
+Ultra-compressed code review — one line per issue, location + problem + fix.
 
-Deliver ultra-compressed code review feedback — one line per issue.
+Use the agent: caveman-review
 
-## Usage
-
-```
-/caveman-review           # review current diff
-/caveman-review <file>    # review specific file
-```
-
-Output format: `L<line>: 🔴/🟡/🔵 <problem>. <fix>.`
-
----
-
-Read `.claude/skills/caveman-review/SKILL.md` then perform the review.
+$ARGUMENTS
