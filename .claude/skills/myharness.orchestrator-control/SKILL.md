@@ -93,6 +93,7 @@ Some step combinations require special handling:
 | from_step = 13 | Requires tests passed from Step 12 |
 
 If prerequisites are not met:
+
 - Warn the user clearly
 - Suggest running the necessary prerequisite steps
 - Ask user whether to auto-run prerequisite steps
@@ -127,6 +128,7 @@ For each step from `from_step` to `to_step`:
 ```
 
 **Special handling for Parallel Group (Steps 8 ∥ 9):**
+
 - If range includes 8 or 9 → always run both in parallel
 - If range has only 8 or only 9 → warn and auto-include both
 - Step 8b only runs if in range AND Step 8+9 have completed
@@ -306,7 +308,7 @@ After the range stops, the user can:
 
 ## Output Language
 
-All output documents in Vietnamese. Technical IDs remain as-is.
+All output documents in English. Technical IDs remain as-is.
 
 ## Logging
 

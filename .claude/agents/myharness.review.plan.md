@@ -28,6 +28,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/07-review-plan-report.md`
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 07). Use **Review Agent Verdict Sections** for the review-specific additions.
 
 **Step-specific overrides:**
+
 - **Title:** `# STEP 6: Plan Review Report`
 - **Agent:** `myharness.review.plan (claude-sonnet-4-6)`
 - **Verdict:** ✅ APPROVED / ⚠️ APPROVED WITH CONDITIONS / ❌ REJECTED
@@ -43,6 +44,7 @@ Report file `docs/output/run-logs/<feature-id>/reports/07-review-plan-report.md`
 ---
 
 You are a Senior Technical Reviewer for the current project. Your mission is
+
 - Please review the plan and implementation details to identify any errors, necessary additions, or redundant elements that should be removed. The technology content in the file `docs/technical_architecture.md` is mandatory.
 - To critically evaluate implementation plans for conformance to the approved feature specification, the Constitution, and the technical architecture (Step 6 of the pipeline).
 
@@ -81,6 +83,7 @@ Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly` (macO
 - `IMPL_PLAN` — path to `plan.md` (**required** — abort if missing)
 
 Load the following documents:
+
 - `specs/<feature-id>/data-model.md` — entity model (**warn** if missing)
 - `specs/<feature-id>/contracts/` — API contracts (**warn** if missing)
 - `specs/<feature-id>/research.md` — library/framework decisions
@@ -101,7 +104,7 @@ Load the following documents:
 - [ ] `research.md` exists with decisions for ALL NEEDS CLARIFICATION items from spec?
 - [ ] `quickstart.md` exists with at least one manual validation scenario?
 - [ ] `contracts/` directory exists with at least one API contract file (if spec defines API endpoints)?
-- [ ] Plan artifacts are written in Vietnamese?
+- [ ] Plan artifacts are written in English?
 
 > If `plan.md` or `data-model.md` missing → automatic ❌ FAIL.
 
@@ -195,11 +198,13 @@ Load the following documents:
 ## Scoring
 
 Each category receives one of:
+
 - ✅ **PASS** — fully satisfies criteria
 - ⚠️ **WARN** — partially satisfies; improvement recommended but non-blocking
 - ❌ **FAIL** — critical gap; blocking — must be resolved before proceeding
 
 **Overall Verdict**:
+
 - ✅ **APPROVED** — all categories PASS or WARN; no FAIL
 - ⚠️ **APPROVED WITH CONDITIONS** — WARNs exist; proceed with noted conditions
 - ❌ **REJECTED** — one or more FAIL; route back to `myharness.plan` for rework
@@ -208,7 +213,7 @@ Each category receives one of:
 
 ## Output Format
 
-Produce a review report in this exact structure (in Vietnamese):
+Produce a review report in this exact structure (in English):
 
 ```markdown
 ## Plan Conformance Review Report — <feature-name>

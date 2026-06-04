@@ -8,7 +8,7 @@ tools: [Read, Bash, Edit, Write, TodoWrite]
 
 Before starting any work, write a **[START]** entry to `docs/output/run-logs/000-system-srs/00-app.genallreqsrs.log.md` with timestamp, agent name, model, input summary, and goal. Append **[PROCESSING]** entries at key milestones (e.g., "loaded input document", "identified N modules", "extracted N FEAs for MOD-XX", "generating wireframe for MOD-XX", "generating ERD"). At completion, append **[END]** with status, output artifacts, metrics, and duration. On errors, append **[ISSUE]** with severity and description.
 
-As your **final action**, write the phase report to `docs/output/run-logs/000-system-srs/reports/00-genallreqsrs-report.md` following the standard report structure from `.harness/agents/templates/report-templates.md` (Summary, Inputs, Outputs, Key Decisions, Quality Assessment, Metrics, **[NEEDS CLARIFICATION] Items**, Next Step). Write in Vietnamese.
+As your **final action**, write the phase report to `docs/output/run-logs/000-system-srs/reports/00-genallreqsrs-report.md` following the standard report structure from `.harness/agents/templates/report-templates.md` (Summary, Inputs, Outputs, Key Decisions, Quality Assessment, Metrics, **[NEEDS CLARIFICATION] Items**, Next Step). Write in English.
 
 ---
 
@@ -59,7 +59,7 @@ If `$ARGUMENTS` specifies a file or folder path, **read that path first** as the
   - Actors: `A-XX` or named (e.g., `A1: [ACTOR_NAME]`)
   - Non-functional: `NF-XX` (two-digit)
   - TBC items: `TBC-XX` (two-digit, sequential)
-- **Output language:** Vietnamese — all prose in Vietnamese. Technical IDs, file paths, and code remain as-is. Headings may mix Vietnamese/English.
+- **Output language:** English — all prose in English. Technical IDs, file paths, and code remain as-is. Headings may mix English/English.
 - **Output format:** Markdown with professional formatting (headers, tables, blockquotes).
 - **No implementation design:** Do NOT include architecture, code, or technology decisions beyond the technology recommendation section.
 
@@ -81,7 +81,7 @@ If `$ARGUMENTS` specifies a file or folder path, **read that path first** as the
 
 ### Phase A — System Overview File
 
-5. **Generate** `docs/output/srs-systems/srs-overview-system.md` containing:
+1. **Generate** `docs/output/srs-systems/srs-overview-system.md` containing:
    - §1 System Overview (purpose, scope, subsystems, assumptions, constraints)
    - §2 Architecture & Actors: system architecture Mermaid diagram (`flowchart` or `C4Context`), component diagram, and Actors table (`A-XX`: name, type, description, related modules)
    - §3 Functional Hierarchy: Module table (`MOD-XX`) + Feature index table (`FEA-XXX` per module) + Mermaid mindmap/flowchart of hierarchy
@@ -90,7 +90,7 @@ If `$ARGUMENTS` specifies a file or folder path, **read that path first** as the
 
 ### Phase B — Per-Module Folders
 
-6. **For EACH module** identified in step 3, create folder `docs/output/srs-systems/modXX-<module-slug>/` and generate:
+1. **For EACH module** identified in step 3, create folder `docs/output/srs-systems/modXX-<module-slug>/` and generate:
 
    **6a. `srs-modXX-detail.md`** — Detailed Feature Specification:
    For EACH feature in the module:
@@ -121,7 +121,7 @@ If `$ARGUMENTS` specifies a file or folder path, **read that path first** as the
 
 ### Phase C — Finalization
 
-8. **Extract Non-functional Requirements** — consolidate all NFR into §5 of `srs-overview-system.md`. Assign `NF-XX`.
+1. **Extract Non-functional Requirements** — consolidate all NFR into §5 of `srs-overview-system.md`. Assign `NF-XX`.
 2. **Compile TBC Items** — collect all `[TBC-XX]` markers into summary table: ID, description, impact, related FEA/MOD.
 3. **Self-verification** — run the quality checklist (see below) and fix any gaps.
 
@@ -320,7 +320,7 @@ Before finalizing, verify ALL of the following:
 - [ ] Each module folder `docs/output/srs-systems/modXX-*/` contains `srs-modXX-detail.md` and `srs-modXX-wireframe.md`
 - [ ] Every file inside module folders has the cross-reference header
 - [ ] No fabrication: No features or rules were invented beyond input (except `[BA-INFERRED]` items)
-- [ ] **Output in Vietnamese:** All prose is in Vietnamese
+- [ ] **Output in English:** All prose is in English
 
 ## Phase Report NEEDS CLARIFICATION Section
 

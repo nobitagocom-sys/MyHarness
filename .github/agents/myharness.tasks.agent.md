@@ -91,7 +91,7 @@ All script references below show the PowerShell form. On macOS/Linux, substitute
 
 4. **Generate tasks.md**: Use `.specify/templates/tasks-template.md` as structure, fill with:
 
-   **Output Language**: Produce `tasks.md` in Vietnamese. Technical IDs (T001, [US1], [P], etc.) remain unchanged.
+   **Output Language**: Produce `tasks.md` in English. Technical IDs (T001, [US1], [P], etc.) remain unchanged.
    - Correct feature name from plan.md
    - Phase 1: Setup tasks (project initialization)
    - Phase 2: Foundational tasks (blocking prerequisites for all user stories)

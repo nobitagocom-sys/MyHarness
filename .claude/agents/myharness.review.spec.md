@@ -28,6 +28,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/05-review-spec-report.md`
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 05). Use **Review Agent Verdict Sections** for the review-specific additions.
 
 **Step-specific overrides:**
+
 - **Title:** `# STEP 4: Specification Review Report`
 - **Agent:** `myharness.review.spec (claude-sonnet-4-6)`
 - **Verdict:** ✅ APPROVED / ⚠️ APPROVED WITH CONDITIONS / ❌ REJECTED
@@ -77,6 +78,7 @@ Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly` (macO
 - `FEATURE_SPEC` — path to `spec.md`
 
 Load the following reference documents:
+
 - `docs/output/srs-systems/srs-overview-system.md` — system-level SRS (traceability source)
 - `docs/technical_architecture.md` — technical architecture (feasibility reference)
 - `.specify/memory/constitution.md` — project Constitution (compliance gate)
@@ -164,11 +166,13 @@ Check spec against the Constitution articles relevant at the specification phase
 ## Scoring
 
 Each category receives one of:
+
 - ✅ **PASS** — fully satisfies criteria
 - ⚠️ **WARN** — partially satisfies; improvement recommended but non-blocking
 - ❌ **FAIL** — critical gap; blocking — must be resolved before proceeding
 
 **Overall Verdict**:
+
 - ✅ **APPROVED** — all categories PASS or WARN; no FAIL
 - ⚠️ **APPROVED WITH CONDITIONS** — WARNs exist; proceed with noted conditions
 - ❌ **REJECTED** — one or more FAIL; route back to `myharness.clarify` for rework
@@ -177,7 +181,7 @@ Each category receives one of:
 
 ## Output Format
 
-Produce a review report in this exact structure (in Vietnamese):
+Produce a review report in this exact structure (in English):
 
 ```markdown
 ## Spec Review Report — <feature-name>

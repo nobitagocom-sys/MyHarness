@@ -285,7 +285,7 @@ export default defineConfig({
 
 ## Output Language
 
-All test case documents, test reports, and log entries **MUST** be written in **Vietnamese**.
+All test case documents, test reports, and log entries **MUST** be written in **English**.
 Technical identifiers (TC-ID, FEA-xxx, BR-xxx, SCR-MOD-xx-nn) remain unchanged.
 Code (TypeScript/JavaScript test scripts) and file paths remain in English.
 

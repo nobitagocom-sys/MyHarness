@@ -673,7 +673,7 @@ Prisma's `schema.prisma` is the single source of truth for the database schema. 
 
 ### MySQL 8.x
 
-Required by the constraint. MySQL 8 features (`ROW_NUMBER`, recursive CTEs, window functions) may be useful for reporting queries later. The `utf8mb4` charset handles Unicode (Vietnamese characters in objective titles).
+Required by the constraint. MySQL 8 features (`ROW_NUMBER`, recursive CTEs, window functions) may be useful for reporting queries later. The `utf8mb4` charset handles Unicode (English characters in objective titles).
 
 ### Docker Compose
 

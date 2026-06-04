@@ -178,7 +178,7 @@ Each category receives one of:
 
 ## Output Format
 
-Produce a review report in this exact structure (in Vietnamese):
+Produce a review report in this exact structure (in English):
 
 ```markdown
 ## Spec Review Report — <feature-name>

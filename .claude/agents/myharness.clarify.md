@@ -153,7 +153,7 @@ Execution steps:
 4. Consolidated QA output (batch mode):
     - Merge Part A (carry-forward markers from `myharness.specify`) and Part B (new clarify questions) into a **single numbered list**.
     - Part A questions come first (prefixed `[from specify]`), then Part B (prefixed `[from clarify]`).
-    - Output the full consolidated QA list to `docs/output/run-logs/<feature-id>/reports/04-clarify-qa.md` (Vietnamese).
+    - Output the full consolidated QA list to `docs/output/run-logs/<feature-id>/reports/04-clarify-qa.md` (English).
     - **Present ALL questions at once** to the user in a single message. Do NOT ask one-by-one.
     - For each multiple‑choice question:
        - **Analyze all options** and determine the **most suitable option** based on:

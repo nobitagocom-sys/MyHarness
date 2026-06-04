@@ -34,7 +34,7 @@ As your **absolute last action** before returning to the user or orchestrator, w
 
 Write to: `docs/output/run-logs/<feature-id>/reports/03-specify-report.md`
 
-Use this **exact template** (in Vietnamese):
+Use this **exact template** (in English):
 
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 03).
 

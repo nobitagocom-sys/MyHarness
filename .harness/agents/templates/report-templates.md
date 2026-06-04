@@ -5,7 +5,7 @@ Read the appropriate template file BEFORE writing your phase report.
 
 ## Universal Report Structure
 
-Every phase report MUST include these sections (in Vietnamese):
+Every phase report MUST include these sections (in English):
 
 ```markdown
 # STEP <NN>: <Report Title>

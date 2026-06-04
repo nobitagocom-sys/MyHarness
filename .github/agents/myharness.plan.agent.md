@@ -112,7 +112,7 @@ All script references below show the PowerShell form. On macOS/Linux, substitute
 
 ### Output Language
 
-All plan artifacts **MUST** be written in Vietnamese:
+All plan artifacts **MUST** be written in English:
 - `plan.md`, `data-model.md`, `research.md`, `quickstart.md`, `ui-design.md`
 
 Technical IDs remain unchanged.

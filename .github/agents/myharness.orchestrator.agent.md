@@ -139,10 +139,10 @@ See `.harness/agents/protocols/implement-delegation.md` for full details.
 
 ---
 
-## Output Language Protocol (Vietnamese)
+## Output Language Protocol (English)
 
-All output documents **MUST** be in Vietnamese. Technical IDs (FEA-XXX, BR-XXX, MOD-XX) and code remain as-is.
-When delegating, always instruct sub-agents to produce documents in Vietnamese.
+All output documents **MUST** be in English. Technical IDs (FEA-XXX, BR-XXX, MOD-XX) and code remain as-is.
+When delegating, always instruct sub-agents to produce documents in English.
 
 ---
 

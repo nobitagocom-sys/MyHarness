@@ -69,8 +69,8 @@ Mission: produce a complete, detailed SRS for the **single specified module**.
 - **Use only the two input sources listed below.** If information is missing, write `[TBC-XX]` — do not infer or fabricate.
 - Every Business Rule must cite its source: `(srs-overview-system.md §FEA-XXX / Spec §X-Y-Z)`
 - Use precise technical terminology. Instead of "press the button" → "the system records a click event"
-- Output language: **Vietnamese** — produce one file:
-  - `srs-<MOD-ID>-<module-short-name>.md` — all prose in Vietnamese (headings/labels may mix Vietnamese/English)
+- Output language: **English** — produce one file:
+  - `srs-<MOD-ID>-<module-short-name>.md` — all prose in English (headings/labels may mix English/English)
 - Technical IDs (FEA-XXX, BR-XXX, TBC-XX) remain unchanged.
 - Output format: **Markdown**
 - Do NOT include implementation-level design (architecture, code)

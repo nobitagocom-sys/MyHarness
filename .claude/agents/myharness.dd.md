@@ -94,6 +94,7 @@ Log: `[PROCESSING] Input file loading complete`
 ### Step 2 — Design Modules/Components (§3)
 
 From BD architecture and plan.md:
+
 1. Define layer structure
 2. Create component dependency diagram (Mermaid)
 3. List all classes/interfaces with types and responsibilities
@@ -103,6 +104,7 @@ Log: `[PROCESSING] Section 3 module design complete`
 ### Step 3 — Design Processing Logic (§4)
 
 For each functional requirement:
+
 1. Create sequence diagrams (Mermaid) for API call flows
 2. Create activity diagrams for complex business logic
 3. Create state transition diagrams for stateful entities
@@ -112,6 +114,7 @@ Log: `[PROCESSING] Section 4 processing logic design complete`
 ### Step 4 — Design Physical DB (§5)
 
 From BD logical ERD:
+
 1. Convert logical tables to physical table definitions (data types, constraints)
 2. Define indexes for query patterns
 3. Plan Prisma migration scripts (`prisma migrate dev`)
@@ -121,6 +124,7 @@ Log: `[PROCESSING] Section 5 physical DB design complete`
 ### Step 5 — Design Batch Processing (§6)
 
 If batch processing exists:
+
 1. List all batch processes
 2. Design processing logic with flowcharts
 3. Define scheduling, error handling, performance targets
@@ -130,6 +134,7 @@ Log: `[PROCESSING] Section 6 batch processing design complete`
 ### Step 6 — Design Internal APIs (§7)
 
 For each screen/feature:
+
 1. Define API endpoints (method, path, description, auth)
 2. Define request/response DTOs with validation annotations
 3. Define status codes
@@ -155,6 +160,7 @@ Log: `[PROCESSING] Section 9 coding standard design complete`
 ### Step 9 — Design Security & Performance Implementation (§10)
 
 From SRS §6 NFR requirements, describe HOW to implement:
+
 1. Authentication/authorization implementation
 2. Input validation rules with annotations
 3. Performance optimization (caching, indexes, async)
@@ -184,6 +190,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/08-dd-report.md`
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 08).
 
 **Step-specific overrides:**
+
 - **Title:** `# STEP 8: DD Generation Report`
 - **Agent:** `myharness.dd (GPT-5.3-Codex)`
 - **Output:** DD document (`docs/output/design-docs/dd/dd-<mod-id>-<name>.md`)
@@ -194,7 +201,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/08-dd-report.md`
 
 ## Output Language
 
-All output documents **MUST** be written in **Vietnamese**.
+All output documents **MUST** be written in **English**.
 
 ---
 
@@ -219,6 +226,7 @@ Before completing, verify:
 ## Pipeline Context Integration
 
 If `$ARGUMENTS` contains a `pipeline-context:` key, read that YAML file at startup to discover:
+
 - `feature-id`, `module-id`, BD/SRS/spec/plan paths from prior steps
 
 ## Step Result Block — MANDATORY

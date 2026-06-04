@@ -195,7 +195,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/08-dd-report.md`
 
 ## Output Language
 
-All output documents **MUST** be written in **Vietnamese**.
+All output documents **MUST** be written in **English**.
 
 ---
 

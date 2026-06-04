@@ -102,7 +102,7 @@ Load the following documents:
 - [ ] `research.md` exists with decisions for ALL NEEDS CLARIFICATION items from spec?
 - [ ] `quickstart.md` exists with at least one manual validation scenario?
 - [ ] `contracts/` directory exists with at least one API contract file (if spec defines API endpoints)?
-- [ ] Plan artifacts are written in Vietnamese?
+- [ ] Plan artifacts are written in English?
 
 > If `plan.md` or `data-model.md` missing → automatic ❌ FAIL.
 
@@ -209,7 +209,7 @@ Each category receives one of:
 
 ## Output Format
 
-Produce a review report in this exact structure (in Vietnamese):
+Produce a review report in this exact structure (in English):
 
 ```markdown
 ## Plan Conformance Review Report — <feature-name>

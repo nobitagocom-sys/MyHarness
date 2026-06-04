@@ -20,6 +20,7 @@ This agent **MUST** create one output file during execution. The pipeline CANNOT
 
 1. Determine `<feature-id>` from the context
 2. Create directories: `docs/output/run-logs/<feature-id>/` and `docs/output/run-logs/<feature-id>/reports/`
+
 ### Step FINAL — Write Phase Report (⚠️ DO THIS LAST — NON-NEGOTIABLE)
 
 Write to: `docs/output/run-logs/<feature-id>/reports/06-plan-report.md`
@@ -27,6 +28,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/06-plan-report.md`
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 06).
 
 **Step-specific overrides:**
+
 - **Title:** `# STEP 5: Implementation Plan Report`
 - **Agent:** `myharness.plan (GPT-5.3-Codex)`
 - **Input:** specification (`spec.md`), constitution (`constitution.md`), technical architecture (`docs/technical_architecture.md`)
@@ -104,7 +106,8 @@ All script references below show the PowerShell form. On macOS/Linux, substitute
 
 ### Output Language
 
-All plan artifacts **MUST** be written in Vietnamese:
+All plan artifacts **MUST** be written in English:
+
 - `plan.md`, `data-model.md`, `research.md`, `quickstart.md`, `ui-design.md`
 
 Technical IDs remain unchanged.
@@ -165,6 +168,7 @@ Technical IDs remain unchanged.
 ## Pipeline Context Integration
 
 If `$ARGUMENTS` contains a `pipeline-context:` key, read that YAML file at startup to discover:
+
 - `feature-id`, `module-id`, spec path, tech-stack summary
 
 ## Step Result Block — MANDATORY

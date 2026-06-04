@@ -182,11 +182,11 @@ Write to: `docs/output/run-logs/<feature-id>/reports/02-bd-report.md`
 
 ## Output Language
 
-All output documents **MUST** be written in **Vietnamese**.
+All output documents **MUST** be written in **English**.
 
-- BD document: Vietnamese prose
+- BD document: English prose
 - Technical identifiers (S-XX, P-XX, FR-XX, VR-XX, etc.): unchanged
-- Mermaid diagram labels: Vietnamese
+- Mermaid diagram labels: English
 - Code/paths: as-is
 
 ---

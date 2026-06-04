@@ -28,6 +28,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/11-review-code-report.md`
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 11). Use **Review Agent Verdict Sections** for the review-specific additions.
 
 **Step-specific overrides:**
+
 - **Title:** `# STEP 11: Code Review Report`
 - **Agent:** `myharness.review.code (claude-sonnet-4-6)`
 - **Verdict:** ✅ APPROVED / ⚠️ APPROVED WITH CONDITIONS / ❌ REJECTED
@@ -79,6 +80,7 @@ Code review MUST verify that all screen data comes from the database, NOT from m
 4. **If mock data is detected:** Mark as ❌ CRITICAL — "Data must come from DB, not mock/hardcoded source"
 
 Add a dedicated section in the report:
+
 ```markdown
 ## DB Data Usage Verification
 | Check Item | Result | Notes |
@@ -88,6 +90,7 @@ Add a dedicated section in the report:
 | Prisma seed data exists | ✅/❌ | |
 | No mock / hardcoded data | ✅/❌ | |
 ```
+
 - ONLY review; delegate fixes to `myharness.implement`
 
 ## Setup
@@ -196,7 +199,7 @@ Add a dedicated section in the report:
   - UX-03: Period selection is clearly shown?
   - UX-04: Key Result add/remove interactions are clear?
   - UX-05: Save draft / submit actions show confirmation or feedback?
-- [ ] **Vietnamese/English naming**: Field names consistent with spec and domain model?
+- [ ] **English/English naming**: Field names consistent with spec and domain model?
 - [ ] **Logging standards**: `INFO` for operations, `WARN` for recoverable issues, `ERROR` for failures?
 - [ ] **NestJS config**: No direct `process.env` access in application service code — environment values come from `docker-compose.yml` (workshop) or NestJS module config?
 - [ ] **UI implementation**: Chosen UI framework and component patterns match the documented project stack?
@@ -230,6 +233,7 @@ Every business rule implementation **MUST** have evidence. Claims without eviden
 Read `.harness/agents/templates/report-templates.md` § Claims & Evidence for the required format.
 
 For each business rule (BR-XXX) implemented:
+
 - [ ] Implementation file exists at declared path?
 - [ ] Symbol/function name matches claim?
 - [ ] At least one test covers the claimed behavior?
@@ -252,11 +256,13 @@ If ANY claim lacks evidence (file + symbol + test): ❌ CRITICAL — "Claim not 
 ## Scoring
 
 Each category receives:
+
 - ✅ **PASS** — fully compliant
 - ⚠️ **WARN** — minor issues; non-blocking improvements recommended
 - ❌ **FAIL** — critical issue; must be resolved before deployment
 
 **Overall Verdict**:
+
 - ✅ **APPROVED** — all PASS or WARN; no FAIL
 - ⚠️ **APPROVED WITH CONDITIONS** — WARNs noted; technical debt tracked
 - ❌ **REJECTED** — one or more FAIL; route back to `myharness.implement`
@@ -265,7 +271,7 @@ Each category receives:
 
 ## Output Format
 
-Produce the review report in Vietnamese:
+Produce the review report in English:
 
 ```markdown
 ## Code Review Report — <feature-name>

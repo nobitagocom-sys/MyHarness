@@ -197,7 +197,7 @@ Add a dedicated section in the report:
   - UX-03: Period selection is clearly shown?
   - UX-04: Key Result add/remove interactions are clear?
   - UX-05: Save draft / submit actions show confirmation or feedback?
-- [ ] **Vietnamese/English naming**: Field names consistent with spec and domain model?
+- [ ] **English/English naming**: Field names consistent with spec and domain model?
 - [ ] **Logging standards**: `INFO` for operations, `WARN` for recoverable issues, `ERROR` for failures?
 - [ ] **NestJS config**: No direct `process.env` access in application service code — environment values come from `docker-compose.yml` (workshop) or NestJS module config?
 - [ ] **UI implementation**: Chosen UI framework and component patterns match the documented project stack?
@@ -266,7 +266,7 @@ Each category receives:
 
 ## Output Format
 
-Produce the review report in Vietnamese:
+Produce the review report in English:
 
 ```markdown
 ## Code Review Report — <feature-name>
