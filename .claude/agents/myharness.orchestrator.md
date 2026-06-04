@@ -50,7 +50,8 @@ If `$ARGUMENTS` is empty, ask: *"Please describe the feature."* Do not proceed u
 ```
 $ARGUMENTS → STEP 0 (detect existing spec)
   │
-  STEP 1  myharness.srs             → SRS
+  STEP 1  myharness.srs.system      → docs/output/srs-systems/ (system-wide SRS + wireframes)
+          myharness.srs             → SRS per-module (reads srs-overview-system.md as input)
   STEP 2  myharness.bd              → BD (External Design)
   STEP 3  myharness.specify     → spec.md
   STEP 4  myharness.clarify     → resolve ambiguities (NO PAUSE)
@@ -90,6 +91,7 @@ $ARGUMENTS → STEP 0 (detect existing spec)
 At pipeline start, create and maintain: `docs/output/run-logs/<feature-id>/run-context.yaml`
 
 See `.harness/agents/protocols/pipeline-context.md` for schema. This file:
+
 - Is created at STEP 0 with immutable fields (feature-id, module-id, tech-stack)
 - Is updated after each step with artifact paths and metrics from `<!-- STEP-RESULT -->` blocks
 - Is passed to sub-agents so they can discover prior step outputs without re-reading large files
@@ -106,12 +108,15 @@ module-id: <mod-id>
 module-keyword: <keyword>
 pipeline-context: docs/output/run-logs/<feature-id>/run-context.yaml
 mode: autonomous
-language: Vietnamese
+language: English
 report-nn: <NN>           # for myharness.implement only
 report-phase: <phase>     # for myharness.implement only
+screens-dir: specs/<feature-id>/screens/   # pass to STEP 6, 8, 9, 10 — read from run-context step-3-spec.screens-dir (omit if step-3 not yet complete)
 ```
 
 Sub-agents parse this structured block to discover all context. **Do NOT repeat information that is already in `run-context.yaml` or in the sub-agent's own instructions.**
+
+> **`screens-dir` propagation rule:** After STEP 3 completes, orchestrator MUST read `run-context.yaml → step-3-spec.screens-dir` and include it in all subsequent delegation blocks (STEP 6, 8, 9, 10). This is the token-efficient screen context that replaces reading `spec.md` per task.
 
 ---
 
@@ -119,6 +124,7 @@ Sub-agents parse this structured block to discover all context. **Do NOT repeat 
 
 After each sub-agent returns, parse the `<!-- STEP-RESULT ... /STEP-RESULT -->` YAML block from the response.
 See `.harness/agents/protocols/step-result-block.md` for format. Use it to:
+
 1. Update `run-context.yaml`
 2. Check `verdict` for gate decisions (no need to read full report file)
 3. Extract `critical-issues` for retry protocol
@@ -128,6 +134,7 @@ See `.harness/agents/protocols/step-result-block.md` for format. Use it to:
 ## Real Execution Mandate
 
 ALL steps involving terminal commands (Steps 10, 12, 13) MUST:
+
 - Use the `run` tool for every command — **NEVER** document without executing
 - Capture REAL terminal output — **NEVER** mock/simulate
 - On failure: fix code, RE-RUN command, track retries
@@ -159,6 +166,7 @@ Entry types and formats defined in `.harness/agents/protocols/log-formats.md`.
 When steps are marked `[PARALLEL GROUP]`, dispatch ALL agents in that group with a **single multi-agent call** before waiting for any result.
 
 ### Rules
+
 1. **No shared output files** — verify each agent writes to a different path before dispatching.
 2. **Wait for ALL** — do not proceed until every agent in the group returns a `<!-- STEP-RESULT -->` block.
 3. **Log each separately** — write a `[PROCESSING]` entry per agent, then one `[PARALLEL-SYNC]` entry once all complete.
@@ -170,12 +178,14 @@ Trigger: Step 7 gate PASSED.
 
 **Pre-dispatch conflict check (MANDATORY before dispatching Group A):**
 Verify output paths do NOT overlap:
+
 - Step 8 (dd) writes to: `docs/output/design-docs/dd/dd-<MOD-ID>-<short-name>.md`
 - Step 9 (tasks) writes to: `specs/<feature-id>/tasks.md`
 
 These paths are structurally disjoint (`design-docs/dd/` vs `specs/`). If for any reason both agents would write to the same file, do NOT dispatch in parallel — run sequentially and write a `[WRITE-CONFLICT]` log entry.
 
 Dispatch simultaneously:
+
 - `myharness.dd` → writes `docs/output/design-docs/dd/dd-<MOD-ID>-<short-name>.md`
 - `myharness.tasks` → writes `specs/<feature-id>/tasks.md`
 
@@ -212,6 +222,7 @@ If `tasks.md` contains clearly separable Backend and Frontend task groups, run t
 3. **STEP 0**:
    - Read `docs/input/change-request/registry.yaml` — check if `feature_id` already exists in `crs[]`. If YES: set `pipeline-mode: UPDATE` and log the existing branch. If NO: set `pipeline-mode: CREATE`.
    - Create `docs/output/run-logs/<feature-id>/state.yaml` with:
+
    ```yaml
    run_id: RUN-<YYYYMMDD>-<feature-id>
    feature_id: <feature-id>
@@ -224,6 +235,7 @@ If `tasks.md` contains clearly separable Backend and Frontend task groups, run t
      total_output: 0
      estimated_cost_usd: 0.0
    ```
+
 4. For each phase: read the step definition file. Execute steps sequentially UNLESS steps are tagged `[PARALLEL GROUP]` — dispatch those as a single multi-agent call per the Parallel Execution Protocol above.
    **Budget guard (check BEFORE each step dispatch):** Read `state.yaml.token_summary.estimated_cost_usd` and compare against `.harness/models/catalog.yaml` budget thresholds:
    - ≥ 70% (`warn_at_ratio`): write `[BUDGET-WARNING]` log entry, continue
@@ -248,6 +260,7 @@ If `tasks.md` contains clearly separable Backend and Frontend task groups, run t
 ## Resume Mode
 
 If `$ARGUMENTS` contains `mode: resume` and `resume_from_step: <N>`:
+
 1. Read `state.yaml` to get `completed_steps` and `state`
 2. If `state: FAILED`: update `state.yaml` → set `state: RUNNING`, clear `failed_step`
 3. Skip all steps in `completed_steps`

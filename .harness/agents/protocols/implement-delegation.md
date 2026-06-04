@@ -12,7 +12,7 @@ report-nn: <NN>
 report-phase: <phase-name>
 pipeline-context: docs/output/run-logs/<feature-id>/run-context.yaml
 mode: autonomous
-language: Vietnamese
+language: English
 ```
 
 ## Real Execution Mandate

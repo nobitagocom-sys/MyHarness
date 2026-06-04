@@ -108,7 +108,7 @@ module-id: <mod-id>
 module-keyword: <keyword>
 pipeline-context: docs/output/run-logs/<feature-id>/run-context.yaml
 mode: autonomous
-language: Vietnamese
+language: English
 report-nn: <NN>           # for myharness.implement only
 report-phase: <phase>     # for myharness.implement only
 ```

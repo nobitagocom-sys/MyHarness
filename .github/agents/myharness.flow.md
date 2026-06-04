@@ -244,7 +244,7 @@ module-id: mod01
 module-keyword: [KEYWORD]
 pipeline-context: docs/output/run-logs/001-xxx/run-context.yaml
 mode: autonomous
-language: Vietnamese
+language: English
 ```
 
 ### 4.2 Sub-Agent → Orchestrator: Step Result Block
