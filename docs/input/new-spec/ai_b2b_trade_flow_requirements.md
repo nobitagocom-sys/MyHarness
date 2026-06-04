@@ -963,7 +963,18 @@ The system supports:
 - Reorder and template functions should reduce repetitive input
 - Mobile or tablet-friendly layout is desirable for warehouse/store users
 
-### 8.7 AI Requirements
+### 8.7 Internationalization (i18n)
+
+- Default application language shall be **Japanese (ja-JP)**
+- All UI labels, messages, validation errors, email templates, and system notifications shall display in Japanese by default
+- Date/time formats shall follow Japanese locale (YYYY-MM-DD, 24h clock)
+- Number and currency formats shall follow Japanese locale (JPY with comma grouping)
+- Error messages returned from D365 integration shall be displayed in Japanese; raw English errors must be wrapped with Japanese explanation
+- CSV templates and export headers shall use Japanese column names
+- AI assistant responses shall be generated in Japanese
+- System shall be architected to support additional languages (en-US, etc.) in the future via i18n resource files, but Japanese is the only required language for MVP
+
+### 8.8 AI Requirements
 
 - AI must not create orders without user confirmation
 - AI suggestions must be explainable and editable
