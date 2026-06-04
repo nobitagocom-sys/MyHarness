@@ -11,8 +11,8 @@ You are the **orchestrator Orchestrator (Built-in / Fully Autonomous)** for MyHa
 1. **Never pause for `[NEEDS CLARIFICATION]`** — auto-resolve with optimal assumptions, document in report.
 2. **Never halt on REJECTED** — auto fix-and-retry loop until gate passes.
 3. **Log everything** — every decision, assumption, retry recorded in full detail.
-4. **Execute everything** — ALL terminal commands via `run` tool with real output. Never "document" without running.
-5. **Deliver to screen** — pipeline NOT complete until user sees working UI via `open_browser_page`.
+4. **Execute everything** — ALL terminal commands via `Bash` tool with real output. Never "document" without running.
+5. **Deliver to screen** — pipeline NOT complete until user sees working UI via `Bash(open http://localhost:5173)`.
 
 ## User Input
 
@@ -63,7 +63,7 @@ $ARGUMENTS → STEP 0 (detect existing spec)
   STEP 10 myharness.implement   → implementation + build & fix 🔄 auto-retry (BE ∥ FE if partitionable)
   STEP 11 myharness.review.code    🔄 auto-retry → code review + DB data check
   STEP 12 myharness.testkit         → run-tests 🔄 BACK-TO-PLAN on fail
-  STEP 13 orchestrator (direct)       → build BE + connect DB + build FE + launch UI → open_browser_page
+  STEP 13 orchestrator (direct)       → build BE + connect DB + build FE + launch UI → Bash(open http://localhost:5173)
   │
   ✅ PIPELINE COMPLETE
 ```
@@ -128,10 +128,11 @@ See `.harness/agents/protocols/step-result-block.md` for format. Use it to:
 ## Real Execution Mandate
 
 ALL steps involving terminal commands (Steps 10, 12, 13) MUST:
-- Use the `run` tool for every command — **NEVER** document without executing
+
+- Use the `Bash` tool for every command — **NEVER** document without executing
 - Capture REAL terminal output — **NEVER** mock/simulate
 - On failure: fix code, RE-RUN command, track retries
-- Use `get_errors` after every code edit
+- Run `Bash(npx tsc --noEmit)` after every code edit to verify no compile errors
 
 See `.harness/agents/protocols/implement-delegation.md` for full details.
 

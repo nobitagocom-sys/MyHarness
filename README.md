@@ -33,17 +33,18 @@ You have a full product spec, PRD, or requirements document for the whole system
 **Step 2a:** Run the system SRS agent to extract all modules and features from your document:
 
 ```
-@myharness.srs.system <path-to-your-spec-file>
+/myharness.srs.system <path-to-your-spec-file>
 ```
 
-This reads your spec and generates `docs/output/srs-systems/` — the canonical requirements used by all downstream agents. Your input can be any format: a markdown doc, a folder of files, a PRD, raw notes.
+This reads your spec and generates `docs/output/srs-systems/` — the canonical requirements baseline used by all downstream agents. Your input can be any format: a markdown doc, a folder of files, a PRD, raw notes.
 
-**Step 2b:** Then run the pipeline per module:
+**Step 2b:** Run the orchestrator with a feature description:
 
 ```
-@myharness.orchestrator MOD-01
-@myharness.orchestrator MOD-02
+/myharness.orchestrator <feature or system description>
 ```
+
+At STEP 0, the orchestrator **automatically detects** that `docs/output/srs-systems/srs-overview-system.md` exists, reads it, and skips SRS re-generation. All downstream steps (BD, spec, plan, implement…) use the pre-generated SRS as primary input — nothing is regenerated from scratch.
 
 ---
 
@@ -67,11 +68,15 @@ Raw notes, user stories, or copied Jira tickets all work — agents will structu
 Then run:
 
 ```
-@myharness.orchestrator <feature name>
+/myharness.orchestrator <feature name>
 ```
+
+At STEP 0, the orchestrator checks `docs/input/change-request/registry.yaml` — if the feature already exists it switches to UPDATE mode automatically.
 
 ---
 
+> **Note:** `/myharness.orchestrator` does not take module IDs or flags as input. STEP 0 auto-detects project state (new vs update, SRS pre-generated vs not) from the filesystem. You only need to describe what to build.
+>
 > `docs/technical_architecture.md` is filled in automatically by `myharness.init` — you don't need to edit it manually.
 
 ---

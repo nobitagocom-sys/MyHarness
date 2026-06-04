@@ -51,7 +51,18 @@ You are a Senior Technical Reviewer for the current project. Your mission is to 
 $ARGUMENTS
 ```
 
-Optional: feature-id (e.g. `001-xxx`). If empty, auto-detect from the active branch via `check-prerequisites.ps1`.
+Optional: feature-id (e.g. `001-xxx`). If empty, auto-detect from the active branch via `check-prerequisites.ps1` (or `check-prerequisites.sh` on macOS/Linux).
+
+## Platform Detection
+
+**Before running any `.specify/scripts/` script**, detect OS and use the correct script path + flag style:
+
+| OS | Script path | Flag style |
+| --- | --- | --- |
+| Windows | `.specify/scripts/powershell/<script>.ps1` | `-Json`, `-PathsOnly`, `-RequireTasks`, `-IncludeTasks` |
+| macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
+
+All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
 
 ## Constraints
 
@@ -61,7 +72,7 @@ Optional: feature-id (e.g. `001-xxx`). If empty, auto-detect from the active bra
 
 ## Setup
 
-Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly` from repo root and parse:
+Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly` (macOS/Linux: `.specify/scripts/bash/check-prerequisites.sh --json --paths-only`) from repo root and parse:
 
 - `FEATURE_DIR` — absolute path to the feature specs directory
 - `FEATURE_SPEC` — path to `spec.md`

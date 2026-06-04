@@ -49,7 +49,7 @@ pipeline-context: docs/output/run-logs/<feature-id>/run-context.yaml
 
 **Phase 3 — Build & Fix:**
 
-1. Fix all compile/lint errors (`get_errors` → fix → repeat until zero)
+1. Fix all compile/lint errors (`Bash(npx tsc --noEmit)` → fix → repeat until zero)
 2. Build frontend: `cd frontend && npm install && npm run build`
 3. Start Docker (if `docker-compose.dev.yml` exists): `docker compose -f docker/docker-compose.dev.yml up -d`
 4. Build backend: `cd backend && npm install && npm run build`

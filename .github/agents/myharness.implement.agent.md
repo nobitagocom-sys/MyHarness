@@ -58,6 +58,17 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Platform Detection
+
+**Before running any `.specify/scripts/` script**, detect OS and use the correct script path + flag style:
+
+| OS | Script path | Flag style |
+| --- | --- | --- |
+| Windows | `.specify/scripts/powershell/<script>.ps1` | `-Json`, `-PathsOnly`, `-RequireTasks`, `-IncludeTasks` |
+| macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
+
+All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
+
 ## Scope Guard (⛔ RUNS FIRST — before any file creation)
 
 If `$ARGUMENTS` contains a `forbidden_write:` list, **you MUST NOT write to any path in that list**.
@@ -84,7 +95,7 @@ ADMIN role query logic (P-08), Prisma portable schema (P-09), error boundaries (
 
 ## Outline
 
-1. Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks` (macOS/Linux: `.specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks`) from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
 
 2. **Check checklists status** (if FEATURE_DIR/checklists/ exists):
    - Scan all checklist files in the checklists/ directory

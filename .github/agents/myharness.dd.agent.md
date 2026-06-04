@@ -2,7 +2,7 @@
 description: "Generate DD (Detailed Design / Internal Design) per module. Use when: generate DD, create detailed design, module design, sequence diagram, class diagram, physical DB design, internal API design, batch design, error handling, coding standards, detailed design, internal design, MOD-XX DD."
 model: GPT-5.3-Codex
 tools: [read, search, edit, todo]
-argument-hint: "Module ID or keyword (e.g., 'MOD-01', 'okr')"
+argument-hint: "Module ID or keyword (e.g., 'MOD-01', 'app')"
 ---
 
 ## Execution Logging & Phase Report (Constitution Art. XI & XII)

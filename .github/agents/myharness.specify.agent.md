@@ -65,6 +65,17 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Platform Detection
+
+**Before running any `.specify/scripts/` script**, detect OS and use the correct script path + flag style:
+
+| OS | Script path | Flag style |
+| --- | --- | --- |
+| Windows | `.specify/scripts/powershell/<script>.ps1` | `-Json`, `-PathsOnly`, `-RequireTasks`, `-IncludeTasks` |
+| macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
+
+All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
+
 ## Outline
 
 The text the user typed after `/myharness.specify` in the triggering message **is** the feature description. Assume you always have it available in this conversation even if `$ARGUMENTS` appears literally below. Do not ask the user to repeat it unless they provided an empty command.
@@ -115,9 +126,9 @@ Given that feature description, do this:
       - Find the highest number N
       - Use N+1 for the new branch number
 
-   g. Run the script `.specify/scripts/powershell/create-new-feature.ps1 -Json "$ARGUMENTS"` with the calculated number and short-name:
+   g. Run the script `.specify/scripts/powershell/create-new-feature.ps1 -Json "$ARGUMENTS"` (macOS/Linux: `.specify/scripts/bash/create-new-feature.sh --json "$ARGUMENTS"`) with the calculated number and short-name:
       - Pass `--number N+1` and `--short-name "your-short-name"` along with the feature description
-      - Bash example: `.specify/scripts/powershell/create-new-feature.ps1 -Json "$ARGUMENTS" --json --number 5 --short-name "user-auth" "Add user authentication"`
+      - Bash example: `.specify/scripts/bash/create-new-feature.sh --json "$ARGUMENTS" --json --number 5 --short-name "user-auth" "Add user authentication"`
       - PowerShell example: `.specify/scripts/powershell/create-new-feature.ps1 -Json "$ARGUMENTS" -Json -Number 5 -ShortName "user-auth" "Add user authentication"`
 
    **IMPORTANT**:

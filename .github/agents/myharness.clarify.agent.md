@@ -54,6 +54,17 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Platform Detection
+
+**Before running any `.specify/scripts/` script**, detect OS and use the correct script path + flag style:
+
+| OS | Script path | Flag style |
+| --- | --- | --- |
+| Windows | `.specify/scripts/powershell/<script>.ps1` | `-Json`, `-PathsOnly`, `-RequireTasks`, `-IncludeTasks` |
+| macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
+
+All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
+
 ## Outline
 
 Goal: Detect and reduce ambiguity or missing decision points in the active feature specification and record the clarifications directly in the spec file.
@@ -62,7 +73,7 @@ Note: This clarification workflow is expected to run (and be completed) BEFORE i
 
 Execution steps:
 
-1. Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly` from repo root **once** (combined `--json --paths-only` mode / `-Json -PathsOnly`). Parse minimal JSON payload fields:
+1. Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly` (macOS/Linux: `.specify/scripts/bash/check-prerequisites.sh --json --paths-only`) from repo root **once** (combined `--json --paths-only` mode / `-Json -PathsOnly`). Parse minimal JSON payload fields:
    - `FEATURE_DIR`
    - `FEATURE_SPEC`
    - (Optionally capture `IMPL_PLAN`, `TASKS` for future chained flows.)

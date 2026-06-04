@@ -6,7 +6,7 @@ tools: [Read, Bash, Edit, Write, TodoWrite]
 
 ## Execution Logging & Phase Report
 
-Before starting any work, write a **[START]** entry to `docs/output/run-logs/000-system-srs/00-okr.genallreqsrs.log.md` with timestamp, agent name, model, input summary, and goal. Append **[PROCESSING]** entries at key milestones (e.g., "loaded input document", "identified N modules", "extracted N FEAs for MOD-XX", "generating wireframe for MOD-XX", "generating ERD"). At completion, append **[END]** with status, output artifacts, metrics, and duration. On errors, append **[ISSUE]** with severity and description.
+Before starting any work, write a **[START]** entry to `docs/output/run-logs/000-system-srs/00-app.genallreqsrs.log.md` with timestamp, agent name, model, input summary, and goal. Append **[PROCESSING]** entries at key milestones (e.g., "loaded input document", "identified N modules", "extracted N FEAs for MOD-XX", "generating wireframe for MOD-XX", "generating ERD"). At completion, append **[END]** with status, output artifacts, metrics, and duration. On errors, append **[ISSUE]** with severity and description.
 
 As your **final action**, write the phase report to `docs/output/run-logs/000-system-srs/reports/00-genallreqsrs-report.md` following the standard report structure from `.harness/agents/templates/report-templates.md` (Summary, Inputs, Outputs, Key Decisions, Quality Assessment, Metrics, **[NEEDS CLARIFICATION] Items**, Next Step). Write in Vietnamese.
 
@@ -23,6 +23,7 @@ $ARGUMENTS
 ```
 
 `$ARGUMENTS` may contain:
+
 - Path to input **file or folder** containing requirements documents.
 - Scope constraints (specific modules, features).
 - Additional guidance.
@@ -31,7 +32,7 @@ If empty, use the default input sources below. Do **NOT** prompt the user — pr
 
 ## Context
 
-Project: **[PROJECT_NAME]** 
+Project: **[PROJECT_NAME]**
 Mission: produce a **complete, exhaustive, system-wide SRS** covering all modules and all features found in the specification documents. The output (`docs/output/srs-systems/`) is the **canonical input** for all downstream agents (especially `myharness.srs` which generates per-module SRS files from it).
 
 ## Input Sources
@@ -63,6 +64,7 @@ If `$ARGUMENTS` specifies a file or folder path, **read that path first** as the
 - **No implementation design:** Do NOT include architecture, code, or technology decisions beyond the technology recommendation section.
 
 ### Response Handling Rules
+
 - Output MUST be split into **multiple files** according to the output structure below — never merge everything into one file.
 - Each file must be **standalone readable** with a cross-reference header.
 - Execute all file creation **automatically and continuously** — do NOT stop to ask the user between files.
@@ -78,7 +80,8 @@ If `$ARGUMENTS` specifies a file or folder path, **read that path first** as the
 4. **Create output directory** `docs/output/srs-systems/` (and subdirectories per module).
 
 ### Phase A — System Overview File
-5. **Generate** `docs/output/srs-systems/srs-overview-system.md` containing:
+
+1. **Generate** `docs/output/srs-systems/srs-overview-system.md` containing:
    - §1 System Overview (purpose, scope, subsystems, assumptions, constraints)
    - §2 Architecture & Actors: system architecture Mermaid diagram (`flowchart` or `C4Context`), component diagram, and Actors table (`A-XX`: name, type, description, related modules)
    - §3 Functional Hierarchy: Module table (`MOD-XX`) + Feature index table (`FEA-XXX` per module) + Mermaid mindmap/flowchart of hierarchy
@@ -86,7 +89,8 @@ If `$ARGUMENTS` specifies a file or folder path, **read that path first** as the
    - §5 Common Components: Non-functional Requirements (`NF-XX`), Global Business Rules, UI/UX Standards (master layout, colors, typography), Global Error Handling, Security & Authorization model (RBAC/ABAC roles, permission matrix)
 
 ### Phase B — Per-Module Folders
-6. **For EACH module** identified in step 3, create folder `docs/output/srs-systems/modXX-<module-slug>/` and generate:
+
+1. **For EACH module** identified in step 3, create folder `docs/output/srs-systems/modXX-<module-slug>/` and generate:
 
    **6a. `srs-modXX-detail.md`** — Detailed Feature Specification:
    For EACH feature in the module:
@@ -112,13 +116,14 @@ If `$ARGUMENTS` specifies a file or folder path, **read that path first** as the
    - Detailed table definitions (columns, types, indexes, constraints)
    - Sample data for illustration
 
-7. **Cross-reference header** — Every file inside `docs/output/srs-systems/modXX-*/` MUST start with:
+2. **Cross-reference header** — Every file inside `docs/output/srs-systems/modXX-*/` MUST start with:
    `> 📄 This file is part of the SRS document set. See the system overview at [srs-overview-system.md](../srs-overview-system.md)`
 
 ### Phase C — Finalization
-8. **Extract Non-functional Requirements** — consolidate all NFR into §5 of `srs-overview-system.md`. Assign `NF-XX`.
-9. **Compile TBC Items** — collect all `[TBC-XX]` markers into summary table: ID, description, impact, related FEA/MOD.
-10. **Self-verification** — run the quality checklist (see below) and fix any gaps.
+
+1. **Extract Non-functional Requirements** — consolidate all NFR into §5 of `srs-overview-system.md`. Assign `NF-XX`.
+2. **Compile TBC Items** — collect all `[TBC-XX]` markers into summary table: ID, description, impact, related FEA/MOD.
+3. **Self-verification** — run the quality checklist (see below) and fix any gaps.
 
 ---
 
@@ -127,21 +132,26 @@ If `$ARGUMENTS` specifies a file or folder path, **read that path first** as the
 Apply when generating the ERD section in `srs-overview-system.md` §4:
 
 **Step 1 — Data Requirements Analysis:**
+
 - **Entities:** List all objects the system manages (`ENT-XX`: name, description).
 - **Attributes per entity** (table format):
+
   | Attribute | Data Type | Constraints | Description |
   |-----------|-----------|-------------|-------------|
   | id | BIGINT | PK, SERIAL/IDENTITY | Primary key |
   | name | VARCHAR(255) | NOT NULL | Display name |
+
 - **Data Flow:** How does data move between entities? Which business rules govern relationships?
 
 **Step 2 — ERD Mermaid Diagram:**
 
 Render as a `erDiagram` Mermaid block:
+
 - 1:1 relationship: `||--||`
 - 1:N relationship: `||--o{`
 - N:N relationship: **MUST** create a Junction Table → decompose into two 1:N relationships. Symbol: `}o--o{`
 - Include a relationship summary table:
+
   | Entity A | Relationship | Entity B | Description |
   |----------|--------------|----------|-------------|
   | User | 1:N | Alert | One user can have many alerts |
@@ -161,7 +171,7 @@ docs/output/srs-systems/
 │   ├── srs-mod01-detail.md
 │   ├── srs-mod01-wireframe.md
 │   └── srs-mod01-data-model.md
-├── mod02-okr/
+├── mod02-app/
 │   ├── srs-mod02-detail.md
 │   ├── srs-mod02-wireframe.md
 │   └── srs-mod02-data-model.md
@@ -284,24 +294,28 @@ docs/output/srs-systems/
 Before finalizing, verify ALL of the following:
 
 **Content completeness:**
+
 - [ ] **Module completeness:** Every module in input has a `MOD-XX` entry and a folder `docs/output/srs-systems/modXX-*/`
 - [ ] **Feature completeness:** Every function described in input has a `FEA-XXX` entry in `srs-modXX-detail.md`
 - [ ] **Wireframe completeness:** Every feature with a screen has an entry in `srs-modXX-wireframe.md`
 - [ ] **ERD completeness:** All entities identified from features appear in `srs-overview-system.md` §4 ERD
 
 **ID integrity:**
+
 - [ ] All `FEA-XXX` IDs are globally sequential and unique
 - [ ] All `MOD-XX` IDs are sequential and unique
 - [ ] All `BR-XXX-N` have source citations `(Spec §X-Y-Z)` or `[BA-INFERRED]`
 - [ ] All `TBC-XX` used inline also appear in §6 TBC summary table
 
 **Coverage:**
+
 - [ ] Actor coverage: All actors appear in `srs-overview-system.md` §2.3
 - [ ] NFR coverage: Performance, security, reliability captured in §5.1
 - [ ] Exception flows: Each FEA with known error conditions includes `E-XXX-N` entries
 - [ ] Cross-module references: Features interacting with other modules note the dependency
 
 **File structure:**
+
 - [ ] `docs/output/srs-systems/srs-overview-system.md` exists and contains all 6 sections
 - [ ] Each module folder `docs/output/srs-systems/modXX-*/` contains `srs-modXX-detail.md` and `srs-modXX-wireframe.md`
 - [ ] Every file inside module folders has the cross-reference header
@@ -325,7 +339,8 @@ The phase report (`00-genallreqsrs-report.md`) **MUST** include a `## [NEEDS CLA
 ## Downstream Usage
 
 The output file `docs/output/srs-systems/srs-overview-system.md` is consumed by:
-- **`myharness.srs`** agent — extracts per-module SRS files (e.g., `srs-mod01-workspace.md`, `srs-mod02-okr.md`)
+
+- **`myharness.srs`** agent — extracts per-module SRS files (e.g., `srs-mod01-workspace.md`, `srs-mod02-app.md`)
 - **`myharness.specify`** agent — references for feature specification
 - **`myharness.orchestrator`** / **`myharness.orchestrator`** — pipeline orchestrators reference it as the requirements baseline
 

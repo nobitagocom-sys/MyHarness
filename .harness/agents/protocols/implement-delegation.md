@@ -17,10 +17,10 @@ language: Vietnamese
 
 ## Real Execution Mandate
 
-ALL terminal commands MUST be executed via the `run` tool with real output captured.
+ALL terminal commands MUST be executed via the `Bash` tool with real output captured.
 
 - **PROHIBITED:** Documenting commands without executing, mock output, skipping npm commands.
-- **REQUIRED:** Use `get_errors` after every code edit to verify compile/lint errors are resolved.
+- **REQUIRED:** Run `Bash(npx tsc --noEmit)` after every code edit to verify compile/lint errors are resolved.
 - **REQUIRED:** For frontend under `frontend/`, run `npm install` if `node_modules/` does not exist.
 
 ## ⛔ Portable Database Schema Rules (Post-Mortem P-02, P-05)
@@ -89,7 +89,7 @@ Track every file created/modified in the report's Artifacts section.
 Phase 2 — Build & Fix:
 Build the application and fix all compile/runtime errors. Do NOT launch the screen.
 Execute in order:
-1. Fix all compile/lint errors (get_errors → fix → repeat until zero)
+1. Fix all compile/lint errors (`Bash(npx tsc --noEmit)` → fix → repeat until zero)
 2. Build frontend: cd frontend && npm install && npm run build
 3. Start Docker (if docker-compose.dev.yml exists): docker compose -f docker/docker-compose.dev.yml up -d
 4. Build backend: cd backend && npm install && npm run build

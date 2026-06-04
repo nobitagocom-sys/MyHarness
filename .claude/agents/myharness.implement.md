@@ -58,6 +58,17 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Platform Detection
+
+**Before running any `.specify/scripts/` script**, detect OS and use the correct script path + flag style:
+
+| OS | Script path | Flag style |
+| --- | --- | --- |
+| macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
+| Windows | `.specify/scripts/powershell/<script>.ps1` | `-Json`, `-PathsOnly`, `-RequireTasks`, `-IncludeTasks` |
+
+All script references below show the bash form. On Windows, substitute the powershell path and PowerShell-style flags.
+
 ## Scope Guard (⛔ RUNS FIRST — before any file creation)
 
 If `$ARGUMENTS` contains a `forbidden_write:` list, **you MUST NOT write to any path in that list**.
@@ -84,7 +95,7 @@ ADMIN role query logic (P-08), Prisma portable schema (P-09), error boundaries (
 
 ## Outline
 
-1. Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. Run `.specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks` (Windows: `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks`) from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
 
 2. **Check checklists status** (if FEATURE_DIR/checklists/ exists):
    - Scan all checklist files in the checklists/ directory
@@ -310,12 +321,13 @@ Note: This command assumes a complete task breakdown exists in tasks.md. If task
 
 ## STEP 10 Mode: Build, Start & Verify on Screen
 
-When invoked by `myharness.orchestrator` for **STEP 10** (the instruction will contain "Build, run, and verify"), execute the following concrete sequence using the `run` tool. Do NOT skip to simulated log output — run actual commands.
+When invoked by `myharness.orchestrator` for **STEP 10** (the instruction will contain "Build, run, and verify"), execute the following concrete sequence using the `Bash` tool. Do NOT skip to simulated log output — run actual commands.
 
 > **⚠️ CRITICAL EXECUTION RULES (applies to ALL steps)**:
-> 1. **USE the `run` tool** for every terminal command. DO NOT document commands without executing them.
-> 2. **USE `get_errors`** after editing code to verify no compile/lint errors remain.
-> 3. **Capture REAL output** from the `run` tool. DO NOT write simulated/mock output.
+>
+> 1. **USE the `Bash` tool** for every terminal command. DO NOT document commands without executing them.
+> 2. **Run `Bash(npx tsc --noEmit)`** after editing code to verify no compile/lint errors remain.
+> 3. **Capture REAL output** from the `Bash` tool. DO NOT write simulated/mock output.
 > 4. **If a command fails**: read the error, fix the source code, re-run the command.
 > 5. **Track retries**: record each fix attempt and re-run in the execution log.
 > 6. **For frontend**: Always `npm install` first if `node_modules/` does not exist.

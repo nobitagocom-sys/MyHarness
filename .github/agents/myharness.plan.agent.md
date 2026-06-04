@@ -57,9 +57,20 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Platform Detection
+
+**Before running any `.specify/scripts/` script**, detect OS and use the correct script path + flag style:
+
+| OS | Script path | Flag style |
+| --- | --- | --- |
+| Windows | `.specify/scripts/powershell/<script>.ps1` | `-Json`, `-PathsOnly`, `-RequireTasks`, `-IncludeTasks` |
+| macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
+
+All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
+
 ## Outline
 
-1. **Setup**: Run `.specify/scripts/powershell/setup-plan.ps1 -Json` from repo root and parse JSON for FEATURE_SPEC, IMPL_PLAN, SPECS_DIR, BRANCH. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. **Setup**: Run `.specify/scripts/powershell/setup-plan.ps1 -Json` (macOS/Linux: `.specify/scripts/bash/setup-plan.sh --json`) from repo root and parse JSON for FEATURE_SPEC, IMPL_PLAN, SPECS_DIR, BRANCH. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
 
 2. **Load context**: Read FEATURE_SPEC and `.specify/memory/constitution.md`. Load IMPL_PLAN template (already copied).
 
@@ -122,7 +133,7 @@ Technical IDs remain unchanged.
    - Skip if project is purely internal (build scripts, one-off tools, etc.)
 
 3. **Agent context update**:
-   - Run `.specify/scripts/powershell/update-agent-context.ps1 -AgentType copilot`
+   - Run `.specify/scripts/powershell/update-agent-context.ps1 -AgentType copilot` (macOS/Linux: `.specify/scripts/bash/update-agent-context.sh copilot`)
    - These scripts detect which AI agent is in use
    - Update the appropriate agent-specific context file
    - Add only new technology from current plan
@@ -138,7 +149,7 @@ Technical IDs remain unchanged.
    - Map each screen to its **React JSX component path**:
      `frontend/src/pages/<featureName>/Scr{SCREEN_ID}.jsx`
      (e.g., SCR-mod01-01 → `frontend/src/pages/workspace/Scr0801.jsx`)
-   - **NEVER** reference Thymeleaf template paths or legacy `src/okr-workshop-web/` paths
+   - **NEVER** reference Thymeleaf template paths or legacy `src/app-web/` paths
    - Include responsive behavior notes (if applicable)
    - Reference constitution Layout-01~06 standards throughout
    - Skip if feature has no user-facing screens
@@ -152,7 +163,7 @@ Technical IDs remain unchanged.
 - **⛔ PATH HARD GATE**: Before writing `plan.md`, verify the "Project Structure" section uses
   the canonical monolithic layout. Every implementation file path
   MUST begin with `backend/src/modules/<feature>/` (for TypeScript backend) or `frontend/src/pages/<feature>/`
-  (for React screens). Paths like `src/modules/mod[XX]/` or `okr-workshop-web/src/features/` are
+  (for React screens). Paths like `src/modules/mod[XX]/` or `app-web/src/features/` are
   **INVALID** and represent a constitution violation. If the plan is about to generate an invalid
   path, correct it to the canonical path before writing. Record the correction in the log as
   `[PROCESSING] path corrected: <wrong> → <correct>`.

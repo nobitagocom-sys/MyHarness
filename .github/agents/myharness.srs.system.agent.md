@@ -7,7 +7,7 @@ argument-hint: "Optional: path to input file/folder and scope constraints (defau
 
 ## Execution Logging & Phase Report
 
-Before starting any work, write a **[START]** entry to `docs/output/run-logs/000-system-srs/00-okr.genallreqsrs.log.md` with timestamp, agent name, model, input summary, and goal. Append **[PROCESSING]** entries at key milestones (e.g., "loaded input document", "identified N modules", "extracted N FEAs for MOD-XX", "generating wireframe for MOD-XX", "generating ERD"). At completion, append **[END]** with status, output artifacts, metrics, and duration. On errors, append **[ISSUE]** with severity and description.
+Before starting any work, write a **[START]** entry to `docs/output/run-logs/000-system-srs/00-app.genallreqsrs.log.md` with timestamp, agent name, model, input summary, and goal. Append **[PROCESSING]** entries at key milestones (e.g., "loaded input document", "identified N modules", "extracted N FEAs for MOD-XX", "generating wireframe for MOD-XX", "generating ERD"). At completion, append **[END]** with status, output artifacts, metrics, and duration. On errors, append **[ISSUE]** with severity and description.
 
 As your **final action**, write the phase report to `docs/output/run-logs/000-system-srs/reports/00-genallreqsrs-report.md` following the standard report structure from `.harness/agents/templates/report-templates.md` (Summary, Inputs, Outputs, Key Decisions, Quality Assessment, Metrics, **[NEEDS CLARIFICATION] Items**, Next Step). Write in Vietnamese.
 
@@ -162,7 +162,7 @@ docs/output/srs-systems/
 │   ├── srs-mod01-detail.md
 │   ├── srs-mod01-wireframe.md
 │   └── srs-mod01-data-model.md
-├── mod02-okr/
+├── mod02-app/
 │   ├── srs-mod02-detail.md
 │   ├── srs-mod02-wireframe.md
 │   └── srs-mod02-data-model.md
@@ -326,7 +326,7 @@ The phase report (`00-genallreqsrs-report.md`) **MUST** include a `## [NEEDS CLA
 ## Downstream Usage
 
 The output file `docs/output/srs-systems/srs-overview-system.md` is consumed by:
-- **`myharness.srs`** agent — extracts per-module SRS files (e.g., `srs-mod01-workspace.md`, `srs-mod02-okr.md`)
+- **`myharness.srs`** agent — extracts per-module SRS files (e.g., `srs-mod01-workspace.md`, `srs-mod02-app.md`)
 - **`myharness.specify`** agent — references for feature specification
 - **`myharness.orchestrator`** / **`myharness.orchestrator`** — pipeline orchestrators reference it as the requirements baseline
 

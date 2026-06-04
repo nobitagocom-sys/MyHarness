@@ -52,7 +52,18 @@ You are a Senior Code Reviewer specializing in Node.js/NestJS/TypeScript impleme
 $ARGUMENTS
 ```
 
-If `$ARGUMENTS` is empty, run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly` to detect the current active feature.
+If `$ARGUMENTS` is empty, run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly` (macOS/Linux: `.specify/scripts/bash/check-prerequisites.sh --json --paths-only`) to detect the current active feature.
+
+## Platform Detection
+
+**Before running any `.specify/scripts/` script**, detect OS and use the correct script path + flag style:
+
+| OS | Script path | Flag style |
+| --- | --- | --- |
+| Windows | `.specify/scripts/powershell/<script>.ps1` | `-Json`, `-PathsOnly`, `-RequireTasks`, `-IncludeTasks` |
+| macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
+
+All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
 
 ## Constraints
 
@@ -82,7 +93,7 @@ Add a dedicated section in the report:
 
 ## Setup
 
-1. Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly -RequireTasks -IncludeTasks` and parse:
+1. Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly -RequireTasks -IncludeTasks` (macOS/Linux: `.specify/scripts/bash/check-prerequisites.sh --json --paths-only --require-tasks --include-tasks`) and parse:
    - `FEATURE_DIR` — feature specs directory
    - `AVAILABLE_DOCS` — list of generated artifacts
 2. Load reference documents:
