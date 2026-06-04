@@ -122,16 +122,7 @@ For each step from `from_step` to `to_step`:
    - report-gate-protocol.md (every step)
    - auto-resolve-protocol.md (steps 1,2,3,4,6,8,9)
    - gate-retry-protocol.md (steps 5,7,10,11,12)
-3. Execute step:
-   a. If parallel group (8 ∥ 9) → dispatch both agents simultaneously
-   b. If regular step → dispatch the corresponding agent
-   c. Read STEP-RESULT block
-   d. Update run-context.yaml and state.yaml
-   e. Apply REPORT HARD GATE
-   f. If gate REJECTED:
-      - Steps 5,7,11: auto-retry with fix agent (max 5 attempts)
-      - Step 10: auto-retry build & fix (max 5 attempts)
-      - Step 12: BACK-TO-PLAN (max 3 cycles)
+3. Execute step per Step Execution Checklist below
 4. Write log to 00-myharness.log.md
 ```
 
@@ -139,6 +130,134 @@ For each step from `from_step` to `to_step`:
 - If range includes 8 or 9 → always run both in parallel
 - If range has only 8 or only 9 → warn and auto-include both
 - Step 8b only runs if in range AND Step 8+9 have completed
+
+---
+
+### Step Execution Checklist
+
+> ⛔ MANDATORY: Follow exactly for each step. Do NOT skip sub-steps.
+
+#### STEP 1 — SRS Generation (TWO mandatory sub-steps)
+
+```
+SUB-STEP 1a — myharness.srs.system (ALWAYS run first unless already exists):
+  1. Check if docs/output/srs-systems/srs-overview-system.md EXISTS
+  2. IF NOT EXISTS:
+     a. Write [PROCESSING] STEP 1a — myharness.srs.system to log
+     b. Invoke Skill: myharness.srs.system
+        ARGUMENTS: feature-id, module-id, module-keyword, pipeline-context, input-spec
+     c. Wait for result → parse <!-- STEP-RESULT -->
+     d. Set srs-system.status: PRE_GENERATED in run-context.yaml
+     e. Write [PROCESSING] STEP 1a — COMPLETE to log
+  3. IF EXISTS:
+     a. Set srs-system.status: PRE_GENERATED (already done)
+     b. Write [STEP 1a SKIPPED — srs-overview-system.md already exists] to log
+
+SUB-STEP 1b — myharness.srs.get-raw (ALWAYS run after 1a):
+  1. Write [PROCESSING] STEP 1b — myharness.srs.get-raw to log
+  2. Invoke Skill: myharness.srs.get-raw
+     ARGUMENTS: feature-id, module-id, module-keyword, pipeline-context, input-spec
+     Pass srs-system-overview path from sub-step 1a
+  3. Wait for result → parse <!-- STEP-RESULT -->
+  4. Update run-context.yaml: step-1-srs.status, path, fea-count, tbc-count
+  5. Apply REPORT HARD GATE
+  6. Write [PROCESSING] STEP 1 — COMPLETE to log
+```
+
+#### STEP 2 — BD Generation
+
+```
+1. Write [PROCESSING] STEP 2 — myharness.bd to log
+2. Read run-context.yaml → get srs path from step-1-srs.path
+3. Invoke Skill: myharness.bd
+   ARGUMENTS: feature-id, module-id, pipeline-context
+   Pass srs-path, srs-system-overview (if PRE_GENERATED)
+4. Wait for result → parse <!-- STEP-RESULT -->
+5. Update run-context.yaml: step-2-bd.status, path, screen-count
+6. Auto-resolve any [NEEDS CLARIFICATION] markers
+7. Apply REPORT HARD GATE
+8. Write [PROCESSING] STEP 2 — COMPLETE to log
+```
+
+#### STEP 3 — Spec Creation
+
+```
+1. Write [PROCESSING] STEP 3 — myharness.specify to log
+2. Read run-context.yaml → get srs-path, bd-path
+3. Invoke Skill: myharness.specify
+   ARGUMENTS: feature-id, module-id, srs-path, bd-path, pipeline-context
+4. Wait for result → parse <!-- STEP-RESULT -->
+5. Update run-context.yaml: step-3-spec.status, path, branch
+6. POST-CHECK: scan spec.md for [NEEDS CLARIFICATION] → auto-resolve each
+7. Apply REPORT HARD GATE
+8. Write [PROCESSING] STEP 3 — COMPLETE to log
+```
+
+#### STEP 4 — Spec Clarification
+
+```
+1. Write [PROCESSING] STEP 4 — myharness.clarify to log
+2. Invoke Skill: myharness.clarify
+   ARGUMENTS: feature-id, spec-path (from run-context step-3), pipeline-context
+3. Wait for result → parse <!-- STEP-RESULT -->
+4. Apply Auto-Resolve Protocol to ALL questions → encode into spec
+5. Write 04-clarify-qa.md with full Q&A table
+6. Update run-context.yaml: step-4-clarify.status, tbc-resolved
+7. Apply REPORT HARD GATE
+8. Write [PROCESSING] STEP 4 — COMPLETE to log
+```
+
+#### STEP 5 — Spec Review (Auto-Retry Gate)
+
+```
+1. Write [PROCESSING] STEP 5 — myharness.review.spec to log
+2. Invoke Skill: myharness.review.spec
+   ARGUMENTS: feature-id, spec-path, srs-path, pipeline-context
+3. Wait for result → parse <!-- STEP-RESULT --> → check verdict
+4. IF APPROVED or APPROVED_WITH_CONDITIONS → proceed to Step 6
+5. IF REJECTED:
+   a. Extract CRITICAL issues list
+   b. Write [ISSUE] STEP 5 — REJECTED (Retry N/5) to log
+   c. Invoke myharness.specify to fix CRITICAL issues
+   d. Re-invoke myharness.review.spec
+   e. Repeat until APPROVED or retry > 5
+   f. If retry > 5 → write [ESCALATION], continue anyway
+6. Update run-context.yaml: step-5-review-spec.verdict, retries
+7. Apply REPORT HARD GATE
+8. Write [PROCESSING] STEP 5 — COMPLETE to log
+```
+
+#### STEP 6 — Implementation Planning
+
+```
+1. Write [PROCESSING] STEP 6 — myharness.plan to log
+2. Invoke Skill: myharness.plan
+   ARGUMENTS: feature-id, module-id, pipeline-context
+3. Wait for result → parse <!-- STEP-RESULT -->
+4. Update run-context.yaml: step-6-plan.path, data-model, contracts
+5. Auto-resolve any [NEEDS CLARIFICATION] markers in plan artifacts
+6. Apply REPORT HARD GATE
+7. Write [PROCESSING] STEP 6 — COMPLETE to log
+```
+
+#### STEP 7 — Plan Review (Auto-Retry Gate)
+
+```
+1. Write [PROCESSING] STEP 7 — myharness.review.plan to log
+2. Invoke Skill: myharness.review.plan (or myharness.review with plan mode)
+   ARGUMENTS: feature-id, plan-path, spec-path, data-model-path, pipeline-context
+3. Wait for result → parse <!-- STEP-RESULT --> → check verdict
+4. IF APPROVED or APPROVED_WITH_CONDITIONS → STOP (if to_step=7)
+5. IF REJECTED:
+   a. Extract CRITICAL issues
+   b. Write [ISSUE] STEP 7 — REJECTED (Retry N/5) to log
+   c. Invoke myharness.plan to fix
+   d. Re-invoke myharness.review.plan
+   e. Repeat until APPROVED or retry > 5
+6. Update run-context.yaml: step-7-review-plan.verdict, retries
+7. Apply REPORT HARD GATE
+8. Write [PROCESSING] STEP 7 — COMPLETE to log
+```
 
 ### 5. Stop at to_step
 
