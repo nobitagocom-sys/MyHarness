@@ -112,6 +112,12 @@ STEP 12 myharness.testkit      → run tests (BACK-TO-PLAN on fail)
 STEP 13 orchestrator direct            → build + launch
 ```
 
+Partial range runs:
+
+```
+myharness.steprange → partial pipeline execution (start_step → end_step)
+```
+
 ---
 
 ## Backup State and Resume
@@ -174,6 +180,7 @@ See [INDEX.md](INDEX.md) for the full routing table.
 |---|---|
 | `myharness.init` | **Project initialization** — run first when onboarding a new project |
 | `myharness.orchestrator` | Orchestrator — coordinates the full pipeline |
+| `myharness.steprange` | Partial pipeline runner — execute only `start_step` → `end_step` |
 | `myharness.srs/bd/dd` | IPA document generation |
 | `myharness.specify/clarify/plan/tasks` | Spec Kit core |
 | `myharness.implement` | Code generation |
