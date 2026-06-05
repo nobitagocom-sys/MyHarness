@@ -5,11 +5,37 @@
 
 ---
 
-## STEP 0 — Existing Spec Detection (MANDATORY BEFORE ALL STEPS)
+## STEP 0 — Mode Detection (MANDATORY BEFORE ALL STEPS)
 
 **Agent**: orchestrator (self)
 
-Scan `specs/` directory for existing feature/module match before creating anything.
+Detect pipeline mode from `$ARGUMENTS`. **Explicit flags take priority over filesystem heuristics.**
+
+```text
+/myharness.orchestrator --N <path-to-spec-file>
+/myharness.orchestrator --CR <feature-id> <path-to-cr-file>
+/myharness.orchestrator <feature description>      # no flag → auto-detect
+```
+
+| Flag | Mode | Meaning |
+|------|------|---------|
+| `--N <spec-path>` | **CREATE** | New spec. Path to input spec file (e.g. `docs/input/new-spec/foo.md`). Orchestrator reads it to extract system name + modules. |
+| `--CR <feature-id> <cr-path>` | **UPDATE** | Change request. Existing `feature-id` + path to CR file (e.g. `docs/input/change-request/cr-input.md`). Updates existing specs in-place. |
+| *(none)* | auto | Auto-detect from filesystem (see below). |
+
+`--N` and `--CR` are mutually exclusive.
+
+**CASE A — `--N <spec-path>` present:**
+- pipeline-mode = **CREATE**
+- Read the spec file at `<spec-path>` as the SRS input.
+
+**CASE B — `--CR <feature-id> <cr-path>` present:**
+- pipeline-mode = **UPDATE** on `<feature-id>`
+- Read the CR file at `<cr-path>`. Do NOT create a new branch/folder.
+
+**CASE C — no flag (auto-detect):**
+
+Scan `specs/` directory for an existing feature/module match before creating anything.
 
 ```
 Run: Get-ChildItem specs/ -Directory | Select-Object -ExpandProperty Name

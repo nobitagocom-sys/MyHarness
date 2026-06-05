@@ -1,170 +1,116 @@
 # MyHarness
 
-AI-SDLC Engineering Kit — spec-driven pipeline with control plane enforcement.
+Spec-driven AI pipeline. You describe a feature — agents turn it into requirements, design, code, and tests automatically (13 steps).
 
-Combines execution engine (13-step pipeline, Spec Kit, IPA docs) with control plane (scope enforcement, health monitoring, role boundaries).
+Runs on **GitHub Copilot** (default) or **Claude Code**. Same commands work on both.
 
 ---
 
 ## Quick Start
 
-### 1. Init a new project (automated agent)
+**1. Pick provider** (default is `copilot`, skip if fine):
+
+```bash
+bash .specify/scripts/bash/switch-provider.sh claude    # or: copilot
+```
+
+**2. Initialize the project** (first time only):
 
 ```
-@myharness.init ProjectName: MyApp, Description: Internal HR system, Team: 4
+/myharness.init ProjectName: MyApp, Description: Internal HR system, Team: 4
 ```
 
-Agent `myharness.init` will:
+Asks you to pick a stack, then sets up the config and tech architecture doc.
 
-- Read available stacks from `.harness/stacks/` and ask you to pick one
-- Copy the selected stack profile and fill in all placeholders automatically
-- Create project constitution and config
+**3. Write what you want to build, then run the pipeline:**
 
-### 2. Prepare your input
+| You have | Command |
+| --- | --- |
+| **New spec/PRD** (file) | `/myharness.orchestrator --N <path-to-spec-file>` |
+| **Change request** on existing feature | `/myharness.orchestrator --CR <feature-id> <path-to-cr-file>` |
+| Not sure / just describe it | `/myharness.orchestrator <feature description>` |
 
-There are two scenarios depending on where you are in the project lifecycle:
+The flag tells the orchestrator the mode directly, so you don't have to remember the filesystem rules:
+
+- `--N` → **CREATE** mode (new spec → split into modules)
+- `--CR` → **UPDATE** mode (apply change request to an existing feature)
+- *no flag* → auto-detect CREATE vs UPDATE from your files
+
+Examples:
+
+```
+/myharness.orchestrator --N docs/input/new-spec/my_feature.md
+/myharness.orchestrator --CR feat-login docs/input/change-request/cr-input.md
+/myharness.orchestrator add user profile page
+```
+
+**Run only part of it / recover a stalled run** (optional) — `orchestrator-control` runs a step range then stops, and is also the recovery path when a run dies mid-step:
+
+```
+/myharness.orchestrator-control from=1 to=7 --N docs/input/new-spec/my_feature.md   # run steps 1–7 then stop
+/myharness.orchestrator-control from=6 to=6 <feature-id>                            # re-run only step 6
+/myharness.orchestrator-control from=0 to=13 <feature-id>                           # resume a stalled run
+```
+
+It reads `state.yaml` to know the last completed step, so a plain `<feature-id>` resumes from where it stopped. `from=N to=N` re-runs a single step.
+
+> **Big multi-module spec?** Run `/myharness.srs.system <spec-path>` first to build one shared requirements baseline for all modules, then run the orchestrator. For a single feature you can skip it.
 
 ---
 
-#### Scenario A — New project (full product spec)
-
-You have a full product spec, PRD, or requirements document for the whole system.
-
-**Step 2a:** Run the system SRS agent to extract all modules and features from your document:
-
-```
-/myharness.srs.system <path-to-your-spec-file>
-```
-
-This reads your spec and generates `docs/output/srs-systems/` — the canonical requirements baseline used by all downstream agents. Your input can be any format: a markdown doc, a folder of files, a PRD, raw notes.
-
-**Step 2b:** Run the orchestrator with a feature description:
-
-```
-/myharness.orchestrator <feature or system description>
-```
-
-At STEP 0, the orchestrator **automatically detects** that `docs/output/srs-systems/srs-overview-system.md` exists, reads it, and skips SRS re-generation. All downstream steps (BD, spec, plan, implement…) use the pre-generated SRS as primary input — nothing is regenerated from scratch.
-
----
-
-#### Scenario B — Adding a feature or change request to an existing project
-
-You already have a running project and want to build a new feature.
-
-Open **`docs/input/change-request/cr-input.md`** and fill in your requirements:
+## What cr-input.md needs
 
 | Section | What to write |
 | --- | --- |
-| **CR Title** | Short name for this feature/change |
-| **Requirement Description** | What the feature should do |
-| **Context** | Why it's needed, business rationale |
-| **Functional Requirements** | List of concrete behaviors (FR-001, FR-002…) |
-| **Non-Functional Requirements** | Performance, security, scale concerns |
-| **Out of scope** | What this change explicitly does NOT cover |
+| CR Title | Short feature name |
+| Requirement Description | What it should do |
+| Context | Why it's needed |
+| Functional Requirements | Concrete behaviors (FR-001…) |
+| Non-Functional Requirements | Performance, security, scale |
+| Out of scope | What it does NOT cover |
 
-Raw notes, user stories, or copied Jira tickets all work — agents will structure it.
-
-Then run:
-
-```
-/myharness.orchestrator <feature name>
-```
-
-At STEP 0, the orchestrator checks `docs/input/change-request/registry.yaml` — if the feature already exists it switches to UPDATE mode automatically.
+Raw notes or Jira tickets work too — agents structure it.
 
 ---
 
-> **Note:** `/myharness.orchestrator` does not take module IDs or flags as input. STEP 0 auto-detects project state (new vs update, SRS pre-generated vs not) from the filesystem. You only need to describe what to build.
->
-> `docs/technical_architecture.md` is filled in automatically by `myharness.init` — you don't need to edit it manually.
-
----
-
-## Available Stacks
-
-Stacks are defined in `.harness/stacks/` — each subdirectory is a stack profile with its own `stack.yaml`, templates, and KB.
-
-When you run `@myharness.init`, it reads this directory dynamically and presents the available options. To add a new stack, copy `_template/` and fill in `stack.yaml`.
-
-See `.harness/stacks/README.md` for the full list and descriptions.
-
----
-
-## Pipeline (13 Steps)
+## The 13 Steps
 
 ```
-myharness.orchestrator orchestrates:
-
-STEP 1  myharness.srs          → SRS (requirements doc)
-STEP 2  myharness.bd           → BD (basic design)
-STEP 3  myharness.specify      → spec.md
-STEP 4  myharness.clarify      → resolve ambiguities
-STEP 5  myharness.review.spec  → review gate (auto-retry)
-STEP 6  myharness.plan         → plan.md + data-model
-STEP 7  myharness.review.plan  → review gate (auto-retry)
-STEP 8  myharness.dd           → DD (detail design)     ┐ parallel
-STEP 9  myharness.tasks        → tasks.md               ┘
-STEP 8b myharness.testkit      → test cases
-STEP 10 myharness.implement    → source code (BE ∥ FE)
-STEP 11 myharness.review.code  → code review gate
-STEP 12 myharness.testkit      → run tests (BACK-TO-PLAN on fail)
-STEP 13 orchestrator direct            → build + launch
+1  SRS          → requirements
+2  BD           → basic design
+3  specify      → spec.md
+4  clarify      → resolve ambiguities
+5  review.spec  → gate
+6  plan         → plan.md + data model
+7  review.plan  → gate
+8  DD + tasks   → detail design + tasks.md
+9  testkit      → test cases
+10 implement    → code (backend ∥ frontend)
+11 review.code  → gate
+12 testkit      → run tests
+13 orchestrator → build + launch
 ```
 
 ---
 
-## Agents
+## Stacks
 
-See [INDEX.md](INDEX.md) for the full routing table.
+`/myharness.init` lets you choose:
 
-| Agent | Role |
-|---|---|
-| `myharness.init` | **Project initialization** — run first when onboarding a new project |
-| `myharness.orchestrator` | Orchestrator — coordinates the full pipeline |
-| `myharness.srs/bd/dd` | IPA document generation |
-| `myharness.specify/clarify/plan/tasks` | Spec Kit core |
-| `myharness.implement` | Code generation |
-| `myharness.review.*` | Quality gates |
-| `myharness.testkit` | Test generation + execution |
+| Stack | For |
+| --- | --- |
+| `web-nestjs-react` | NestJS + React + Prisma |
+| `web-nextjs-supabase` | Next.js + Supabase |
+| `mobile-react-native` | React Native |
 
 ---
 
-## Control Plane (`.harness/`)
+## Where things go
 
 ```
-.harness/
-├── enforce/          ← scope_guard.py, layer_lint.py (pre-commit)
-├── health/           ← health runner + 8 checks (post-pipeline)
-├── roles/            ← role boundary definitions per agent
-├── stacks/           ← stack profiles (web/mobile/template)
-├── kb/               ← knowledgebase (project, modules, decisions, post-mortem)
-├── models/           ← model catalog + routing policy
-└── logs/             ← agent.jsonl (event log for health checks)
+docs/input/    ← YOU write here (cr-input.md or full spec)
+docs/output/   ← agents generate here — don't edit by hand
+specs/         ← spec.md, plan.md, tasks.md per feature
 ```
 
----
-
-## Directory Structure
-
-```
-.github/agents/            ← myharness.*.agent.md (20 agents)
-.github/agents/protocols/  ← Shared protocols
-.github/agents/steps/      ← Step definitions
-.github/agents/templates/  ← Report + token templates
-.harness/                  ← Control plane (see above)
-.specify/                  ← Spec Kit config + constitution
-
-docs/
-├── technical_architecture.md  ← Project tech stack (generated by myharness.init, read by all agents)
-├── input/                     ← YOU WRITE HERE before running the pipeline
-│   ├── README.md              ← Start here — explains which folder to use
-│   ├── new-spec/              ← Full product spec for new projects → feed to @myharness.srs.system
-│   └── change-request/        ← Feature/CR for existing projects → feed to @myharness.orchestrator
-└── output/                    ← Generated by agents — do not edit manually
-    ├── srs-systems/           ← System-wide SRS (from myharness.srs.system)
-    ├── design-docs/           ← SRS, BD, DD per module
-    └── run-logs/              ← Pipeline logs and phase reports
-
-specs/                         ← Spec Kit artifacts per feature run
-```
+For full details (control plane, models, agent routing) see [INDEX.md](INDEX.md).

@@ -65,7 +65,7 @@ for line in text.splitlines():
     if in_agents:
         if re.match(r'^\S', line):
             in_agents = False; continue
-        m = re.match(r'^\s{2}([\w.]+):\s+\{[^}]*model:\s+(\w+)', line)
+        m = re.match(r'^\s{2}([\w.\-]+):\s+\{[^}]*model:\s+(\w+)', line)
         if m:
             alias = m.group(2)
             agent_models[m.group(1)] = model_aliases.get(alias, alias)
@@ -140,7 +140,7 @@ for line in text.splitlines():
     if in_agents:
         if re.match(r'^\S', line):
             in_agents = False; continue
-        m = re.match(r'^\s{2}([\w.]+):\s+\{[^}]*model:\s+(\w+)', line)
+        m = re.match(r'^\s{2}([\w.\-]+):\s+\{[^}]*model:\s+(\w+)', line)
         if m:
             agent_aliases[m.group(1)] = m.group(2)
 
@@ -304,16 +304,21 @@ PYEOF
 # ---------------------------------------------------------------------------
 # Dispatch
 # ---------------------------------------------------------------------------
+# NOTE: Claude agents (.claude/agents/) are hand-maintained custom files and are
+# NO LONGER generated from the Copilot sources. This script only syncs Copilot.
+# `claude` / `all` are kept for backward compat but skip the Claude write so a
+# stray invocation can never overwrite the custom Claude agents.
 case "$PROVIDER" in
   copilot)
     sync_copilot
     ;;
   claude)
-    sync_claude_code
+    echo "SKIP: Claude agents are hand-maintained — sync does not touch .claude/agents/." >&2
+    echo "      Edit .claude/agents/*.md directly. (Nothing written.)" >&2
     ;;
   all)
     sync_copilot
-    sync_claude_code
+    echo "SKIP: Claude agents are hand-maintained — only Copilot agents were synced." >&2
     ;;
   *)
     echo "ERROR: unknown provider '$PROVIDER'. Use: copilot | claude | all" >&2

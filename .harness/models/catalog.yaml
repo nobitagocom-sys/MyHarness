@@ -66,6 +66,7 @@ tiers:
 
 agents:
   myharness.orchestrator:  { model: claude_sonnet,   role: orchestrator }
+  myharness.orchestrator-control: { model: claude_sonnet, role: orchestrator }
   myharness.bd:            { model: gpt_frontier,    role: synthesis }
   myharness.clarify:       { model: claude_haiku,    role: lightweight }  # was gpt_frontier — Q&A only, no frontier needed
   myharness.specify:       { model: gpt_frontier,    role: synthesis }

@@ -27,6 +27,14 @@ $ARGUMENTS
 
 If `$ARGUMENTS` is empty, ask: *"Please describe the feature."* Do not proceed until provided.
 
+**Mode flag (optional, parsed at STEP 0 — see `steps-01-04-design.md`):**
+
+- `--N <spec-path>` → force CREATE mode (new spec file).
+- `--CR <feature-id> <cr-path>` → force UPDATE mode (change request on an existing feature).
+- *(no flag)* → auto-detect CREATE vs UPDATE from the filesystem.
+
+`--N` and `--CR` are mutually exclusive. Explicit flags override auto-detect.
+
 ---
 
 ## Protocols (read on demand — BEFORE each step)

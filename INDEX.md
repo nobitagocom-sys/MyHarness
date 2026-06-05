@@ -10,6 +10,7 @@
 |---|---|---|
 | **init, setup, onboard, new project, configure stack** | **`myharness.init`** | **Project initialization (run first)** |
 | orchestrator, orchestrate, run pipeline, full pipeline | `myharness.orchestrator` | Full 13-step pipeline |
+| re-run step, resume, stalled, interrupted, step range, from to | `myharness.orchestrator-control` | Bounded step-range run + recovery |
 | SRS, software requirements, requirements spec | `myharness.srs` | Step 1 |
 | BD, basic design, external design, 外部設計 | `myharness.bd` | Step 2 |
 | spec, specify, feature spec | `myharness.specify` | Step 3 |
