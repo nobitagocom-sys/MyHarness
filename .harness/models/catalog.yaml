@@ -51,8 +51,9 @@ tiers:
     description: "Gate pass/fail decisions, multi-artifact comparison"
 
   # lightweight: fast tasks that don't require frontier reasoning
-  # Claude: Haiku (~5-8x faster than Sonnet, 10x cheaper)
-  # Copilot: GPT-5.4 mini (fast, sufficient for Q&A and low-stakes review)
+  # Both providers map this tier to claude_haiku (Claude Haiku 4.5):
+  #   Claude Code: ~5-8x faster than Sonnet, ~10x cheaper
+  #   Copilot:     Claude Haiku 4.5 is in the Copilot catalog, fast + low-cost for Q&A / low-stakes review
   lightweight:
     model: claude_haiku
     use_for: [clarify, review.plan, compress]
