@@ -179,7 +179,9 @@ Log: `[PROCESSING] Sections 2 and 11 complete`
 
 Assemble all sections into `docs/output/design-docs/dd/dd-<mod-id>-<name>.md`.
 
-> ⚠️ **MANDATORY: TABLE OF CONTENTS** — The DD document **MUST** include a `## TABLE OF CONTENTS` section immediately after the `RECORD OF CHANGE` table (before §1). Generate a complete, clickable table of contents listing all `##` and `###` level headings with Markdown anchor links. This matches the structure in `dd-ipa-template.md`. Do NOT skip this section.
+> ⚠️ **MANDATORY: TABLE OF CONTENTS** — The DD document **MUST** include a `## TABLE OF CONTENTS` section immediately after the `RECORD OF CHANGE` table (before §1). **Write the body FIRST, generate the TOC LAST** from the headings you actually wrote. Derive each anchor with the GitHub slug rule (lowercase, strip punctuation, spaces→`-`) — never copy the template's example anchors. Do NOT skip this section.
+>
+> 🚫 **NO SELF-REPAIR LOOP:** After saving, the IDE may flag *"broken anchor link"* / *"link to non-existent file"* / cosmetic whitespace warnings. These are **EXPECTED and HARMLESS** (anchors resolve on render; cross-doc links are forward-references to later pipeline artifacts). **Do NOT re-edit the file to chase markdown diagnostics** — write body once + TOC once, then STOP. No fix-recheck-fix loop.
 
 Log: `[PROCESSING] DD document output complete`
 

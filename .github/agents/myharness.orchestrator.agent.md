@@ -2,7 +2,7 @@
 description: "Built-in (fully autonomous) Orchestrator for the full feature development pipeline. No pauses, no human-in-the-loop stops. Auto-resolves all [NEEDS CLARIFICATION] markers with optimal assumptions, auto-loops on REJECTED gates until resolved. Use when: run full pipeline end-to-end without interruption, orchestrate all agents autonomously, manage feature lifecycle without human intervention."
 model: claude-sonnet-4-6
 tools: [read, edit, execute, web]
-agents: [myharness.srs, myharness.bd, myharness.specify, myharness.clarify, myharness.review.spec, myharness.plan, myharness.review.plan, myharness.dd, myharness.testkit, myharness.tasks, myharness.implement, myharness.review.code]
+agents: [myharness.srs, myharness.srs.system, myharness.bd, myharness.specify, myharness.clarify, myharness.review.spec, myharness.plan, myharness.review.plan, myharness.dd, myharness.testkit, myharness.tasks, myharness.implement, myharness.review.code, myharness.compress]
 argument-hint: "Feature description to process through the full pipeline"
 ---
 

@@ -121,7 +121,16 @@ If `$ARGUMENTS` specifies a file or folder path, **read that path first** as the
 ### Phase C — Finalization
 8. **Extract Non-functional Requirements** — consolidate all NFR into §5 of `srs-overview-system.md`. Assign `NF-XX`.
 9. **Compile TBC Items** — collect all `[TBC-XX]` markers into summary table: ID, description, impact, related FEA/MOD.
-10. **Self-verification** — run the quality checklist (see below) and fix any gaps.
+10. **Self-verification** — run the quality checklist (see below) **for CONTENT completeness only** (every module has a folder, every entity in ERD, every actor mapped, no skipped FEA). Fix content gaps. Do NOT treat IDE markdown diagnostics as gaps — see the rule below.
+
+> 🚫 **NO SELF-REPAIR LOOP ON MARKDOWN DIAGNOSTICS (speed-critical):**
+> After you write each file, the IDE/harness may surface markdown diagnostics — *"broken anchor link"*, *"link to non-existent file"*, or cosmetic whitespace/line-length warnings. For this multi-file SRS set these are **EXPECTED and HARMLESS**:
+> - Cross-reference links between `srs-overview-system.md` and `modXX-*/` files, and any TOC anchors, resolve correctly on render; VS Code's live check lags multi-file writes.
+> - Links to BD/plan/other downstream artifacts are intentional forward-references to files produced later in the pipeline.
+>
+> **Write each file ONCE. Do NOT re-edit any file to chase markdown diagnostics.** Your self-verification (step 10) is about CONTENT coverage, not a green diagnostics panel. Each file = one write; if a file legitimately needs a content fix from step 10, make that single targeted edit and move on — never a fix-recheck-fix loop.
+>
+> **TOC rule (if a file has a TOC):** write the file body first, then derive TOC anchors with the GitHub slug rule (lowercase, strip punctuation, spaces→`-`) from the headings you actually wrote — not from any template example. Correct on first try, no re-edit.
 
 ---
 

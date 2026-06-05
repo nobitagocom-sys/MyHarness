@@ -87,11 +87,18 @@ Priority rule: `srs-overview-system.md` → `srs-mod<XX>-detail.md` → `srs-mod
 
 1. Load `docs/output/srs-systems/srs-overview-system.md` to get system context, then identify the module folder matching `$ARGUMENTS` (e.g., `docs/output/srs-systems/mod01-xxx/`). Load `srs-mod<XX>-detail.md` and `srs-mod<XX>-wireframe.md` from that folder. Enumerate all FEAs belonging to the target module.
 2. Cross-reference `srs-mod<XX>-detail.md` and `srs-mod<XX>-wireframe.md` to fill in any missing details for each FEA.
-3. Generate a complete SRS document using **`.specify/templates/srs-template.md`** as the base template. Follow the section mapping in **SRS Output Structure** below to populate each template section with module-specific content.
-   > ⚠️ **MANDATORY: TABLE OF CONTENTS** — The SRS document **MUST** include a `## TABLE OF CONTENTS` section immediately after the `Record of Change` table (before §1). Generate a complete, clickable table of contents listing all `##` and `###` level headings with Markdown anchor links. This matches the structure in `srs-template.md`. Do NOT skip this section.
-4. Save to `docs/output/design-docs/srs/srs-<MOD-ID>-<module-short-name>.md`.  
-  Example: MOD-01 (auth module) → `docs/output/design-docs/srs/srs-mod01-auth.md`
-5. After saving, report: file paths (both versions), FEA count, TBC item count.
+3. **Generate the full BODY first (all sections §1–§4), TOC LAST.** Use **`.specify/templates/srs-template.md`** as the base template and follow the section mapping in **SRS Output Structure** below. Write the entire document in **ONE pass** — header, `Record of Change`, a single TOC placeholder line `<!-- TOC -->`, then every section. Do NOT hand-write the TOC during this pass.
+4. **Save ONCE** to `docs/output/design-docs/srs/srs-<MOD-ID>-<module-short-name>.md` (example: MOD-01 → `srs-mod01-auth.md`).
+5. **Generate the TOC LAST, from the frozen headings**, then do ONE final edit replacing `<!-- TOC -->`:
+   > ⚠️ **MANDATORY TABLE OF CONTENTS** — Immediately after the `Record of Change` table, replace the `<!-- TOC -->` placeholder with a `## TABLE OF CONTENTS` section listing every `##`/`###` heading as a clickable link. Derive each anchor with the **GitHub slug rule**: lowercase the heading text, remove punctuation, replace spaces with `-` (e.g. `### 1.3 Definitions, Acronyms` → `#13-definitions-acronyms`). Build the TOC from the headings as they were ACTUALLY written in steps 3–4 — never from the template's example anchors. Because headings are already frozen, the links are correct on the first try.
+6. After the TOC edit, report: file path, FEA count, TBC item count.
+
+> 🚫 **NO SELF-REPAIR LOOP (read carefully — this is the main speed rule):**
+> After you save, the IDE/harness may surface **markdown diagnostics** on your output file — typically *"broken anchor link"*, *"link to non-existent file"*, or cosmetic line/whitespace warnings. These are **EXPECTED and HARMLESS** for a standalone generated SRS:
+> - Anchor links resolve correctly when the file is rendered — VS Code's live check can lag the heading edits.
+> - Reference-document links (to BD, plan, other SRS files) point to artifacts produced **later** in the pipeline; they are intentionally forward-references.
+>
+> **Therefore: do NOT re-edit the file to chase markdown diagnostics.** Write body once (step 3–4) + TOC once (step 5) = **exactly two edits total**, then STOP. Do not enter a fix-recheck-fix loop. Content correctness comes from the section mapping, not from a green diagnostics panel.
 
 ## SRS Output Structure
 
