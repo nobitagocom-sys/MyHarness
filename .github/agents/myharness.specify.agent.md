@@ -1,7 +1,7 @@
 ---
 description: Create or update the feature specification from a natural language feature description.
 model: GPT-5.4
-tools: [read, search, edit, todo]
+tools: [read, search, edit]
 handoffs: 
   - label: Build Technical Plan
     agent: myharness.plan
@@ -39,8 +39,8 @@ Use this **exact template** (in English):
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 03).
 
 **Step-specific overrides:**
-- **Title:** `# STEP 2: Specification Creation Report`
-- **Agent:** `myharness.specify (GPT-5.4)`
+- **Title:** `# STEP 3: Specification Creation Report`
+- **Agent:** `myharness.specify (claude-sonnet-4-6)`
 - **Input:** feature description, SRS (`srs-<mod-id>-<name>.md`), BD (`bd-<mod-id>-<name>.md`), template, constitution
 - **Output:** specification (`specs/<feature-id>/spec.md`), quality checklist (`specs/<feature-id>/checklists/requirements.md`)
 - **Quality evaluation categories:** content quality, requirement completeness, feature readiness, screen layout (UI), wireframe (UI), visual design specification (UI)
@@ -63,6 +63,8 @@ Use this **exact template** (in English):
 $ARGUMENTS
 ```
 
+> **Copilot — Argument Resolution:** If you see the literal text `$ARGUMENTS` (not substituted with real content), treat the **entire preceding user message** as the argument value. Do NOT ask the user to repeat their input — extract the intent directly from what they typed.
+
 You **MUST** consider the user input before proceeding (if not empty).
 
 ## Platform Detection
@@ -75,6 +77,28 @@ You **MUST** consider the user input before proceeding (if not empty).
 | macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
 
 All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
+
+## Script Execution Fallback (Copilot mode)
+
+> **Copilot:** If `.specify/scripts/` cannot be executed (no shell access in chat context), use this manual fallback instead of aborting:
+
+1. **Detect active feature branch:**
+   - Read `specs/` directory — list all subdirectories
+   - Match against current git branch name (e.g. `001-user-auth`)
+   - If no match: pick the highest-numbered folder in `specs/`
+
+2. **Set variables manually:**
+   ```
+   FEATURE_DIR = specs/<feature-id>/
+   FEATURE_SPEC = specs/<feature-id>/spec.md
+   IMPL_PLAN   = specs/<feature-id>/plan.md
+   TASKS       = specs/<feature-id>/tasks.md
+   ```
+
+3. **Proceed** using these paths exactly as you would use script output.
+
+> If even `read` / `search` is unavailable, ask the user: *"What is the active feature ID? (e.g. 001-user-auth)"*
+
 
 ## Outline
 
@@ -402,7 +426,9 @@ Success criteria must be:
 
 If `$ARGUMENTS` contains a `pipeline-context:` key, read that YAML file at startup to discover:
 - `feature-id`, `module-id` (use existing feature-id, do NOT generate new one)
-- SRS and BD paths from prior steps
+- SRS path: `steps.step-1-srs.path` (fall back to `summaries.srs-summary-path` if available)
+- BD path: `steps.step-2-bd.path` (fall back to `summaries.bd-summary-path` if available)
+- Always prefer summary paths over full paths to reduce token load
 
 ## Step Result Block — MANDATORY
 

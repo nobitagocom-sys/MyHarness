@@ -37,6 +37,8 @@ As your **final action**, write the phase report to `docs/output/run-logs/<featu
 $ARGUMENTS
 ```
 
+> **Copilot — Argument Resolution:** If you see the literal text `$ARGUMENTS` (not substituted with real content), treat the **entire preceding user message** as the argument value. Do NOT ask the user to repeat their input — extract the intent directly from what they typed.
+
 You **MUST** consider the user input before proceeding (if not empty).
 
 ## Platform Detection

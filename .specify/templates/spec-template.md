@@ -1,13 +1,12 @@
 # Feature Specification: [FEATURE NAME]
 
-**Feature Branch**: `[###-feature-name]`  
-**Created**: [DATE]  
-**Status**: Draft  
-**Input**: User description: "$ARGUMENTS"
+**Feature Branch**: `[###-feature-name]`
 
-> Write this specification in requirement language only. Focus on what the system must do and why the
-> behavior matters. Do not choose a technical stack or implementation approach unless the input explicitly
-> mandates it.
+**Created**: [DATE]
+
+**Status**: Draft
+
+**Input**: User description: "$ARGUMENTS"
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -15,28 +14,14 @@
   IMPORTANT: User stories should be PRIORITIZED as user journeys ordered by importance.
   Each user story/journey must be INDEPENDENTLY TESTABLE - meaning if you implement just ONE of them,
   you should still have a viable MVP (Minimum Viable Product) that delivers value.
-  
+
   Assign priorities (P1, P2, P3, etc.) to each story, where P1 is the most critical.
   Think of each story as a standalone slice of functionality that can be:
   - Developed independently
   - Tested independently
   - Deployed independently
   - Demonstrated to users independently
-  - Implemented with tests written first and observed failing before code changes
 -->
-
-### Test-First Delivery Rules
-
-<!--
-  ACTION REQUIRED: Replace this section with project-specific test-first rules.
-  Strict TDD is mandatory:
-  - Tests MUST be written before implementation
-  - Tests MUST fail first for the expected reason
-  - Implementation MUST be the minimum change required to pass
-  - Refactoring happens only after tests pass
--->
-
-- [Document the non-negotiable TDD rules for this feature]
 
 ### User Story 1 - [Brief Title] (Priority: P1)
 
@@ -103,20 +88,10 @@
 ### Functional Requirements
 
 - **FR-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
-- **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]  
+- **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]
 - **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
 - **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
 - **FR-005**: System MUST [behavior, e.g., "log all security events"]
-
-### Clarifications Needed
-
-<!--
-  ACTION REQUIRED: Capture unresolved business rules here instead of guessing.
-  Use this section whenever the input mentions UI elements, workflow states, roles,
-  calculations, or data rules without defining the expected behavior.
--->
-
-- **CL-001**: [Describe unresolved requirement and why it blocks or constrains design]
 
 *Example of marking unclear requirements:*
 
@@ -141,3 +116,16 @@
 - **SC-002**: [Measurable metric, e.g., "System handles 1000 concurrent users without degradation"]
 - **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
 - **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]
+
+## Assumptions
+
+<!--
+  ACTION REQUIRED: The content in this section represents placeholders.
+  Fill them out with the right assumptions based on reasonable defaults
+  chosen when the feature description did not specify certain details.
+-->
+
+- [Assumption about target users, e.g., "Users have stable internet connectivity"]
+- [Assumption about scope boundaries, e.g., "Mobile support is out of scope for v1"]
+- [Assumption about data/environment, e.g., "Existing authentication system will be reused"]
+- [Dependency on existing system/service, e.g., "Requires access to the existing user profile API"]

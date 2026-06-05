@@ -1,7 +1,7 @@
 ---
 description: "Review feature specifications for quality, completeness, and correctness. Use when: review spec, check spec quality, validate feature requirements, audit specification for gaps or inconsistencies, spec review after clarify (Step 4)."
 model: claude-sonnet-4-6
-tools: [read, search, edit, todo]
+tools: [read, search, edit]
 argument-hint: "Optional: feature-id to review (e.g. '001-xxx'). Leave empty to auto-detect."
 ---
 
@@ -29,13 +29,13 @@ Write to: `docs/output/run-logs/<feature-id>/reports/05-review-spec-report.md`
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 05). Use **Review Agent Verdict Sections** for the review-specific additions.
 
 **Step-specific overrides:**
-- **Title:** `# STEP 4: Specification Review Report`
+- **Title:** `# STEP 5: Specification Review Report`
 - **Agent:** `myharness.review.spec (claude-sonnet-4-6)`
 - **Verdict:** ✅ APPROVED / ⚠️ APPROVED WITH CONDITIONS / ❌ REJECTED
 - **Input:** specification (`spec.md`), SRS (`srs-<mod-id>-<name>.md`), constitution (`constitution.md`)
 - **Review result categories:** content quality, requirement completeness, SRS traceability, screen layout, wireframe, visual design specification
 - **Additional section:** `## CRITICAL Issues` table
-- **Next phase:** `myharness.plan` (STEP 5) — implementation plan generation
+- **Next phase:** `myharness.plan` (STEP 6) — implementation plan generation
 
 ### ⛔ COMPLETION HARD GATE
 
@@ -50,6 +50,8 @@ You are a Senior Technical Reviewer for the current project. Your mission is to 
 ```text
 $ARGUMENTS
 ```
+
+> **Copilot — Argument Resolution:** If you see the literal text `$ARGUMENTS` (not substituted with real content), treat the **entire preceding user message** as the argument value. Do NOT ask the user to repeat their input — extract the intent directly from what they typed.
 
 Optional: feature-id (e.g. `001-xxx`). If empty, auto-detect from the active branch via `check-prerequisites.ps1` (or `check-prerequisites.sh` on macOS/Linux).
 
@@ -82,6 +84,25 @@ Load the following reference documents:
 - `docs/technical_architecture.md` — technical architecture (feasibility reference)
 - `.specify/memory/constitution.md` — project Constitution (compliance gate)
 - Feature-specific SRS if exists: `docs/output/design-docs/srs/srs-<module>.md`
+
+## Script Execution Fallback (Copilot mode)
+
+> **Copilot:** If `.specify/scripts/` cannot be executed (no shell access in chat context), use this manual fallback instead of aborting:
+
+1. **Detect active feature branch:**
+   - Read `specs/` directory — list all subdirectories
+   - Match against current git branch name (e.g. `001-user-auth`)
+   - If no match: pick the highest-numbered folder in `specs/`
+
+2. **Set variables manually:**
+   ```
+   FEATURE_DIR  = specs/<feature-id>/
+   FEATURE_SPEC = specs/<feature-id>/spec.md
+   ```
+
+3. **Proceed** using these paths exactly as you would use script output.
+
+> If even `read` / `search` is unavailable, ask the user: *"What is the active feature ID? (e.g. 001-user-auth)"*
 
 ---
 

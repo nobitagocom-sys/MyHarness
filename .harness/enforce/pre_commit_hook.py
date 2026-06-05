@@ -5,7 +5,8 @@ pre-commit hook for Harness scope enforcement.
 Reads active role from .harness-role (root of repo) or HARNESS_ROLE env var,
 then runs scope_guard.py against staged files.
 
-Install: python scripts/install_hooks.py
+Install: copy/symlink this file to .git/hooks/pre-commit and make it executable
+         (chmod +x .git/hooks/pre-commit).
 """
 
 import os

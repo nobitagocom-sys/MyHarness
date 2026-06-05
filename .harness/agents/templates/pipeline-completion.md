@@ -42,7 +42,7 @@ Use this template when all steps complete (with or without escalations).
 - Plan: `specs/<feature-id>/plan.md`
 - DD: `docs/output/design-docs/dd/dd-<MOD-ID>-<module-short-name>.md`
 - Tasks: `specs/<feature-id>/tasks.md`
-- Implementation: `src/modules/<module>/`
+- Implementation: `backend/src/modules/<module>/` + `frontend/src/`
 - Verified: Feature accessible on screen ✅
 
 **Execution Logs & Reports**: `docs/output/run-logs/<feature-id>/`

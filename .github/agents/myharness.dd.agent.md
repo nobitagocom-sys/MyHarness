@@ -1,8 +1,33 @@
 ---
 description: "Generate DD (Detailed Design / Internal Design) per module. Use when: generate DD, create detailed design, module design, sequence diagram, class diagram, physical DB design, internal API design, batch design, error handling, coding standards, detailed design, internal design, MOD-XX DD."
 model: GPT-5.3-Codex
-tools: [read, search, edit, todo]
+tools: [read, search, edit]
 argument-hint: "Module ID or keyword (e.g., 'MOD-01', 'app')"
+---
+
+## User Input
+
+```text
+$ARGUMENTS
+```
+
+> **Copilot — Argument Resolution:** If you see the literal text `$ARGUMENTS` (not substituted with real content), treat the **entire preceding user message** as the argument value. Do NOT ask the user to repeat their input — extract the intent directly from what they typed.
+
+If `$ARGUMENTS` is empty or no module ID is provided, ask: *"Which module do you want to generate DD for? (e.g. MOD-01, Dashboard)"*
+
+---
+
+## Script Execution Fallback (Copilot mode)
+
+> **Copilot:** If `.specify/scripts/` cannot be executed (no shell access in chat context), use this manual fallback instead of aborting:
+
+1. **Detect module from argument:** Extract module ID or keyword from `$ARGUMENTS` (e.g. `MOD-01`, `Dashboard`)
+2. **Locate BD:** Search `docs/output/design-docs/bd/` for `bd-<mod-id>-*.md`
+3. **Locate spec + plan:** Read `specs/` to find active feature directory
+4. **Proceed** using the found paths as context.
+
+> If even `read` / `search` is unavailable, ask the user: *"What is the module ID? (e.g. MOD-01)"*
+
 ---
 
 ## Execution Logging & Phase Report (Constitution Art. XI & XII)
@@ -186,7 +211,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/08-dd-report.md`
 
 **Step-specific overrides:**
 - **Title:** `# STEP 8: DD Generation Report`
-- **Agent:** `myharness.dd (GPT-5.3-Codex)`
+- **Agent:** `myharness.dd (claude-sonnet-4-6)`
 - **Output:** DD document (`docs/output/design-docs/dd/dd-<mod-id>-<name>.md`)
 - **Design metrics:** component count, sequence diagram count, physical table count, API endpoint count, batch process count, error code count
 - **Next phase:** STEP 9: `myharness.tasks` — task generation

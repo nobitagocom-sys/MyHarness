@@ -1,7 +1,7 @@
 ﻿---
 description: Execute the implementation planning workflow using the plan template to generate design artifacts.
 model: GPT-5.3-Codex
-tools: [read, search, edit, run, todo]
+tools: [read, search, edit, execute]
 handoffs: 
   - label: Create Tasks
     agent: myharness.tasks
@@ -35,8 +35,8 @@ Write to: `docs/output/run-logs/<feature-id>/reports/06-plan-report.md`
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 06).
 
 **Step-specific overrides:**
-- **Title:** `# STEP 5: Implementation Plan Report`
-- **Agent:** `myharness.plan (GPT-5.3-Codex)`
+- **Title:** `# STEP 6: Implementation Plan Report`
+- **Agent:** `myharness.plan (claude-sonnet-4-6)`
 - **Input:** specification (`spec.md`), constitution (`constitution.md`), technical architecture (`docs/technical_architecture.md`)
 - **Output:** implementation plan (`plan.md`), data model (`data-model.md`), research (`research.md`), contracts (`contracts/*.md`), UI design (`ui-design.md`)
 - **Quality evaluation categories:** data model completeness, contract definition, constitution compliance, UI design (UI behavior)
@@ -55,6 +55,8 @@ Report file `docs/output/run-logs/<feature-id>/reports/06-plan-report.md` MUST e
 $ARGUMENTS
 ```
 
+> **Copilot — Argument Resolution:** If you see the literal text `$ARGUMENTS` (not substituted with real content), treat the **entire preceding user message** as the argument value. Do NOT ask the user to repeat their input — extract the intent directly from what they typed.
+
 You **MUST** consider the user input before proceeding (if not empty).
 
 ## Platform Detection
@@ -67,6 +69,28 @@ You **MUST** consider the user input before proceeding (if not empty).
 | macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
 
 All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
+
+## Script Execution Fallback (Copilot mode)
+
+> **Copilot:** If `.specify/scripts/` cannot be executed (no shell access in chat context), use this manual fallback instead of aborting:
+
+1. **Detect active feature branch:**
+   - Read `specs/` directory — list all subdirectories
+   - Match against current git branch name (e.g. `001-user-auth`)
+   - If no match: pick the highest-numbered folder in `specs/`
+
+2. **Set variables manually:**
+   ```
+   FEATURE_DIR = specs/<feature-id>/
+   FEATURE_SPEC = specs/<feature-id>/spec.md
+   IMPL_PLAN   = specs/<feature-id>/plan.md
+   TASKS       = specs/<feature-id>/tasks.md
+   ```
+
+3. **Proceed** using these paths exactly as you would use script output.
+
+> If even `read` / `search` is unavailable, ask the user: *"What is the active feature ID? (e.g. 001-user-auth)"*
+
 
 ## Outline
 

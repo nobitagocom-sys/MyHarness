@@ -1,7 +1,7 @@
 ﻿---
 description: Execute the implementation plan by processing and executing all tasks defined in tasks.md
 model: GPT-5.3-Codex
-tools: [read, search, edit, run, todo]
+tools: [read, search, edit, execute]
 ---
 
 ## Execution Logging & Phase Report (Constitution Art. XI & XII)
@@ -37,7 +37,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/<NN>-<phase>-report.md`
 
 **Step-specific overrides:**
 - **Title:** `# STEP <NN>: <Implementation Report / Build Verification Report / Launch Report>`
-- **Agent:** `myharness.implement (GPT-5.3-Codex)`
+- **Agent:** `myharness.implement (claude-sonnet-4-6)`
 - **Input:** tasks (`tasks.md`), implementation plan (`plan.md`), data model (`data-model.md`), contracts (`contracts/*.md`)
 - **Quality evaluation categories:** compile success, test pass, coverage threshold met, checklist completion
 - **Metrics:** completed task count, created file count, changed file count, test count (pass/fail), coverage
@@ -56,6 +56,8 @@ Report file `docs/output/run-logs/<feature-id>/reports/<NN>-<phase>-report.md` M
 $ARGUMENTS
 ```
 
+> **Copilot — Argument Resolution:** If you see the literal text `$ARGUMENTS` (not substituted with real content), treat the **entire preceding user message** as the argument value. Do NOT ask the user to repeat their input — extract the intent directly from what they typed.
+
 You **MUST** consider the user input before proceeding (if not empty).
 
 ## Platform Detection
@@ -68,6 +70,43 @@ You **MUST** consider the user input before proceeding (if not empty).
 | macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
 
 All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
+
+## Script Execution Fallback (Copilot mode)
+
+> **Copilot:** If `.specify/scripts/` cannot be executed (no shell access in chat context), use this manual fallback instead of aborting:
+
+1. **Detect active feature branch:**
+   - Read `specs/` directory — list all subdirectories
+   - Match against current git branch name (e.g. `001-user-auth`)
+   - If no match: pick the highest-numbered folder in `specs/`
+
+2. **Set variables manually:**
+   ```
+   FEATURE_DIR = specs/<feature-id>/
+   FEATURE_SPEC = specs/<feature-id>/spec.md
+   IMPL_PLAN   = specs/<feature-id>/plan.md
+   TASKS       = specs/<feature-id>/tasks.md
+   ```
+
+3. **Proceed** using these paths exactly as you would use script output.
+
+> If even `read` / `search` is unavailable, ask the user: *"What is the active feature ID? (e.g. 001-user-auth)"*
+
+
+## Diff-Only Retry Mode (⛔ CHECK FIRST — before Scope Guard)
+
+If `$ARGUMENTS` contains `diff_only: true`, this is a retry fix invocation. Skip the full context load sequence and apply minimal targeted fixes only:
+
+1. Read `retry_count` and `flagged_files` from `$ARGUMENTS`
+2. Read ONLY the files listed in `flagged_files` — do NOT re-read tasks.md, plan.md, data-model.md, contracts/, or technical_architecture.md
+3. Apply fixes to resolve the CRITICAL issues described in the orchestrator's fix instruction
+4. Run `npx tsc --noEmit` to confirm no new compile errors
+5. Write a short diff-only report section: list each flagged file, what was changed, and the CRITICAL issue it addresses
+6. Skip steps 1–5 of the normal Outline below — jump directly to step 6 (execute fix) and step FINAL (write report)
+
+This mode exists to avoid re-reading ~20 files on every retry, which wastes tokens and credits.
+
+---
 
 ## Scope Guard (⛔ RUNS FIRST — before any file creation)
 
@@ -319,14 +358,29 @@ Note: This command assumes a complete task breakdown exists in tasks.md. If task
 
 ---
 
+## Copilot Tool Mapping
+
+> **Copilot mode:** The `run` and `get_errors` tools do not exist in Copilot. Use the following equivalents:
+
+| Claude Code tool | Copilot equivalent |
+|-----------------|-------------------|
+| `run` (terminal command) | Use `run_in_terminal` tool — execute the shell command directly |
+| `get_errors` (compile check) | After editing, run `npx tsc --noEmit` via `run_in_terminal`; paste any errors back |
+| `open_browser_page` | Provide the URL and instruct user to open it; or use `fetch_webpage` to verify the endpoint |
+| Sub-agent dispatch (`agent` tool) | Mention `@agent-name` in your response — Copilot will route to that agent |
+
+**NEVER simulate or mock terminal output.** If `run_in_terminal` is unavailable in the current context, tell the user to run the command manually and paste the output back.
+
+---
+
 ## STEP 10 Mode: Build, Start & Verify on Screen
 
-When invoked by `myharness.orchestrator` for **STEP 10** (the instruction will contain "Build, run, and verify"), execute the following concrete sequence using the `run` tool. Do NOT skip to simulated log output — run actual commands.
+When invoked by `myharness.orchestrator` for **STEP 10** (the instruction will contain "Build, run, and verify"), execute the following concrete sequence using the `run_in_terminal` tool. Do NOT skip to simulated log output — run actual commands.
 
 > **⚠️ CRITICAL EXECUTION RULES (applies to ALL steps)**:
-> 1. **USE the `run` tool** for every terminal command. DO NOT document commands without executing them.
-> 2. **USE `get_errors`** after editing code to verify no compile/lint errors remain.
-> 3. **Capture REAL output** from the `run` tool. DO NOT write simulated/mock output.
+> 1. **USE the `run_in_terminal` tool** for every terminal command. DO NOT document commands without executing them.
+> 2. **Compile check:** After editing, run `npx tsc --noEmit` via `run_in_terminal` to verify no errors remain.
+> 3. **Capture REAL output** from the tool. DO NOT write simulated/mock output.
 > 4. **If a command fails**: read the error, fix the source code, re-run the command.
 > 5. **Track retries**: record each fix attempt and re-run in the execution log.
 > 6. **For frontend**: Always `npm install` first if `node_modules/` does not exist.

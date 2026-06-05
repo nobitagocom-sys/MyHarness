@@ -1,7 +1,7 @@
 ---
 description: "Generate SRS (Software Requirements Specification) per module. Use when: generate SRS, create module SRS, extract requirements from spec, write requirements specification, MOD-XX SRS."
 model: GPT-5.4
-tools: [read, search, edit, todo]
+tools: [read, search, edit]
 argument-hint: "Module ID or keyword (e.g., 'MOD-01', 'Dashboard', 'Objective', 'Workspace')"
 ---
 
@@ -30,7 +30,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/01-srs-report.md`
 
 **Step-specific overrides:**
 - **Title:** `# STEP 1: SRS Generation Report`
-- **Agent:** `myharness.srs (GPT-5.4)`
+- **Agent:** `myharness.srs (claude-sonnet-4-6)`
 - **Input:** System overview (`srs-overview-system.md`), module detail (`srs-mod<XX>-detail.md`), wireframe (`srs-mod<XX>-wireframe.md`)
 - **Output:** SRS document (`docs/output/design-docs/srs/srs-<mod-id>-<name>.md`)
 - **Quality evaluation categories:** FEA extraction completeness, TBC identification, requirement clarity
@@ -50,6 +50,8 @@ Report file `docs/output/run-logs/<feature-id>/reports/01-srs-report.md` MUST ex
 ```text
 $ARGUMENTS
 ```
+
+> **Copilot — Argument Resolution:** If you see the literal text `$ARGUMENTS` (not substituted with real content), treat the **entire preceding user message** as the argument value. Do NOT ask the user to repeat their input — extract the intent directly from what they typed.
 
 `$ARGUMENTS` contains the module specification. Accept either of the following formats:
 - `modxx` (e.g., `mod01`, `mod02`, etc.)

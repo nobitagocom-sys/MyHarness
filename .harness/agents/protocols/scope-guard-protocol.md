@@ -10,7 +10,7 @@ orchestrator MUST run scope_guard before dispatching Step 10 (implement).
 ## Command
 
 ```bash
-python .harness/enforce/scope_guard.py --role implement --staged
+python3 .harness/enforce/scope_guard.py --role implement --staged
 ```
 
 ## Log Entry

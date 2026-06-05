@@ -1,6 +1,6 @@
 ---
 description: Compress a markdown/text file into caveman-speak to reduce input tokens on future reads.
-tools: [read_file, write_file]
+tools: [read, edit]
 ---
 
 # Caveman Compress

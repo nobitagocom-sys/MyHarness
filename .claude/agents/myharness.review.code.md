@@ -65,6 +65,34 @@ If `$ARGUMENTS` is empty, run `.specify/scripts/powershell/check-prerequisites.p
 
 All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
 
+## Scope-Aware Review Mode (⛔ CHECK FIRST)
+
+Before running any review categories, determine project scale:
+
+1. Read `specs/<feature-id>/spec.md` — count `SCR-` entries to get `screen_count`
+2. Read `specs/<feature-id>/tasks.md` — count total tasks to get `task_count`
+
+**Small project threshold**: screen_count ≤ 3 AND task_count ≤ 30
+
+If threshold is met, **SKIP** these enterprise-level checks (mark them ⏭️ SKIPPED — Not Applicable):
+
+- Category 3 (Testing): Skip R-11 Playwright E2E requirement — Jest integration tests are sufficient
+- Category 6 (Performance): Skip k6 performance tests; skip CSV streaming requirement if no CSV feature
+- Category 7 (Domain Standards): Skip UX-03/UX-04/UX-05 if those patterns don't exist in the spec
+- Category 8 (Dev Data): Skip dev simulator requirement if no external integrations in plan.md
+- Category 9 (Prisma Portable Schema): Still required — no skip
+
+Add to report header:
+
+```markdown
+**Project Scale**: <screen_count> screens / <task_count> tasks
+**Review Mode**: FULL | SMALL-PROJECT (enterprise checks skipped where not applicable)
+```
+
+This prevents small 2-3 screen apps from being REJECTED for missing enterprise patterns that their spec never required.
+
+---
+
 ## Constraints
 
 - DO NOT modify any source code files — produce a review report only

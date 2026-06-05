@@ -15,6 +15,6 @@ context:
     - "docker-compose.yml"
 guardrails:
   pre_action:
-    - "python .harness/enforce/scope_guard.py --role implement --staged"
+    - "python3 .harness/enforce/scope_guard.py --role implement --staged"
   post_action:
-    - "python .harness/enforce/layer_lint.py"
+    - "python3 .harness/enforce/layer_lint.py"

@@ -79,6 +79,47 @@ pipeline-context: docs/output/run-logs/<feature-id>/run-context.yaml
 
 ---
 
+## STEP 1c — Artifact Compression (MANDATORY after Step 1b)
+
+> Run immediately after Step 1b completes, before dispatching Step 2.
+> Purpose: create lightweight summary files so Steps 2–7 read ~30% of the original token load.
+
+| Key | Value |
+|-----|-------|
+| Agent | `myharness.compress` |
+| Model | see catalog.yaml (lightweight tier — Haiku/GPT-5.4 mini) |
+| Input | SRS full path from `run-context.yaml step-1-srs.path` |
+| Output | `docs/output/design-docs/summaries/srs-<mod-id>-summary.md` |
+| Report | `reports/01c-compress-report.md` |
+| Gate | SOFT GATE — if compress fails, log warning and continue with full paths |
+
+**Delegation `$ARGUMENTS`:**
+
+```yaml
+feature-id: <feature-id>
+module-id: <mod-id>
+srs-full-path: <from run-context step-1-srs.path>
+bd-full-path: null   # BD not yet generated at this point
+output-dir: docs/output/design-docs/summaries/
+pipeline-context: docs/output/run-logs/<feature-id>/run-context.yaml
+```
+
+**After completion:** Update `run-context.yaml` summaries section:
+
+```yaml
+summaries:
+  srs-summary-path: docs/output/design-docs/summaries/srs-<mod-id>-summary.md
+  bd-summary-path: null   # populated after Step 2 + compress round 2
+  srs-reduction-pct: <N>
+```
+
+**Downstream usage rule (orchestrator enforces):**
+When passing SRS path to Steps 2, 3, 4, 5, 6, 7 — use `summaries.srs-summary-path` if it exists and is non-null. Pass the full path as `srs-full-path` alongside for agents that need to reference specific FR details.
+
+> ⚠️ **SOFT GATE** — compress failure does NOT block the pipeline. Write `[WARN] Step 1c compress failed — falling back to full paths` in orchestrator log and continue normally.
+
+---
+
 ## STEP 2 — BD Generation (External Design)
 
 > **PRE-CHECK (MANDATORY before dispatching):** Read `run-context.yaml` field `srs-system.status`.
@@ -110,6 +151,41 @@ srs-module-path: docs/output/srs-systems/mod<XX>-<slug>/              # only if 
 **After completion:** Auto-resolve any `[NEEDS CLARIFICATION]` markers in BD per `protocols/auto-resolve-protocol.md`.
 
 > ⛔ **[REPORT GATE]** per `protocols/report-gate-protocol.md`
+
+---
+
+## STEP 2c — BD Compression (MANDATORY after Step 2)
+
+> Run immediately after Step 2 completes, before dispatching Step 3.
+
+| Key | Value |
+|-----|-------|
+| Agent | `myharness.compress` |
+| Model | see catalog.yaml (lightweight tier) |
+| Input | BD full path from `run-context.yaml step-2-bd.path` |
+| Output | `docs/output/design-docs/summaries/bd-<mod-id>-summary.md` |
+| Gate | SOFT GATE — failure falls back to full BD path |
+
+**Delegation `$ARGUMENTS`:**
+
+```yaml
+feature-id: <feature-id>
+module-id: <mod-id>
+srs-full-path: null
+bd-full-path: <from run-context step-2-bd.path>
+output-dir: docs/output/design-docs/summaries/
+pipeline-context: docs/output/run-logs/<feature-id>/run-context.yaml
+```
+
+**After completion:** Update `run-context.yaml`:
+
+```yaml
+summaries:
+  bd-summary-path: docs/output/design-docs/summaries/bd-<mod-id>-summary.md
+  bd-reduction-pct: <N>
+```
+
+**Downstream usage rule:** Steps 3, 5, 6, 7 use `summaries.bd-summary-path` when it exists.
 
 ---
 

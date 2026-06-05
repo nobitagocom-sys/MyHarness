@@ -1,14 +1,14 @@
 """
 scope_guard.py — Harness Scope Enforcement
 
-Reads write_globs from harness/roles/<role>.yaml and checks that
+Reads write_globs from .harness/roles/<role>.yaml and checks that
 changed files do not exceed the role's allowed write scope.
 Exits non-zero if any violation is found.
 
 Usage:
-    python scripts/enforce/scope_guard.py --role pm
-    python scripts/enforce/scope_guard.py --role dev --files src/foo.py docs/bar.md
-    python scripts/enforce/scope_guard.py --role pm --staged
+    python3 .harness/enforce/scope_guard.py --role implement
+    python3 .harness/enforce/scope_guard.py --role implement --files src/foo.py docs/bar.md
+    python3 .harness/enforce/scope_guard.py --role implement --staged
 """
 
 import argparse

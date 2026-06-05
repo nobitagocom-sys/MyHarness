@@ -28,16 +28,16 @@ models:
 # Maps each tier to the best native Anthropic model.
 # ---------------------------------------------------------------------------
 claude_code_models:
-  claude_opus:   "claude-opus-4-5"           # orchestration — most capable
+  claude_opus:   "claude-opus-4-8"           # orchestration — most capable
   claude_sonnet: "claude-sonnet-4-6"         # review, balanced quality/cost
   claude_haiku:  "claude-haiku-4-5-20251001" # lightweight/fast tasks
-  gpt_frontier:  "claude-opus-4-5"           # synthesis → Opus (long-context)
+  gpt_frontier:  "claude-opus-4-8"           # synthesis → Opus (long-context)
   gpt_codex:     "claude-sonnet-4-6"         # coding → Sonnet (fast + capable)
 
 tiers:
   synthesis:
     model: gpt_frontier
-    use_for: [srs, bd, specify, clarify, tasks, srs.system]
+    use_for: [srs, bd, specify, tasks, srs.system]
     description: "Long-context document synthesis, formal spec writing"
 
   coding:
@@ -47,8 +47,16 @@ tiers:
 
   review:
     model: claude_sonnet
-    use_for: [review.spec, review.plan, review.code, init]
+    use_for: [review.spec, review.code, init]
     description: "Gate pass/fail decisions, multi-artifact comparison"
+
+  # lightweight: fast tasks that don't require frontier reasoning
+  # Claude: Haiku (~5-8x faster than Sonnet, 10x cheaper)
+  # Copilot: GPT-5.4 mini (fast, sufficient for Q&A and low-stakes review)
+  lightweight:
+    model: claude_haiku
+    use_for: [clarify, review.plan, compress]
+    description: "Q&A resolution, low-stakes review gates, artifact summarization"
 
   orchestrator:
     model: claude_sonnet
@@ -57,24 +65,25 @@ tiers:
 
 agents:
   myharness.orchestrator:  { model: claude_sonnet,   role: orchestrator }
-  myharness.bd:            { model: gpt_frontier,  role: synthesis }
-  myharness.clarify:       { model: gpt_frontier,  role: synthesis }
-  myharness.specify:       { model: gpt_frontier,  role: synthesis }
-  myharness.srs:           { model: gpt_frontier,  role: synthesis }
-  myharness.srs.system:    { model: gpt_frontier,  role: synthesis }
-  myharness.tasks:         { model: gpt_frontier,  role: synthesis }
-  myharness.plan:          { model: gpt_codex,     role: coding }
-  myharness.dd:            { model: gpt_codex,     role: coding }
-  myharness.implement:     { model: gpt_codex,     role: coding }
-  myharness.review.code:   { model: claude_sonnet, role: review }
-  myharness.review.plan:   { model: claude_sonnet, role: review }
-  myharness.review.spec:   { model: claude_sonnet, role: review }
-  myharness.init:          { model: claude_sonnet, role: review }
-  myharness.testkit:       { model: claude_sonnet, role: review }
-  myharness.analyze:       { model: claude_sonnet, role: review }
-  myharness.checklist:     { model: claude_sonnet, role: review }
-  myharness.constitution:  { model: gpt_frontier,  role: synthesis }
-  myharness.taskstoissues: { model: claude_sonnet, role: review }
+  myharness.bd:            { model: gpt_frontier,    role: synthesis }
+  myharness.clarify:       { model: claude_haiku,    role: lightweight }  # was gpt_frontier — Q&A only, no frontier needed
+  myharness.specify:       { model: gpt_frontier,    role: synthesis }
+  myharness.srs:           { model: gpt_frontier,    role: synthesis }
+  myharness.srs.system:    { model: gpt_frontier,    role: synthesis }
+  myharness.tasks:         { model: gpt_frontier,    role: synthesis }
+  myharness.plan:          { model: gpt_codex,       role: coding }
+  myharness.dd:            { model: gpt_codex,       role: coding }
+  myharness.implement:     { model: gpt_codex,       role: coding }
+  myharness.review.code:   { model: claude_sonnet,   role: review }
+  myharness.review.plan:   { model: claude_haiku,    role: lightweight }  # was claude_sonnet — 97/100 score shows over-spec'd
+  myharness.review.spec:   { model: claude_sonnet,   role: review }
+  myharness.init:          { model: claude_sonnet,   role: review }
+  myharness.testkit:       { model: claude_sonnet,   role: review }
+  myharness.analyze:       { model: claude_sonnet,   role: review }
+  myharness.checklist:     { model: claude_sonnet,   role: review }
+  myharness.constitution:  { model: gpt_frontier,    role: synthesis }
+  myharness.taskstoissues: { model: claude_sonnet,   role: review }
+  myharness.compress:      { model: claude_haiku,    role: lightweight }  # NEW — artifact summarization
 
 escalation:
   synthesis_fail_after: 3   # retries before escalating to review tier

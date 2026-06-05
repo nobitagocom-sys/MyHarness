@@ -97,7 +97,11 @@ Compare output against all `write:` paths declared across tasks in `specs/<featu
 **Gate logic:**
 
 - ✅/⚠️ → proceed to Step 12
-- ❌ REJECTED → invoke `myharness.implement` to fix CRITICAL issues → re-invoke `myharness.review.code`
+- ❌ REJECTED → per `protocols/gate-retry-protocol.md`:
+  - Retry 1: invoke `myharness.implement` with full CRITICAL issues list
+  - Retry ≥2: invoke `myharness.implement` with `diff_only: true`, `retry_count: N`, `flagged_files: <files cited in CRITICAL issues>` — agent reads only flagged files, no full context reload
+  - Retry 3: auto-escalate to APPROVED_WITH_CONDITIONS per gate-retry-protocol.md § Diff-Only Retry Mode
+- Write `gate_retry_counts.step-11: <N>` to `state.yaml` after each retry
 - Escalation after 5 retries → continue to Step 12
 
 **Additional DB Data Check:**

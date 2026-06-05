@@ -1,6 +1,6 @@
 ---
 description: Convert existing tasks into actionable, dependency-ordered GitHub issues for the feature based on available design artifacts.
-tools: ['github/github-mcp-server/issue_write']
+tools: [github/github-mcp-server/issue_write]
 ---
 
 ## Execution Logging & Phase Report (Constitution Art. XI & XII)
@@ -16,6 +16,8 @@ As your **final action**, write the phase report to `docs/output/run-logs/<featu
 ```text
 $ARGUMENTS
 ```
+
+> **Copilot — Argument Resolution:** If you see the literal text `$ARGUMENTS` (not substituted with real content), treat the **entire preceding user message** as the argument value. Do NOT ask the user to repeat their input — extract the intent directly from what they typed.
 
 You **MUST** consider the user input before proceeding (if not empty).
 

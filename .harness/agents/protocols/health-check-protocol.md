@@ -5,7 +5,7 @@ orchestrator runs the health runner after Step 13 (pipeline complete).
 ## Command
 
 ```bash
-python .harness/health/runner.py --format cli
+python3 .harness/health/runner.py --format cli
 ```
 
 ## Log Entry

@@ -1,6 +1,6 @@
 ---
 description: "Identify underspecified areas in the current feature spec by asking up to 5 highly targeted clarification questions and encoding answers back into the spec."
-model: claude-sonnet-4-6
+model: claude-haiku-4-5-20251001
 tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 

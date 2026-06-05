@@ -1,8 +1,32 @@
 ---
 description: "Generate BD (Basic Design / External Design) per module. Use when: generate BD, create basic design, screen design, UI layout, system architecture, logical ERD, screen transition, external interface design, basic design, external design, MOD-XX BD."
 model: GPT-5.4
-tools: [read, search, edit, todo]
+tools: [read, search, edit]
 argument-hint: "Module ID or keyword (e.g., 'MOD-01', 'Dashboard', 'Objective', 'Workspace')"
+---
+
+## User Input
+
+```text
+$ARGUMENTS
+```
+
+> **Copilot — Argument Resolution:** If you see the literal text `$ARGUMENTS` (not substituted with real content), treat the **entire preceding user message** as the argument value. Do NOT ask the user to repeat their input — extract the intent directly from what they typed.
+
+If `$ARGUMENTS` is empty or no module ID is provided, ask: *"Which module do you want to generate BD for? (e.g. MOD-01, Dashboard)"*
+
+---
+
+## Script Execution Fallback (Copilot mode)
+
+> **Copilot:** If `.specify/scripts/` cannot be executed (no shell access in chat context), use this manual fallback instead of aborting:
+
+1. **Detect module from argument:** Extract module ID or keyword from `$ARGUMENTS` (e.g. `MOD-01`, `Dashboard`)
+2. **Locate SRS:** Search `docs/output/design-docs/srs/` for `srs-<mod-id>-*.md`
+3. **Proceed** using the found path as `FEATURE_DIR` context.
+
+> If even `read` / `search` is unavailable, ask the user: *"What is the module ID? (e.g. MOD-01)"*
+
 ---
 
 ## Execution Logging & Phase Report (Constitution Art. XI & XII)
@@ -167,7 +191,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/02-bd-report.md`
 
 **Step-specific overrides:**
 - **Title:** `# STEP 2: BD Generation Report`
-- **Agent:** `myharness.bd (GPT-5.4)`
+- **Agent:** `myharness.bd (claude-sonnet-4-6)`
 - **Output:** BD document (`docs/output/design-docs/bd/bd-<mod-id>-<name>.md`)
 - **Design metrics:** screen count, pattern count, report count, logical table count, external interface count, business rule count (VR/AR/DR/CALC)
 - **Next phase:** STEP 3: `myharness.specify` — feature specification creation

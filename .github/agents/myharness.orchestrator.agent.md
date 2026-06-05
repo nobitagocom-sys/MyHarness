@@ -1,7 +1,7 @@
 ﻿---
 description: "Built-in (fully autonomous) Orchestrator for the full feature development pipeline. No pauses, no human-in-the-loop stops. Auto-resolves all [NEEDS CLARIFICATION] markers with optimal assumptions, auto-loops on REJECTED gates until resolved. Use when: run full pipeline end-to-end without interruption, orchestrate all agents autonomously, manage feature lifecycle without human intervention."
 model: claude-sonnet-4-6
-tools: [agent, read, edit, execute, todo, web]
+tools: [read, edit, execute, web]
 agents: [myharness.srs, myharness.bd, myharness.specify, myharness.clarify, myharness.review.spec, myharness.plan, myharness.review.plan, myharness.dd, myharness.testkit, myharness.tasks, myharness.implement, myharness.review.code]
 argument-hint: "Feature description to process through the full pipeline"
 ---
@@ -13,14 +13,17 @@ You are the **orchestrator Orchestrator (Built-in / Fully Autonomous)** for MyHa
 1. **Never pause for `[NEEDS CLARIFICATION]`** — auto-resolve with optimal assumptions, document in report.
 2. **Never halt on REJECTED** — auto fix-and-retry loop until gate passes.
 3. **Log everything** — every decision, assumption, retry recorded in full detail.
-4. **Execute everything** — ALL terminal commands via `run` tool with real output. Never "document" without running.
-5. **Deliver to screen** — pipeline NOT complete until user sees working UI via `open_browser_page`.
+4. **Execute everything** — ALL terminal commands via `execute` tool (Copilot: `run_in_terminal`) with real output. Never "document" without running.
+5. **Deliver to screen** — pipeline NOT complete until user sees working UI (macOS: `open`, Linux: `xdg-open`, Windows: `start`, Copilot: provide clickable URL).
+
 
 ## User Input
 
 ```text
 $ARGUMENTS
 ```
+
+> **Copilot — Argument Resolution:** If you see the literal text `$ARGUMENTS` (not substituted with real content), treat the **entire preceding user message** as the argument value. Do NOT ask the user to repeat their input — extract the intent directly from what they typed.
 
 If `$ARGUMENTS` is empty, ask: *"Please describe the feature."* Do not proceed until provided.
 
@@ -31,7 +34,7 @@ If `$ARGUMENTS` is empty, ask: *"Please describe the feature."* Do not proceed u
 | Protocol | File | When to Read |
 |----------|------|-------------|
 | Auto-Resolve | `.harness/agents/protocols/auto-resolve-protocol.md` | Before any step with `[NEEDS CLARIFICATION]` |
-| Gate Retry | `.harness/agents/protocols/gate-retry-protocol.md` | Before any review gate (Steps 5, 7, 10, 11, 12) |
+| Gate Retry | `.harness/agents/protocols/gate-retry-protocol.md` | Before any review gate (Steps 5, 7, 11); also drives build-gate retry (Step 10) and test-gate retry (Step 12) |
 | Report Hard Gate | `.harness/agents/protocols/report-gate-protocol.md` | After EVERY step completes |
 | Timestamp | `.harness/agents/protocols/timestamp-protocol.md` | Before writing ANY orchestrator log entry |
 | Log Formats | `.harness/agents/protocols/log-formats.md` | When writing orchestrator log entries |
@@ -52,20 +55,22 @@ If `$ARGUMENTS` is empty, ask: *"Please describe the feature."* Do not proceed u
 ```
 $ARGUMENTS → STEP 0 (detect existing spec)
   │
-  STEP 1  myharness.srs             → SRS
-  STEP 2  myharness.bd              → BD (External Design)
-  STEP 3  myharness.specify     → spec.md
-  STEP 4  myharness.clarify     → resolve ambiguities (NO PAUSE)
-  STEP 5  myharness.review.spec    🔄 auto-retry → spec review
-  STEP 6  myharness.plan        → plan.md + data-model + contracts
-  STEP 7  myharness.review.plan    🔄 auto-retry → plan review
+  STEP 1   myharness.srs             → SRS
+  STEP 1c  myharness.compress        → SRS summary (SOFT GATE — skip on fail)
+  STEP 2   myharness.bd              → BD (External Design)
+  STEP 2c  myharness.compress        → BD summary  (SOFT GATE — skip on fail)
+  STEP 3   myharness.specify     → spec.md
+  STEP 4   myharness.clarify     → resolve ambiguities (NO PAUSE)
+  STEP 5   myharness.review.spec    🔄 auto-retry → spec review
+  STEP 6   myharness.plan        → plan.md + data-model + contracts
+  STEP 7   myharness.review.plan    🔄 auto-retry → plan review
   ┌─ STEP 8  myharness.dd            → DD (Internal Design)       ┐ [PARALLEL GROUP A]
   └─ STEP 9  myharness.tasks    → tasks.md                   ┘ (launched simultaneously after Step 7)
-  STEP 8b myharness.testkit         → test cases (gen-testcases)   (waits for Step 8 DD output + Step 9)
-  STEP 10 myharness.implement   → implementation + build & fix 🔄 auto-retry (BE ∥ FE if partitionable)
-  STEP 11 myharness.review.code    🔄 auto-retry → code review + DB data check
-  STEP 12 myharness.testkit         → run-tests 🔄 BACK-TO-PLAN on fail
-  STEP 13 orchestrator (direct)       → build BE + connect DB + build FE + launch UI → open_browser_page
+  STEP 8b  myharness.testkit         → test cases (gen-testcases)   (waits for Step 8 DD output + Step 9)
+  STEP 10  myharness.implement   → implementation + build & fix 🔄 auto-retry (BE ∥ FE if partitionable)
+  STEP 11  myharness.review.code    🔄 auto-retry → code review + DB data check
+  STEP 12  myharness.testkit         → run-tests 🔄 BACK-TO-PLAN on fail
+  STEP 13  orchestrator (direct)       → build BE + connect DB + build FE + launch UI → open browser
   │
   ✅ PIPELINE COMPLETE
 ```
@@ -125,17 +130,53 @@ See `.harness/agents/protocols/step-result-block.md` for format. Use it to:
 2. Check `verdict` for gate decisions (no need to read full report file)
 3. Extract `critical-issues` for retry protocol
 
+## Copilot — Manual STEP-RESULT Parsing
+
+> **Copilot mode:** The `<!-- STEP-RESULT -->` block is NOT auto-parsed. You MUST manually scan each sub-agent response and extract the fields yourself.
+
+After every `@agent-name` response, locate the block delimited by `<!-- STEP-RESULT` and `/STEP-RESULT -->`. Then:
+
+1. Extract `status:` — if `FAILED`, do NOT proceed; trigger the retry protocol for that step.
+2. Extract `verdict:` — `APPROVED` / `APPROVED_WITH_CONDITIONS` → pass gate; `REJECTED` → invoke fix agent and re-run (max 5 times).
+3. Extract `artifacts:` paths — copy these exact paths into your next delegation `$ARGUMENTS` block so the next sub-agent can find them.
+4. Extract `critical-issues:` list — pass verbatim to the fix agent when verdict is `REJECTED`.
+5. If **no `<!-- STEP-RESULT` block is found** in the response → treat the step as `FAILED` and ask the agent to re-run with explicit instruction to include the block.
+
+**Gate decision table:**
+
+| verdict | action |
+|---------|--------|
+| `APPROVED` | Continue to next step |
+| `APPROVED_WITH_CONDITIONS` | Log warning, continue |
+| `REJECTED` | Pass `critical-issues` to fix agent → re-run → re-review (max 5×) |
+| `N/A` | Continue (non-review steps) |
+| (missing) | Treat as FAILED — request re-run |
+
 ---
 
 ## Real Execution Mandate
 
 ALL steps involving terminal commands (Steps 10, 12, 13) MUST:
-- Use the `run` tool for every command — **NEVER** document without executing
+- Use the `execute` tool (Claude Code) / `run_in_terminal` (Copilot) for every command — **NEVER** document without executing
 - Capture REAL terminal output — **NEVER** mock/simulate
 - On failure: fix code, RE-RUN command, track retries
-- Use `get_errors` after every code edit
+- Run `npx tsc --noEmit` after every code edit to check errors
 
 See `.harness/agents/protocols/implement-delegation.md` for full details.
+
+## Copilot Tool Mapping
+
+> **Copilot mode:** Some Claude Code tools have no direct equivalent. Use the table below:
+
+| Claude Code tool | Copilot equivalent |
+|-----------------|-------------------|
+| `run` / `execute` | `run_in_terminal` — execute shell commands directly |
+| `get_errors` | `run_in_terminal` with `npx tsc --noEmit` |
+| `agent` (dispatch sub-agent) | Mention `@agent-name` — Copilot routes to that agent |
+| `open_browser_page` | Provide the URL to the user; use `fetch_webpage` to verify HTTP status |
+| `todo` | Maintain a numbered checklist in your response text |
+
+**Parallel dispatch:** When the pipeline requires parallel agent calls (e.g., Steps 8 ∥ 9), mention both `@agent-name` in the same message. Copilot will route each mention to the respective agent.
 
 ---
 
@@ -184,6 +225,39 @@ Dispatch simultaneously:
 Sync point: Both must complete before dispatching Step 8b.
 Step 8b uses the DD file (Step 8) and pipeline-context (which now also has tasks path from Step 9).
 Step 10 requires both tasks.md (Step 9) and the testcase file (Step 8b).
+
+---
+
+## Parallel Execution Rules for Steps 1–7 (Multi-Module)
+
+> ⛔ MANDATORY — read before executing any per-module step.
+
+Steps 1b, 2, 3, 4, 5, 6, 7 each run **once per module**. With N modules:
+
+```text
+WRONG — sequential (N× slower):
+  mod01 done → mod02 done → mod03 done → next step
+
+CORRECT — parallel (same time as 1 module):
+  mod01 ┐
+  mod02 ├─ all dispatched together → wait for all → next step
+  mod03 ┘
+```
+
+**How to dispatch in parallel:**
+In a single response, invoke ALL module agents simultaneously.
+Do NOT issue them one at a time.
+
+**Barrier rule:** Do NOT start the next step until ALL modules from the current step have returned results.
+- Start STEP 2 only after ALL Step 1b results received
+- Start STEP 3 only after ALL Step 2 results received
+- etc.
+
+**Retry independence:** If mod02 STEP 5 is REJECTED, its retry loop runs without blocking mod01 or mod03. Collect all module verdicts, then handle each failed module's retry individually.
+
+**run-context.yaml write conflicts:** Use per-module keys (e.g. `step-2-bd.mod01`, `step-2-bd.mod02`) so entries never overwrite each other.
+
+**Single-module projects:** If only 1 module exists, parallel dispatch degenerates to a single agent call — no special handling needed.
 
 ---
 

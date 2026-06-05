@@ -27,17 +27,19 @@
 | analyze, cross-artifact | `myharness.analyze` | On demand |
 | checklist, quality checklist | `myharness.checklist` | On demand |
 | issues, GitHub issues | `myharness.taskstoissues` | On demand |
+| compress, summarize artifact, reduce tokens | `myharness.compress` | On demand |
 
 ---
 
 ## Key Directories
 
 ```
-.github/agents/        ← All myharness.*.agent.md definitions
+.github/agents/        ← All myharness.*.agent.md definitions (Copilot provider)
 .github/prompts/       ← All myharness.*.prompt.md files
-.github/agents/protocols/  ← Shared protocols
-.github/agents/steps/      ← Step definitions (read on demand)
-.github/agents/templates/  ← Report + token templates
+.claude/agents/        ← All myharness.*.md definitions (Claude Code provider)
+.harness/agents/protocols/  ← Shared protocols
+.harness/agents/steps/      ← Step definitions (read on demand)
+.harness/agents/templates/  ← Report + token templates
 
 .harness/              ← Control plane (health, enforce, roles, KB, models)
   enforce/             ← scope_guard.py, layer_lint.py
@@ -59,9 +61,9 @@ docs/output/run-logs/            ← Per-feature run logs + reports
 
 ## Pre-run Checklist
 
-1. `python .harness/enforce/scope_guard.py --role implement --staged` — no violations
-2. `python .harness/enforce/layer_lint.py` — architecture clean
-3. `python .harness/health/runner.py` — score ≥ 70
+1. `python3 .harness/enforce/scope_guard.py --role implement --staged` — no violations
+2. `python3 .harness/enforce/layer_lint.py` — architecture clean
+3. `python3 .harness/health/runner.py` — score ≥ 70
 
 ---
 

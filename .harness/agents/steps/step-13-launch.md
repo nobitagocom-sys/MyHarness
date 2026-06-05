@@ -77,8 +77,11 @@ orchestrator MUST directly:
 6. **Verify screens:**
    - Read `specs/<feature-id>/spec.md` → find first screen route (`SCR-MOD[XX]-01` URL path)
    - Confirm screens are accessible and data is visible from DB (not mock)
-7. **Open browser:**
-   - **Call `Bash(open http://localhost:5173/<first-screen-route>)`** to open the browser
+7. **Open browser (cross-platform):**
+   - macOS: `open http://localhost:5173/<first-screen-route>`
+   - Linux: `xdg-open http://localhost:5173/<first-screen-route>`
+   - Windows: `start http://localhost:5173/<first-screen-route>`
+   - **Copilot:** Provide the URL to the user as a clickable link — `http://localhost:5173/<first-screen-route>`
    - This is the **final mandatory deliverable** of the pipeline
    - The user MUST see the running UI without manual action
 8. **Write `[END]`** entry in orchestrator log with the exact URL

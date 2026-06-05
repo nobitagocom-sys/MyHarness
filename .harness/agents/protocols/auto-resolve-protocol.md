@@ -9,7 +9,7 @@ When any `[NEEDS CLARIFICATION]` marker or ambiguity is encountered at any step:
    - Context from the SRS document
    - Common engineering best practices for domain
    - Conservative, safe defaults (prefer explicit over implicit, standard over custom)
-   - Existing patterns in the codebase (`src/modules/`)
+   - Existing patterns in the codebase (`backend/src/modules/`, `frontend/src/`)
 3. **Choose** the optimal assumption and record it with rationale.
 4. **Encode** the assumption directly into the document (replace marker with the resolved value).
 5. **Report** every resolved item in the `## [AUTO-RESOLVED] Assumptions` section of the phase report.

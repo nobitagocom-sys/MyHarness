@@ -29,7 +29,7 @@
 
 ---
 
-## 2. Pipeline Flow — 5 Phases, 16 Steps
+## 2. Pipeline Flow — 5 Phases, 13 Steps (0–13, plus sub-step 8b)
 
 ```
 USER INPUT ($ARGUMENTS: feature description)
@@ -132,7 +132,7 @@ USER INPUT ($ARGUMENTS: feature description)
 ║                                                                  ║
 ║  STEP 10 ─ myharness.implement [coding tier]          🔄 GATE   ║
 ║  │  Input:  tasks.md + plan.md + data-model.md + contracts/     ║
-║  │  Output: src/modules/<module>/ (source code)                 ║
+║  │  Output: backend/** + frontend/** (per role write_globs)     ║
 ║  │  Phase 1: implement all tasks                                ║
 ║  │  Phase 2: build & fix all errors                             ║
 ║  │  Report: 10-implement-report.md (incl. Screen Verification)  ║
@@ -200,7 +200,7 @@ USER INPUT ($ARGUMENTS: feature description)
 | `myharness.plan` | coding | 6 | Implementation planning | `plan.md`, `data-model.md`, `contracts/` |
 | `myharness.dd` | coding | 8 | Detailed design (DD) | `dd-<MOD>-<name>.md` |
 | `myharness.tasks` | synthesis | 9 | Task decomposition | `tasks.md` |
-| `myharness.implement` | coding | 10,12,13 | Code implementation + build + launch | `src/modules/<mod>/` |
+| `myharness.implement` | coding | 10,12,13 | Code implementation + build + launch | `backend/**`, `frontend/**` |
 
 ### 3.2 Review Agents (review tier — quality gates)
 
@@ -227,9 +227,10 @@ USER INPUT ($ARGUMENTS: feature description)
 
 | Tier | Copilot model | Claude Code model | Used by |
 |------|--------------|-------------------|---------|
-| synthesis | GPT-5.4 | claude-opus-4-5 | srs, bd, specify, clarify, tasks, srs.system, constitution |
+| synthesis | GPT-5.4 | claude-opus-4-8 | srs, bd, specify, tasks, srs.system, constitution |
 | coding | GPT-5.3-Codex | claude-sonnet-4-6 | plan, dd, implement |
-| review | claude-sonnet-4-6 | claude-sonnet-4-6 | review.*, testkit, init, analyze, checklist |
+| review | claude-sonnet-4-6 | claude-sonnet-4-6 | review.spec, review.code, testkit, init, analyze, checklist, taskstoissues |
+| lightweight | GPT-5.4 mini | claude-haiku-4-5 | clarify, review.plan, compress |
 | orchestrator | claude-sonnet-4-6 | claude-sonnet-4-6 | orchestrator |
 
 ---

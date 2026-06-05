@@ -29,7 +29,7 @@ If `$ARGUMENTS` is empty, ask: *"Please describe the feature."* Do not proceed u
 | Protocol | File | When to Read |
 |----------|------|-------------|
 | Auto-Resolve | `.harness/agents/protocols/auto-resolve-protocol.md` | Before any step with `[NEEDS CLARIFICATION]` |
-| Gate Retry | `.harness/agents/protocols/gate-retry-protocol.md` | Before any review gate (Steps 5, 7, 10, 11, 12) |
+| Gate Retry | `.harness/agents/protocols/gate-retry-protocol.md` | Before any review gate (Steps 5, 7, 11); also drives build-gate retry (Step 10) and test-gate retry (Step 12) |
 | Report Hard Gate | `.harness/agents/protocols/report-gate-protocol.md` | After EVERY step completes |
 | Timestamp | `.harness/agents/protocols/timestamp-protocol.md` | Before writing ANY orchestrator log entry |
 | Log Formats | `.harness/agents/protocols/log-formats.md` | When writing orchestrator log entries |

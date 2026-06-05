@@ -69,6 +69,21 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
 
+## Diff-Only Retry Mode (⛔ CHECK FIRST — before Scope Guard)
+
+If `$ARGUMENTS` contains `diff_only: true`, this is a retry fix invocation. Skip the full context load sequence and apply minimal targeted fixes only:
+
+1. Read `retry_count` and `flagged_files` from `$ARGUMENTS`
+2. Read ONLY the files listed in `flagged_files` — do NOT re-read tasks.md, plan.md, data-model.md, contracts/, or technical_architecture.md
+3. Apply fixes to resolve the CRITICAL issues described in the orchestrator's fix instruction
+4. Run `npx tsc --noEmit` to confirm no new compile errors
+5. Write a short diff-only report section: list each flagged file, what was changed, and the CRITICAL issue it addresses
+6. Skip steps 1–5 of the normal Outline below — jump directly to step 6 (execute fix) and step FINAL (write report)
+
+This mode exists to avoid re-reading ~20 files on every retry, which wastes tokens and credits.
+
+---
+
 ## Scope Guard (⛔ RUNS FIRST — before any file creation)
 
 If `$ARGUMENTS` contains a `forbidden_write:` list, **you MUST NOT write to any path in that list**.

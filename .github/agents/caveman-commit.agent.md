@@ -1,6 +1,6 @@
 ---
 description: Generate an ultra-compressed conventional commit message for staged changes.
-tools: [run_in_terminal]
+tools: [execute]
 ---
 
 # Caveman Commit

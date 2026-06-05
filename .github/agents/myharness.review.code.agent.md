@@ -1,7 +1,7 @@
 ﻿---
 description: "Review implementation code for quality, correctness, security, and spec conformance. Use when: review code, check implementation quality, code review, audit Node.js NestJS TypeScript code, verify code matches spec, post-implementation review, code review (Step 9)."
 model: claude-sonnet-4-6
-tools: [read, search, edit, todo]
+tools: [read, search, edit]
 argument-hint: "Feature ID or module to review (e.g., '001-xxx', 'mod01')"
 ---
 
@@ -36,7 +36,7 @@ Write to: `docs/output/run-logs/<feature-id>/reports/11-review-code-report.md`
 - **Review results:** ✅ PASS, ⚠️ MINOR CONDITIONS, ❌ CRITICAL table
 - **Additional sections:** `## Architecture Assessment`, `## CRITICAL Issues` table
 - **Metrics:** reviewed file count, CRITICAL issue count, MINOR issue count, constitution check pass count
-- **Next phase:** `myharness.implement` (STEP 10) — build and verification
+- **Next phase:** `myharness.testkit` (STEP 12) — run automated tests (if APPROVED); `myharness.implement` (STEP 10) — fix and re-implement (if REJECTED)
 
 ### ⛔ COMPLETION HARD GATE
 
@@ -52,6 +52,8 @@ You are a Senior Code Reviewer specializing in Node.js/NestJS/TypeScript impleme
 $ARGUMENTS
 ```
 
+> **Copilot — Argument Resolution:** If you see the literal text `$ARGUMENTS` (not substituted with real content), treat the **entire preceding user message** as the argument value. Do NOT ask the user to repeat their input — extract the intent directly from what they typed.
+
 If `$ARGUMENTS` is empty, run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly` (macOS/Linux: `.specify/scripts/bash/check-prerequisites.sh --json --paths-only`) to detect the current active feature.
 
 ## Platform Detection
@@ -64,6 +66,56 @@ If `$ARGUMENTS` is empty, run `.specify/scripts/powershell/check-prerequisites.p
 | macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
 
 All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
+
+## Script Execution Fallback (Copilot mode)
+
+> **Copilot:** If `.specify/scripts/` cannot be executed (no shell access in chat context), use this manual fallback instead of aborting:
+
+1. **Detect active feature branch:**
+   - Read `specs/` directory — list all subdirectories
+   - Match against current git branch name (e.g. `001-user-auth`)
+   - If no match: pick the highest-numbered folder in `specs/`
+
+2. **Set variables manually:**
+   ```
+   FEATURE_DIR = specs/<feature-id>/
+   FEATURE_SPEC = specs/<feature-id>/spec.md
+   IMPL_PLAN   = specs/<feature-id>/plan.md
+   TASKS       = specs/<feature-id>/tasks.md
+   ```
+
+3. **Proceed** using these paths exactly as you would use script output.
+
+> If even `read` / `search` is unavailable, ask the user: *"What is the active feature ID? (e.g. 001-user-auth)"*
+
+
+## Scope-Aware Review Mode (⛔ CHECK FIRST)
+
+Before running any review categories, determine project scale:
+
+1. Read `specs/<feature-id>/spec.md` — count `SCR-` entries to get `screen_count`
+2. Read `specs/<feature-id>/tasks.md` — count total tasks to get `task_count`
+
+**Small project threshold**: screen_count ≤ 3 AND task_count ≤ 30
+
+If threshold is met, **SKIP** these enterprise-level checks (mark them ⏭️ SKIPPED — Not Applicable):
+
+- Category 3 (Testing): Skip R-11 Playwright E2E requirement — Jest integration tests are sufficient
+- Category 6 (Performance): Skip k6 performance tests; skip CSV streaming requirement if no CSV feature
+- Category 7 (Domain Standards): Skip UX-03/UX-04/UX-05 if those patterns don't exist in the spec
+- Category 8 (Dev Data): Skip dev simulator requirement if no external integrations in plan.md
+- Category 9 (Prisma Portable Schema): Still required — no skip
+
+Add to report header:
+
+```markdown
+**Project Scale**: <screen_count> screens / <task_count> tasks
+**Review Mode**: FULL | SMALL-PROJECT (enterprise checks skipped where not applicable)
+```
+
+This prevents small 2-3 screen apps from being REJECTED for missing enterprise patterns that their spec never required.
+
+---
 
 ## Constraints
 

@@ -1,6 +1,6 @@
 ---
 description: "Review implementation plans for conformance to the feature specification. Use when: review plan, check plan quality, validate implementation design, audit plan for gaps or inconsistencies, plan conformance review after planning (Step 6)."
-model: claude-sonnet-4-6
+model: claude-haiku-4-5-20251001
 tools: [Read, Bash, Edit, Write, TodoWrite]
 ---
 

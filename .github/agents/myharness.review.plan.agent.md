@@ -1,7 +1,7 @@
 ---
 description: "Review implementation plans for conformance to the feature specification. Use when: review plan, check plan quality, validate implementation design, audit plan for gaps or inconsistencies, plan conformance review after planning (Step 6)."
-model: claude-sonnet-4-6
-tools: [read, search, edit, todo]
+model: claude-haiku-4-5-20251001
+tools: [read, search, edit]
 argument-hint: "Optional: feature-id to review (e.g. '001-xxx'). Leave empty to auto-detect."
 ---
 
@@ -29,13 +29,13 @@ Write to: `docs/output/run-logs/<feature-id>/reports/07-review-plan-report.md`
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 07). Use **Review Agent Verdict Sections** for the review-specific additions.
 
 **Step-specific overrides:**
-- **Title:** `# STEP 6: Plan Review Report`
+- **Title:** `# STEP 7: Plan Review Report`
 - **Agent:** `myharness.review.plan (claude-sonnet-4-6)`
 - **Verdict:** ✅ APPROVED / ⚠️ APPROVED WITH CONDITIONS / ❌ REJECTED
 - **Input:** specification (`spec.md`), implementation plan (`plan.md`), data model (`data-model.md`), technical architecture (`docs/technical_architecture.md`)
 - **Review result categories:** spec conformance, constitution compliance, data model consistency, contract completeness, UI design (UI behavior)
 - **Additional section:** `## CRITICAL Issues` table
-- **Next phase:** `myharness.tasks` (STEP 7) — task generation
+- **Next phase:** `myharness.dd` + `myharness.tasks` (STEP 8 ∥ STEP 9) — parallel DD and task generation
 
 ### ⛔ COMPLETION HARD GATE
 
@@ -52,6 +52,8 @@ You are a Senior Technical Reviewer for the current project. Your mission is
 ```text
 $ARGUMENTS
 ```
+
+> **Copilot — Argument Resolution:** If you see the literal text `$ARGUMENTS` (not substituted with real content), treat the **entire preceding user message** as the argument value. Do NOT ask the user to repeat their input — extract the intent directly from what they typed.
 
 Optional: feature-id (e.g. `001-xxx`). If empty, auto-detect from the active branch via `check-prerequisites.ps1` (or `check-prerequisites.sh` on macOS/Linux).
 
@@ -88,6 +90,26 @@ Load the following documents:
 - `specs/<feature-id>/quickstart.md` — integration scenarios
 - `.specify/memory/constitution.md` — project Constitution
 - `docs/technical_architecture.md` — system architecture
+
+## Script Execution Fallback (Copilot mode)
+
+> **Copilot:** If `.specify/scripts/` cannot be executed (no shell access in chat context), use this manual fallback instead of aborting:
+
+1. **Detect active feature branch:**
+   - Read `specs/` directory — list all subdirectories
+   - Match against current git branch name (e.g. `001-user-auth`)
+   - If no match: pick the highest-numbered folder in `specs/`
+
+2. **Set variables manually:**
+   ```
+   FEATURE_DIR  = specs/<feature-id>/
+   FEATURE_SPEC = specs/<feature-id>/spec.md
+   IMPL_PLAN    = specs/<feature-id>/plan.md
+   ```
+
+3. **Proceed** using these paths exactly as you would use script output.
+
+> If even `read` / `search` is unavailable, ask the user: *"What is the active feature ID? (e.g. 001-user-auth)"*
 
 ---
 

@@ -1,7 +1,7 @@
 ---
 description: Generate an actionable, dependency-ordered tasks.md for the feature based on available design artifacts.
 model: GPT-5.4
-tools: [read, search, edit, todo]
+tools: [read, search, edit]
 handoffs: 
   - label: Analyze For Consistency
     agent: myharness.analyze
@@ -36,13 +36,13 @@ Write to: `docs/output/run-logs/<feature-id>/reports/09-tasks-report.md`
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 09).
 
 **Step-specific overrides:**
-- **Title:** `# STEP 7: Task Generation Report`
-- **Agent:** `myharness.tasks (GPT-5.4)`
+- **Title:** `# STEP 9: Task Generation Report`
+- **Agent:** `myharness.tasks (claude-sonnet-4-6)`
 - **Input:** implementation plan (`plan.md`), specification (`spec.md`), data model (`data-model.md`)
 - **Output:** task list (`specs/<feature-id>/tasks.md`)
 - **Quality evaluation categories:** task completeness, dependency consistency, phase breakdown validity
 - **Metrics:** task count, phase count, dependency link count
-- **Next phase:** `myharness.implement` (STEP 8) — implementation execution
+- **Next phase:** `myharness.implement` (STEP 10) — implementation execution
 
 ### ⛔ COMPLETION HARD GATE
 
@@ -56,6 +56,8 @@ Report file `docs/output/run-logs/<feature-id>/reports/09-tasks-report.md` MUST 
 $ARGUMENTS
 ```
 
+> **Copilot — Argument Resolution:** If you see the literal text `$ARGUMENTS` (not substituted with real content), treat the **entire preceding user message** as the argument value. Do NOT ask the user to repeat their input — extract the intent directly from what they typed.
+
 You **MUST** consider the user input before proceeding (if not empty).
 
 ## Platform Detection
@@ -68,6 +70,28 @@ You **MUST** consider the user input before proceeding (if not empty).
 | macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
 
 All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
+
+## Script Execution Fallback (Copilot mode)
+
+> **Copilot:** If `.specify/scripts/` cannot be executed (no shell access in chat context), use this manual fallback instead of aborting:
+
+1. **Detect active feature branch:**
+   - Read `specs/` directory — list all subdirectories
+   - Match against current git branch name (e.g. `001-user-auth`)
+   - If no match: pick the highest-numbered folder in `specs/`
+
+2. **Set variables manually:**
+   ```
+   FEATURE_DIR = specs/<feature-id>/
+   FEATURE_SPEC = specs/<feature-id>/spec.md
+   IMPL_PLAN   = specs/<feature-id>/plan.md
+   TASKS       = specs/<feature-id>/tasks.md
+   ```
+
+3. **Proceed** using these paths exactly as you would use script output.
+
+> If even `read` / `search` is unavailable, ask the user: *"What is the active feature ID? (e.g. 001-user-auth)"*
+
 
 ## Outline
 

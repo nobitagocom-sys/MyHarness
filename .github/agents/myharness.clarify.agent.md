@@ -1,7 +1,7 @@
 ﻿---
 description: Identify underspecified areas in the current feature spec by asking up to 5 highly targeted clarification questions and encoding answers back into the spec.
-model: GPT-5.4
-tools: [read, search, edit, todo]
+model: claude-haiku-4-5-20251001
+tools: [read, search, edit]
 handoffs: 
   - label: Build Technical Plan
     agent: myharness.plan
@@ -31,8 +31,8 @@ Write to: `docs/output/run-logs/<feature-id>/reports/04-clarify-report.md`
 > 📄 Follow **Universal Report Structure** from `.harness/agents/templates/report-templates.md` (STEP 04).
 
 **Step-specific overrides:**
-- **Title:** `# STEP 3: Specification Clarification Report`
-- **Agent:** `myharness.clarify (GPT-5.4)`
+- **Title:** `# STEP 4: Specification Clarification Report`
+- **Agent:** `myharness.clarify (claude-haiku-4-5-20251001)`
 - **Input:** specification (`specs/<feature-id>/spec.md`)
 - **Output:** Q&A document (`04-clarify-qa.md`), updated specification (`spec.md`)
 - **Quality evaluation categories:** ambiguity detection, Q&A quality, completeness of spec updates
@@ -52,6 +52,8 @@ Report file `docs/output/run-logs/<feature-id>/reports/04-clarify-report.md` MUS
 $ARGUMENTS
 ```
 
+> **Copilot — Argument Resolution:** If you see the literal text `$ARGUMENTS` (not substituted with real content), treat the **entire preceding user message** as the argument value. Do NOT ask the user to repeat their input — extract the intent directly from what they typed.
+
 You **MUST** consider the user input before proceeding (if not empty).
 
 ## Platform Detection
@@ -64,6 +66,28 @@ You **MUST** consider the user input before proceeding (if not empty).
 | macOS / Linux | `.specify/scripts/bash/<script>.sh` | `--json`, `--paths-only`, `--require-tasks`, `--include-tasks` |
 
 All script references below show the PowerShell form. On macOS/Linux, substitute the bash path and Unix-style flags.
+
+## Script Execution Fallback (Copilot mode)
+
+> **Copilot:** If `.specify/scripts/` cannot be executed (no shell access in chat context), use this manual fallback instead of aborting:
+
+1. **Detect active feature branch:**
+   - Read `specs/` directory — list all subdirectories
+   - Match against current git branch name (e.g. `001-user-auth`)
+   - If no match: pick the highest-numbered folder in `specs/`
+
+2. **Set variables manually:**
+   ```
+   FEATURE_DIR = specs/<feature-id>/
+   FEATURE_SPEC = specs/<feature-id>/spec.md
+   IMPL_PLAN   = specs/<feature-id>/plan.md
+   TASKS       = specs/<feature-id>/tasks.md
+   ```
+
+3. **Proceed** using these paths exactly as you would use script output.
+
+> If even `read` / `search` is unavailable, ask the user: *"What is the active feature ID? (e.g. 001-user-auth)"*
+
 
 ## Outline
 

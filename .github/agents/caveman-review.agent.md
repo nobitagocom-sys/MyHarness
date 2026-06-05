@@ -1,6 +1,6 @@
 ---
 description: Ultra-compressed code review — one line per issue, location + problem + fix.
-tools: [read_file, run_in_terminal]
+tools: [read, execute]
 ---
 
 # Caveman Review

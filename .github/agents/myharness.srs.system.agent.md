@@ -1,7 +1,7 @@
 ---
 description: "Generate system-wide SRS (Full Module Requirements Definition). Use when: generate full SRS, extract all requirements from spec, create docs/output/srs-systems folder, generate wireframe/ERD, full system SRS, all-module SRS, requirements extraction, requirements definition from product requirements, wireframe, ERD."
 model: GPT-5.4
-tools: [read, search, edit, todo]
+tools: [read, search, edit]
 argument-hint: "Optional: path to input file/folder and scope constraints (default: extract ALL modules from spec)"
 ---
 
@@ -22,6 +22,8 @@ You function as a "data scanner" — you must not miss any rule, flow, constrain
 ```text
 $ARGUMENTS
 ```
+
+> **Copilot — Argument Resolution:** If you see the literal text `$ARGUMENTS` (not substituted with real content), treat the **entire preceding user message** as the argument value. Do NOT ask the user to repeat their input — extract the intent directly from what they typed.
 
 `$ARGUMENTS` may contain:
 - Path to input **file or folder** containing requirements documents.
@@ -331,3 +333,30 @@ The output file `docs/output/srs-systems/srs-overview-system.md` is consumed by:
 - **`myharness.orchestrator`** / **`myharness.orchestrator`** — pipeline orchestrators reference it as the requirements baseline
 
 Ensure the document structure enables easy grep/search by `MOD-XX` and `FEA-XXX` identifiers.
+
+---
+
+## STEP-RESULT Block (Required)
+
+As your **absolute last output** (after report writing), include this structured block for the orchestrator to parse:
+
+```yaml
+<!-- STEP-RESULT
+step: 0
+agent: myharness.srs.system
+status: SUCCESS | FAILED
+feature-id: <feature-id>
+module-id: system
+artifacts:
+  srs-system: docs/output/srs-systems/srs-overview-system.md
+  report: docs/output/run-logs/<feature-id>/reports/00-genallreqsrs-report.md
+metrics:
+  fea-count: <N>
+  mod-count: <N>
+  tbc-count: <N>
+verdict: N/A
+critical-issues: []
+next-inputs:
+  srs-system-path: docs/output/srs-systems/srs-overview-system.md
+/STEP-RESULT -->
+```
