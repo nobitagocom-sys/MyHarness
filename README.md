@@ -114,6 +114,58 @@ STEP 13 orchestrator direct            → build + launch
 
 ---
 
+## Backup State and Resume
+
+When context is getting large, the workflow should checkpoint state so the next run can resume exactly where it stopped.
+
+Detailed design for this feature run: [docs/output/run-logs/001-simple-login-app/backup-state-design.md](docs/output/run-logs/001-simple-login-app/backup-state-design.md)
+
+Effectiveness scorecard template (A/B baseline vs backup): [docs/output/run-logs/001-simple-login-app/backup-effectiveness-scorecard.md](docs/output/run-logs/001-simple-login-app/backup-effectiveness-scorecard.md)
+
+Auto report output (generated): [docs/output/run-logs/001-simple-login-app/backup-effectiveness-auto.md](docs/output/run-logs/001-simple-login-app/backup-effectiveness-auto.md)
+
+Generate auto report:
+
+```bash
+python docs/output/run-logs/001-simple-login-app/backup_effectiveness.py \
+    --backup-run docs/output/run-logs/001-simple-login-app \
+    --output docs/output/run-logs/001-simple-login-app/backup-effectiveness-auto.md \
+    --run-name 001-simple-login-app
+```
+
+Compare with baseline run:
+
+```bash
+python docs/output/run-logs/001-simple-login-app/backup_effectiveness.py \
+    --backup-run docs/output/run-logs/001-simple-login-app \
+    --baseline-run docs/output/run-logs/<baseline-run-id> \
+    --output docs/output/run-logs/001-simple-login-app/backup-effectiveness-auto.md \
+    --run-name 001-simple-login-app
+```
+
+### What to persist
+
+- `state.yaml` for minimal run status and fast resume (`state`, `last_completed_step`, `completed_steps`, retry counts, token summary)
+- `run-context.yaml` as canonical source for step outputs and artifact paths
+- a checkpoint snapshot file (`checkpoint.md` or `checkpoint.jsonl`) with timestamp, current step, open issues, and next action
+- final summary artifacts (`token-report.md`, `pipeline-completion.md`) at end-of-run
+
+### When to checkpoint
+
+- after each step completes
+- after each review gate result (`REJECTED` or `APPROVED_WITH_CONDITIONS`)
+- before dispatching high-risk steps (`implement`, `test`, `launch`)
+- before context budget becomes critical (recommended thresholds: 70% / 85% / 95%)
+
+### Resume order
+
+1. Read `state.yaml` to determine `last_completed_step`.
+2. Read `run-context.yaml` to recover latest artifact paths.
+3. Read nearest checkpoint snapshot for open issues and next action.
+4. Continue from `last_completed_step + 1` (or explicit resume step).
+
+---
+
 ## Agents
 
 See [INDEX.md](INDEX.md) for the full routing table.
