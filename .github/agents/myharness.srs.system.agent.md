@@ -357,7 +357,7 @@ As your **absolute last output** (after report writing), include this structured
 
 ```yaml
 <!-- STEP-RESULT
-step: 0
+step: 1
 agent: myharness.srs.system
 status: SUCCESS | FAILED
 feature-id: <feature-id>
@@ -373,5 +373,11 @@ verdict: N/A
 critical-issues: []
 next-inputs:
   srs-system-path: docs/output/srs-systems/srs-overview-system.md
+  # The discovered modules — STEP 1b dispatches myharness.srs once per entry below.
+  modules:
+    - module-id: mod01
+      module-short-name: <slug>
+      module-folder: docs/output/srs-systems/mod01-<slug>/
+    # ...one entry per module discovered...
 /STEP-RESULT -->
 ```

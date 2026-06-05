@@ -20,7 +20,7 @@ cr-path: <path>                           # set only when pipeline-mode=UPDATE (
 mode: autonomous
 language: English
 
-# --- SRS System Output (set after STEP 1a) ---
+# --- SRS System Output (set after STEP 1 = myharness.srs.system) ---
 # Populated by myharness.srs.system after analysing the input spec.
 # Sub-agents MUST read these paths instead of re-generating from scratch.
 srs-system:
@@ -29,16 +29,16 @@ srs-system:
   modules-dir: docs/output/srs-systems/
   module-count: <N>
   fea-count: <N>
-  # Discovered modules — populated by Step 1a, consumed by Step 1b (one run per module)
+  # Discovered modules — populated by STEP 1 (myharness.srs.system), consumed by STEP 1b (one run per module)
   modules:
     - module-id: mod01
       module-keyword: <keyword>
       module-short-name: <short-name>
-      srs-path: docs/output/srs-systems/<mod-id>-<keyword>.md
+      module-folder: docs/output/srs-systems/mod01-<slug>/   # raw system-SRS module folder (STEP 1 output)
     - module-id: mod02
       module-keyword: <keyword>
       module-short-name: <short-name>
-      srs-path: docs/output/srs-systems/<mod-id>-<keyword>.md
+      module-folder: docs/output/srs-systems/mod02-<slug>/
 
 # --- Compressed Summaries (set after STEP 1c) ---
 # myharness.compress runs after Step 1b and creates lightweight summaries.
@@ -63,14 +63,22 @@ steps:
   step-0:
     status: COMPLETE
     pipeline-mode: UPDATE | CREATE
-  step-1-srs:
+  step-1-srs:                     # STEP 1 = myharness.srs.system (system-wide, runs once)
     status: COMPLETE | SKIPPED | FAILED
     started_at: <ISO-timestamp>
     finished_at: <ISO-timestamp>
-    path: docs/output/design-docs/srs/srs-<mod-id>-<short-name>.md
-    report: docs/output/run-logs/<feature-id>/reports/01-srs-report.md
+    path: docs/output/srs-systems/srs-overview-system.md   # system overview (NOT per-module)
+    report: docs/output/run-logs/<feature-id>/reports/00-genallreqsrs-report.md
+    module-count: <N>
     fea-count: <N>
-    tbc-count: <N>
+  step-1b-srs:                    # STEP 1b = myharness.srs (per-module) — one entry per module
+    mod01:
+      status: COMPLETE | FAILED
+      path: docs/output/design-docs/srs/srs-mod01-<short-name>.md   # the formal per-module SRS downstream reads
+      report: docs/output/run-logs/<feature-id>/reports/01b-srs-mod01-report.md
+      fea-count: <N>
+      tbc-count: <N>
+    # mod02: { ... }             # add one block per discovered module
   step-2-bd:
     status: COMPLETE
     started_at: <ISO-timestamp>

@@ -22,7 +22,7 @@ If `$ARGUMENTS` is empty or no module ID is provided, ask: *"Which module do you
 > **Copilot:** If `.specify/scripts/` cannot be executed (no shell access in chat context), use this manual fallback instead of aborting:
 
 1. **Detect module from argument:** Extract module ID or keyword from `$ARGUMENTS` (e.g. `MOD-01`, `Dashboard`)
-2. **Locate SRS:** Search `docs/output/design-docs/srs/` for `srs-<mod-id>-*.md`
+2. **Locate SRS** (per-module SRS is primary): use the `srs-path` passed in `$ARGUMENTS` (the formal `docs/output/design-docs/srs/srs-<mod-id>-*.md` from STEP 1b). Also read `srs-system-overview` (`docs/output/srs-systems/srs-overview-system.md`) for system NFR/ERD/global rules. Only if the per-module SRS is missing, fall back to the raw module folder `docs/output/srs-systems/mod<XX>-<slug>/srs-mod<XX>-detail.md`.
 3. **Proceed** using the found path as `FEATURE_DIR` context.
 
 > If even `read` / `search` is unavailable, ask the user: *"What is the module ID? (e.g. MOD-01)"*
@@ -80,6 +80,8 @@ Read the following files to gather context:
 ## Output
 
 Generate the BD document at: `docs/output/design-docs/bd/bd-<mod-id>-<name>.md`
+
+> ✅ **RESOLVE-THEN-SAVE-ONCE (prevents double-write + churn):** If `$ARGUMENTS` contains `auto-resolve: true`, resolve every `[NEEDS CLARIFICATION]` marker in-place with the optimal assumption **before** you save — write the resolved value directly into the BD body and record the assumption in the report. Produce the body, resolve markers, build the TOC last, then **save the file EXACTLY ONCE**. Do NOT save a draft-with-markers and then re-edit it. The orchestrator will NOT re-open this file, so all resolution must land in your single write.
 
 The output **MUST** follow the structure defined in `.specify/templates/bd-template.md`:
 

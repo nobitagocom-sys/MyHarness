@@ -1,13 +1,25 @@
 {
-  "// MyHarness": "Cosmetic markdownlint rules disabled so the generated SRS/BD/DD/plan docs under docs/output/ do not produce noise that makes the design agents enter a self-repair loop. Structural rules (broken refs, heading order) stay on. Content correctness comes from the agent section-mapping, not these style rules.",
-  "MD013": false,
-  "MD032": false,
-  "MD033": false,
-  "MD041": false,
-  "MD024": { "siblings_only": true },
-  "MD026": false,
-  "MD036": false,
+  "// MyHarness": "Cosmetic markdownlint rules disabled so generated SRS/BD/DD/plan docs under docs/output/ do not produce diagnostics noise that pushes the design agents into a self-repair loop. These rules fire heavily on Mermaid diagrams, wide tables, and nested lists in the generated docs. Content correctness comes from the agent section-mapping, not these style rules. Structural rules that catch real mistakes (e.g. MD001 heading-increment, MD003) stay ON.",
+
+  "MD007": false,
   "MD009": false,
   "MD012": false,
-  "MD047": false
+  "MD013": false,
+  "MD022": false,
+  "MD024": { "siblings_only": true },
+  "MD026": false,
+  "MD028": false,
+  "MD031": false,
+  "MD032": false,
+  "MD033": false,
+  "MD034": false,
+  "MD036": false,
+  "MD040": false,
+  "MD041": false,
+  "MD047": false,
+  "MD058": false,
+  "MD060": false,
+
+  "// MD005": "list-indent inconsistency — fires on nested lists the agents generate",
+  "MD005": false
 }

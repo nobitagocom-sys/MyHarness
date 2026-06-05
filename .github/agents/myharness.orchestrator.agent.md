@@ -63,8 +63,9 @@ If `$ARGUMENTS` is empty, ask: *"Please describe the feature."* Do not proceed u
 ```
 $ARGUMENTS → STEP 0 (detect existing spec)
   │
-  STEP 1   myharness.srs             → SRS
-  STEP 1c  myharness.compress        → SRS summary (SOFT GATE — skip on fail)
+  STEP 1   myharness.srs.system      → srs-systems/ (system-wide SRS, 1…N modules) — runs ONCE
+  STEP 1b  myharness.srs             → design-docs/srs/srs-<MOD>.md (per-module, MANDATORY, parallel)
+  STEP 1c  myharness.compress        → SRS summary per module (SOFT GATE — skip on fail)
   STEP 2   myharness.bd              → BD (External Design)
   STEP 2c  myharness.compress        → BD summary  (SOFT GATE — skip on fail)
   STEP 3   myharness.specify     → spec.md
@@ -89,7 +90,7 @@ $ARGUMENTS → STEP 0 (detect existing spec)
 
 | Phase | Steps | Detail File |
 |-------|-------|-------------|
-| Design | 0, 1, 2, 3, 4 | `.harness/agents/steps/steps-01-04-design.md` |
+| Design | 0, 1, 1b, 1c, 2, 3, 4 | `.harness/agents/steps/steps-01-04-design.md` |
 | Review | 5, 6, 7 | `.harness/agents/steps/steps-05-07-review.md` |
 | Detail Design | 8, 8b, 9 | `.harness/agents/steps/steps-08-09-detail.md` |
 | Implementation & QA | 10, 11, 12 | `.harness/agents/steps/steps-10-12-implement.md` |

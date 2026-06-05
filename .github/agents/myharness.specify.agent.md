@@ -426,7 +426,7 @@ Success criteria must be:
 
 If `$ARGUMENTS` contains a `pipeline-context:` key, read that YAML file at startup to discover:
 - `feature-id`, `module-id` (use existing feature-id, do NOT generate new one)
-- SRS path: `steps.step-1-srs.path` (fall back to `summaries.srs-summary-path` if available)
+- SRS path: per-module `steps.step-1b-srs.<modXX>.path` (the formal `design-docs/srs/srs-<MOD>.md` from STEP 1b; fall back to `summaries.srs-summary-path`, then to `srs-system.overview-path` for system context)
 - BD path: `steps.step-2-bd.path` (fall back to `summaries.bd-summary-path` if available)
 - Always prefer summary paths over full paths to reduce token load
 

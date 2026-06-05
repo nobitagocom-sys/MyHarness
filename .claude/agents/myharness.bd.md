@@ -56,6 +56,8 @@ Read the following files to gather context:
 
 Generate the BD document at: `docs/output/design-docs/bd/bd-<mod-id>-<name>.md`
 
+> ✅ **RESOLVE-THEN-SAVE-ONCE (prevents double-write + churn):** If `$ARGUMENTS` contains `auto-resolve: true`, resolve every `[NEEDS CLARIFICATION]` marker in-place with the optimal assumption **before** you save — write the resolved value directly into the BD body and record the assumption in the report. Produce the body, resolve markers, build the TOC last, then **save the file EXACTLY ONCE**. Do NOT save a draft-with-markers and then re-edit it. The orchestrator will NOT re-open this file, so all resolution must land in your single write.
+
 The output **MUST** follow the structure defined in `.specify/templates/bd-template.md`:
 
 | § | Section | Content |

@@ -75,7 +75,10 @@ Your job is to transform the BD (Basic Design document) + spec + plan into a DD 
 Read the following files:
 
 1. **BD document**: `docs/output/design-docs/bd/bd-<mod-id>-<name>.md` — external design to implement
-2. **SRS document**: `docs/output/design-docs/srs/srs-<mod-id>-<name>.md` — requirements & NFR
+2. **SRS document** — requirements & NFR. Resolve in this order:
+   - **Primary (per-module SRS from STEP 1b):** `docs/output/design-docs/srs/srs-<mod-id>-<name>.md` (resolve via `run-context.yaml steps.step-1b-srs.<modXX>.path`). This is the formal module SRS every downstream step uses.
+   - **System context:** also read `docs/output/srs-systems/srs-overview-system.md` for system-wide NFR/§5/ERD.
+   - **Fallback:** only if the per-module SRS is missing, read the raw module folder `docs/output/srs-systems/mod<XX>-<slug>/srs-mod<XX>-detail.md`.
 3. **Feature spec**: `specs/<feature-id>/spec.md` — feature specification
 4. **Implementation plan**: `specs/<feature-id>/plan.md` — tech plan & data model
 5. **Technical architecture**: `docs/technical_architecture.md` — mandatory tech stack

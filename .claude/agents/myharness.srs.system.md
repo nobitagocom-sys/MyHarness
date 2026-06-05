@@ -360,3 +360,36 @@ The output file `docs/output/srs-systems/srs-overview-system.md` is consumed by:
 - **`myharness.orchestrator`** / **`myharness.orchestrator`** — pipeline orchestrators reference it as the requirements baseline
 
 Ensure the document structure enables easy grep/search by `MOD-XX` and `FEA-XXX` identifiers.
+
+---
+
+## STEP-RESULT Block (Required)
+
+As your **absolute last output** (after report writing), include this structured block for the orchestrator to parse:
+
+```yaml
+<!-- STEP-RESULT
+step: 1
+agent: myharness.srs.system
+status: SUCCESS | FAILED
+feature-id: <feature-id>
+module-id: system
+artifacts:
+  srs-system: docs/output/srs-systems/srs-overview-system.md
+  report: docs/output/run-logs/<feature-id>/reports/00-genallreqsrs-report.md
+metrics:
+  fea-count: <N>
+  mod-count: <N>
+  tbc-count: <N>
+verdict: N/A
+critical-issues: []
+next-inputs:
+  srs-system-path: docs/output/srs-systems/srs-overview-system.md
+  # The discovered modules — STEP 1b dispatches myharness.srs once per entry below.
+  modules:
+    - module-id: mod01
+      module-short-name: <slug>
+      module-folder: docs/output/srs-systems/mod01-<slug>/
+    # ...one entry per module discovered...
+/STEP-RESULT -->
+```

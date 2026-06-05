@@ -25,18 +25,40 @@ next-inputs:
 
 ## Examples
 
-### STEP 1 — myharness.srs
+### STEP 1 — myharness.srs.system (system-wide, runs once)
 
 ```yaml
 <!-- STEP-RESULT
 step: 1
+agent: myharness.srs.system
+status: SUCCESS
+feature-id: 001-xxx
+artifacts:
+  srs-system: docs/output/srs-systems/srs-overview-system.md
+  modules-dir: docs/output/srs-systems/
+  report: docs/output/run-logs/001-xxx/reports/00-genallreqsrs-report.md
+metrics:
+  module-count: 1
+  fea-count: 12
+verdict: N/A
+critical-issues: []
+next-inputs:
+  srs-system-path: docs/output/srs-systems/srs-overview-system.md
+/STEP-RESULT -->
+```
+
+### STEP 1b — myharness.srs (per-module, one block per module)
+
+```yaml
+<!-- STEP-RESULT
+step: 1b
 agent: myharness.srs
 status: SUCCESS
 feature-id: 001-xxx
 module-id: mod01
 artifacts:
   srs: docs/output/design-docs/srs/srs-mod01-xxx.md
-  report: docs/output/run-logs/001-xxx/reports/01-srs-report.md
+  report: docs/output/run-logs/001-xxx/reports/01b-srs-mod01-report.md
 metrics:
   fea-count: 12
   tbc-count: 3
