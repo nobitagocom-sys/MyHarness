@@ -78,7 +78,8 @@ For each entry in `setup.copy`:
 
 | Placeholder | Replace with |
 |---|---|
-| `[PROJECT_NAME]` | User's project name |
+| `[PROJECT_NAME]` | User's project name (display form, e.g. `B2B System`) |
+| `[PROJECT_SLUG]` | Slug form of project name — lowercase, no spaces, `[a-z0-9_-]` only (e.g. `b2b-system`). Used for Docker container names, DB names, hostnames, seed emails. Derive from project name: lowercase + replace spaces/punctuation with `-`. |
 | `[PROJECT_DESCRIPTION]` | User's description |
 | `[TEAM_SIZE]` | User's team size |
 | `[ENVIRONMENT]` | User's environment |

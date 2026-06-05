@@ -30,6 +30,7 @@ setup:
 # Placeholders user must fill after copying
 placeholders:
   - "[PROJECT_NAME]"
+  - "[PROJECT_SLUG]"
   - "[PROJECT_DESCRIPTION]"
   - "[TEAM_SIZE]"
 

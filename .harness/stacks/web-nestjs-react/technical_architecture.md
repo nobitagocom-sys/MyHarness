@@ -1,4 +1,4 @@
-# Technical Architecture — APP Web Application
+# Technical Architecture — [PROJECT_NAME] Web Application
 
 **Version:** 1.0.0  
 **Purpose:** Defines the system technical architecture optimized for Docker-based local development.  
@@ -78,7 +78,7 @@
 ## II. Repository Structure (Monorepo)
 
 ```
-APP-web/
+[PROJECT_SLUG]-web/
 ├── backend/                    # NestJS API service
 │   ├── src/
 │   │   ├── main.ts             # Bootstrap, Swagger, global pipes
@@ -104,7 +104,7 @@ APP-web/
 │   │   ├── pages/              # Route-level components
 │   │   │   ├── Login.tsx
 │   │   │   ├── Dashboard.tsx
-│   │   │   ├── APPDetail.tsx
+│   │   │   ├── [PROJECT_NAME]Detail.tsx
 │   │   │   ├── CreateObjective.tsx
 │   │   │   └── KeyResultDetail.tsx
 │   │   ├── components/
@@ -146,20 +146,20 @@ APP-web/
 services:
   mysql:
     image: mysql:8.0
-    container_name: APP_mysql
+    container_name: [PROJECT_SLUG]_mysql
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: APP_db
-      MYSQL_USER: APP_user
-      MYSQL_PASSWORD: APP_password
+      MYSQL_DATABASE: [PROJECT_SLUG]_db
+      MYSQL_USER: [PROJECT_SLUG]_user
+      MYSQL_PASSWORD: [PROJECT_SLUG]_password
     command: --default-authentication-plugin=mysql_native_password
     ports:
       - '3307:3306'
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - APP_network
+      - [PROJECT_SLUG]_network
     healthcheck:
       test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-prootpassword']
       interval: 10s
@@ -171,10 +171,10 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: APP_backend
+    container_name: [PROJECT_SLUG]_backend
     restart: unless-stopped
     environment:
-      DATABASE_URL: mysql://APP_user:APP_password@mysql:3306/APP_db
+      DATABASE_URL: mysql://[PROJECT_SLUG]_user:[PROJECT_SLUG]_password@mysql:3306/[PROJECT_SLUG]_db
       JWT_SECRET: workshop_jwt_secret_key
       JWT_REFRESH_SECRET: workshop_jwt_refresh_secret_key
       PORT: 3000
@@ -184,7 +184,7 @@ services:
       mysql:
         condition: service_healthy
     networks:
-      - APP_network
+      - [PROJECT_SLUG]_network
     command: >
       sh -c "
         npx prisma migrate deploy &&
@@ -196,7 +196,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: APP_frontend
+    container_name: [PROJECT_SLUG]_frontend
     restart: unless-stopped
     environment:
       VITE_API_URL: http://localhost:3000
@@ -205,25 +205,25 @@ services:
     depends_on:
       - backend
     networks:
-      - APP_network
+      - [PROJECT_SLUG]_network
 
   adminer:
     image: adminer:4
-    container_name: APP_adminer
+    container_name: [PROJECT_SLUG]_adminer
     restart: unless-stopped
     ports:
       - '8080:8080'
     depends_on:
       - mysql
     networks:
-      - APP_network
+      - [PROJECT_SLUG]_network
 
 volumes:
   mysql_data:
     driver: local
 
 networks:
-  APP_network:
+  [PROJECT_SLUG]_network:
     driver: bridge
 ```
 
@@ -269,7 +269,7 @@ exec "$@"
 
 ### Why Seeding is Required
 
-- Developers need realistic APP data on first container start (no manual data entry).
+- Developers need realistic [PROJECT_NAME] data on first container start (no manual data entry).
 - E2E tests (Playwright) require a deterministic database state — random data breaks assertions.
 - Onboarding new developers: `docker-compose up --build` produces a fully working system in one command.
 
@@ -298,21 +298,21 @@ async function main() {
   const passwordHash = await bcrypt.hash('Password@123', 10);
 
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@APP.local' },
+    where: { email: 'admin@[PROJECT_SLUG].local' },
     update: {},
-    create: { name: 'System Admin', email: 'admin@APP.local', password: passwordHash, role: 'ADMIN' },
+    create: { name: 'System Admin', email: 'admin@[PROJECT_SLUG].local', password: passwordHash, role: 'ADMIN' },
   });
 
   const manager = await prisma.user.upsert({
-    where: { email: 'manager@APP.local' },
+    where: { email: 'manager@[PROJECT_SLUG].local' },
     update: {},
-    create: { name: 'Nguyen Van Manager', email: 'manager@APP.local', password: passwordHash, role: 'MANAGER' },
+    create: { name: 'Nguyen Van Manager', email: 'manager@[PROJECT_SLUG].local', password: passwordHash, role: 'MANAGER' },
   });
 
   const employee = await prisma.user.upsert({
-    where: { email: 'employee@APP.local' },
+    where: { email: 'employee@[PROJECT_SLUG].local' },
     update: {},
-    create: { name: 'Nguyen Van A', email: 'employee@APP.local', password: passwordHash, role: 'EMPLOYEE' },
+    create: { name: 'Nguyen Van A', email: 'employee@[PROJECT_SLUG].local', password: passwordHash, role: 'EMPLOYEE' },
   });
 
   // --- Objectives ---
@@ -380,7 +380,7 @@ main()
 | Category | Description | Sample Records |
 |----------|-------------|----------------|
 | Users | Admin, Manager, Employee accounts with hashed passwords | 3 users |
-| Objectives | Sample APPs per quarter | 2 objectives |
+| Objectives | Sample [PROJECT_NAME] objectives per quarter | 2 objectives |
 | Key Results | KRs linked to objectives with progress | 4 KRs |
 
 ### Database Reset
@@ -419,7 +419,7 @@ services:
 
 ```bash
 git clone <repo-url>
-cd APP-web
+cd [PROJECT_SLUG]-web
 docker-compose up --build     # Builds all images, migrates DB, seeds, starts all services
 ```
 
@@ -436,9 +436,9 @@ Default login credentials (seeded):
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | <admin@APP.local> | Password@123 |
-| Manager | <manager@APP.local> | Password@123 |
-| Employee | <employee@APP.local> | Password@123 |
+| Admin | <admin@[PROJECT_SLUG].local> | Password@123 |
+| Manager | <manager@[PROJECT_SLUG].local> | Password@123 |
+| Employee | <employee@[PROJECT_SLUG].local> | Password@123 |
 
 ### Hot Reload
 
