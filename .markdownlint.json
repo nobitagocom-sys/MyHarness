@@ -1,0 +1,13 @@
+{
+  "// MyHarness": "Cosmetic markdownlint rules disabled so the generated SRS/BD/DD/plan docs under docs/output/ do not produce noise that makes the design agents enter a self-repair loop. Structural rules (broken refs, heading order) stay on. Content correctness comes from the agent section-mapping, not these style rules.",
+  "MD013": false,
+  "MD032": false,
+  "MD033": false,
+  "MD041": false,
+  "MD024": { "siblings_only": true },
+  "MD026": false,
+  "MD036": false,
+  "MD009": false,
+  "MD012": false,
+  "MD047": false
+}

@@ -77,6 +77,12 @@ If `$ARGUMENTS` specifies a file or folder path, **read that path first** as the
 1. **Load input** — Read the file/folder specified in `$ARGUMENTS`. If not specified, load default input sources in priority order. Scan the ENTIRE content.
 2. **Load supplementary** `docs/technical_architecture.md` for architecture/actor/technology context.
 3. **Analyze** — Identify total number of Modules, Features per Module, data entities, and actors. Log findings.
+   > 🧭 **Module-grouping rule (deterministic — avoid over/under-splitting):**
+   > - **If the spec has explicit module markers** (`MOD-XX`, a "Modules" section, or a module-list table) → use exactly those as the modules. Do not invent extra ones.
+   > - **Otherwise, group by feature DOMAIN, not by individual screen/use-case.** A domain = a cohesive set of features sharing the same core entity + primary actor (e.g. *Authentication*, *Product Catalog*, *Order Management*). Count distinct domains.
+   > - **Single-domain spec → ONE module.** Example: a "Simple Login App" with Login + Logout + Home screen is **1 module** (domain = Authentication/Session), NOT three. Do NOT split one cohesive feature into per-screen or per-use-case modules.
+   > - **Minimum is 1.** It is correct and expected to produce a single `mod01-*/` folder when the spec describes one domain. Never force a second module that the spec does not justify.
+   > - Record the chosen module count + the domain rationale in the log before proceeding.
 4. **Create output directory** `docs/output/srs-systems/` (and subdirectories per module).
 
 ### Phase A — System Overview File

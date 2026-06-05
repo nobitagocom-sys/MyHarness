@@ -1,0 +1,9 @@
+{
+  "// MyHarness": "Generated SRS/BD/DD/plan docs under docs/output/ contain forward-reference links (to artifacts produced later in the pipeline) and TOC anchors that VS Code's live checker flags before render. These are expected and harmless. Disabling markdown link-validation stops the SRS/BD/DD agents from entering a fix-recheck-fix loop chasing cosmetic diagnostics.",
+  "markdown.validate.enabled": false,
+  "markdown.validate.fragmentLinks.enabled": "ignore",
+  "markdown.validate.fileLinks.enabled": "ignore",
+  "markdown.validate.referenceLinks.enabled": "ignore",
+  "markdown.validate.unusedLinkDefinitions.enabled": "ignore",
+  "markdown.validate.duplicateLinkDefinitions.enabled": "ignore"
+}
