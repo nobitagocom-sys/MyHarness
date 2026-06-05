@@ -14,6 +14,7 @@
 | BD, basic design, external design, 外部設計 | `myharness.bd` | Step 2 |
 | spec, specify, feature spec | `myharness.specify` | Step 3 |
 | clarify, ambiguity, clarification | `myharness.clarify` | Step 4 |
+| step range, partial run, start_step, end_step | `myharness.steprange` | Partial pipeline execution |
 | review spec | `myharness.review.spec` | Step 5 gate |
 | plan, implementation plan | `myharness.plan` | Step 6 |
 | review plan | `myharness.review.plan` | Step 7 gate |
